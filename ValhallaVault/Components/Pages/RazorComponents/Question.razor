@@ -1,0 +1,22 @@
+﻿@using ValhallaVault.Data.Models
+
+@if (TheQuestion == null || TheQuestion?.Answers == null || string.IsNullOrEmpty(TheQuestion.Question))
+{
+    <p>Something Went Wrong. The Question Was not found</p>
+    return;
+}
+
+<div>
+    <p>@TheQuestion.Question</p>
+    @foreach (AnswerModel answer in TheQuestion.Answers)
+    {
+        <Answer TheAnswerModel="answer"></Answer>
+    }
+</div>
+
+
+
+@code {
+    [Parameter]
+    public QuestionModel? TheQuestion { get; set; }
+}

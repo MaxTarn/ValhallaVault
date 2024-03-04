@@ -1,0 +1,28 @@
+﻿@using ValhallaVault.Data.Models
+
+@if (TheAnswerModel == null)
+{
+    <p>Something Went Wrong. The Answer Was not found</p>
+    return;
+}
+
+
+
+<div>
+    <p>
+        <InputCheckbox @bind-Checked="IsChecked" ValueExpression="@(() => IsChecked)" />
+        @TheAnswerModel.Answer
+    </p>
+    
+    
+</div>
+
+
+@code {
+    [Parameter]
+    public AnswerModel? TheAnswerModel { get; set; }
+
+    public bool IsChecked { get; set; }
+
+    
+}
