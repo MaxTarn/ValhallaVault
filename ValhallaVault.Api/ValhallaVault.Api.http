@@ -1,0 +1,6 @@
+@ValhallaVault.Api_HostAddress = http://localhost:5070
+
+GET {{ValhallaVault.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
