@@ -1,0 +1,4 @@
+﻿namespace ValhallaVault.Data.Models
+{
+
+}
