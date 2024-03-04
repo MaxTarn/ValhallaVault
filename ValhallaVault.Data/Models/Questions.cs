@@ -8,7 +8,7 @@ namespace ValhallaVault.Data.Models;
 
 public class Questions
 {
-    private static List<QuestionModel> DummyQuestions = new()
+    public static List<QuestionModel> DummyQuestions = new()
 {
     new QuestionModel
     {
