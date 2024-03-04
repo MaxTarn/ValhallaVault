@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault.Ui", "ValhallaVault\ValhallaVault.Ui.csproj", "{63F247C0-CF0F-4245-AD29-B1A0FBD706C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault", "ValhallaVault\ValhallaVault.csproj", "{63F247C0-CF0F-4245-AD29-B1A0FBD706C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault.Api", "ValhallaVault.Api\ValhallaVault.Api.csproj", "{BB625C1D-8105-494C-90F9-127495E39E92}"
 EndProject
