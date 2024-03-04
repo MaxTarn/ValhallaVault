@@ -1,0 +1,19 @@
+﻿@using ValhallaVault.Data.Models
+<h3>QuestionsContainer</h3>
+
+@if (DisplayTheseQuestions == null)
+{
+    <h1>Something Went wrong! Unable to display the Questions</h1>
+    return;
+}
+
+@foreach (QuestionModel question in DisplayTheseQuestions)
+{
+    <Question TheQuestion="question"></Question>
+}
+
+@code {
+    [Parameter]
+    public List<QuestionModel>? DisplayTheseQuestions{ get; set; }
+
+}
