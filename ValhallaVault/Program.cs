@@ -56,17 +56,18 @@ namespace ValhallaVault
 
                 context.Database.Migrate(); //har vi inte skapat databasen så görs det nu
 
-                ApplicationUser newUser = new()
+                ApplicationUser newAdmin = new()
                 {
                     UserName = "admin",
                     Email = "adminuser@mail.com",
                     EmailConfirmed = true
                 };
-                var user = signInManager.UserManager.FindByEmailAsync(newUser.Email).GetAwaiter().GetResult(); //vi vill att det ska köras synkront, därvav de två sista metoderna
-                if (user == null)
+
+                var admin = signInManager.UserManager.FindByNameAsync(newAdmin.UserName).GetAwaiter().GetResult();
+                if (admin == null)
                 {
                     //skapa en ny user
-                    signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+                    signInManager.UserManager.CreateAsync(newAdmin, "Password1234!").GetAwaiter().GetResult();
 
 
 
@@ -83,46 +84,60 @@ namespace ValhallaVault
                         roleManagaer.CreateAsync(adminRole).GetAwaiter().GetResult();
                     }
                     //tilldela adminrollen till den nya användaren
-                    signInManager.UserManager.AddToRoleAsync(newUser, "Admin").GetAwaiter().GetResult();
+                    signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
                 }
+
+                ApplicationUser newUser = new()
+                {
+                    UserName = "user",
+                    Email = "user@mail.com",
+                    EmailConfirmed = true
+                };
+
+                var user = signInManager.UserManager.FindByNameAsync(newUser.UserName).GetAwaiter().GetResult();
+                if (user == null)
+                {
+                    //skapa en ny user
+                    signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+                }
+
+
+
+
+
+
+
+
+
+
+
+                var app = builder.Build();
+
+                // Configure the HTTP request pipeline.
+                if (app.Environment.IsDevelopment())
+                {
+                    app.UseMigrationsEndPoint();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+
+                app.UseStaticFiles();
+                app.UseAntiforgery();
+
+                app.MapRazorComponents<App>()
+                    .AddInteractiveServerRenderMode();
+
+                // Add additional endpoints required by the Identity /Account Razor components.
+                app.MapAdditionalIdentityEndpoints();
+
+                app.Run();
             }
-
-
-
-
-
-
-
-
-
-
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseMigrationsEndPoint();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseStaticFiles();
-            app.UseAntiforgery();
-
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
-
-            // Add additional endpoints required by the Identity /Account Razor components.
-            app.MapAdditionalIdentityEndpoints();
-
-            app.Run();
         }
     }
 }
