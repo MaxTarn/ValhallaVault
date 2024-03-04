@@ -1,7 +1,14 @@
-﻿@page "/"
+﻿@page "/Home"
+@using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data.Models
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<h3>Home</h3>
+<Question TheQuestion="Question"></Question>
+<Question TheQuestion="Question2"></Question>
+
+@code {
+    public QuestionModel? Question = Questions.DummyQuestions[1];
+    public QuestionModel? Question2 = Questions.DummyQuestions[5];
+}
