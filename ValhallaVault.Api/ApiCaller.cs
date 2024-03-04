@@ -16,23 +16,23 @@ namespace ValhallaVault.Api
         }
 
 
-        public async Task<Root> MakeCall(string url) //kolla kommentarerna på index, onGet för att se vad allt är
-        {
-            HttpResponseMessage response = await Client.GetAsync(url);
+        //public async Task<Root> MakeCall(string url) //kolla kommentarerna på index, onGet för att se vad allt är
+        //{
+        //    HttpResponseMessage response = await Client.GetAsync(url);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string json = await response.Content.ReadAsStringAsync();
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        string json = await response.Content.ReadAsStringAsync();
 
-                Root? result = JsonConvert.DeserializeObject<Root>(json);
-                if (result != null)
-                {
-                    return result;
-                }
+        //        Root? result = JsonConvert.DeserializeObject<Root>(json);
+        //        if (result != null)
+        //        {
+        //            return result;
+        //        }
 
-            }
+        //    }
 
-            throw new HttpRequestException();
-        }
+        //    throw new HttpRequestException();
+        //}
     }
 }
