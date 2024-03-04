@@ -8,10 +8,6 @@ namespace ValhallaVault.Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public List<SegmentModel> Segments { get; set; }
-
-        public CategoryModel()
-        {
-            Segments = new List<SegmentModel>();
-        }
+        public List<int> SegmentIds { get; set; }
     }
 }
