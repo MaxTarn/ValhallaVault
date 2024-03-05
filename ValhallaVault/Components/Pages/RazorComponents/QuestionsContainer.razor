@@ -18,7 +18,7 @@
 
 <div>
     <p>Question @(_index + 1 )/@DisplayTheseQuestions.Count</p>
-    <Question TheQuestion="@DisplayTheseQuestions[_index]" StyleToAddToCorrectAnswer="@StyleForCorrectAnswer"></Question>
+    <Question TheQuestion="@DisplayTheseQuestions[_index]" StyleToAddToCorrectAnswer="@StyleForCorrectAnswer" StyleToAddToWrongAnswer="@StyleForWrongAnswer" _resetAnswerState="@_resetAnswerState"></Question>
 
     <button @onclick="NextQuestion"style="width: 100px">@btnText</button>
 </div>
@@ -32,14 +32,16 @@
     public  QuestionModel? QuestionShown { get; set; } 
     private string btnText = "Correct it";
     public string StyleForCorrectAnswer { get; set; }
+    public string StyleForWrongAnswer { get; set; }
     private int _index = 0;
-    
+    private bool _resetAnswerState = false;
 
 
 
 
     //TODO MAKE IT SO THAT USER CAN ONLY TICK ONE BOX
-
+    //TODO BACK BUTTONS
+    //TODO the first answer is always green now, remove the styleing fo the correct answer after you change questions
 
 
     public void NextQuestion()
@@ -48,7 +50,9 @@
         {
             //TODO CORRECT THE ANSWER
             StyleForCorrectAnswer = "background-color:green;";
+            StyleForWrongAnswer = "background-color:red;";
             btnText = "Next";
+            _resetAnswerState = false;
             return;
         }
 
@@ -61,6 +65,9 @@
 
         _index++;
         btnText = "Correct it";
+        StyleForCorrectAnswer = "";
+        StyleForWrongAnswer = "";
+        _resetAnswerState = true;
 
     }
 
