@@ -4,16 +4,55 @@
 @if (DisplayTheseQuestions == null)
 {
     <h1>Something Went wrong! Unable to display the Questions</h1>
+    
     return;
 }
-
-@foreach (QuestionModel question in DisplayTheseQuestions)
+@if (HasNullEntry())
 {
-    <Question TheQuestion="question"></Question>
+    
+    <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
+
 }
+
+
+<div>
+    <Question TheQuestion="@QuestionShown"></Question>
+
+    <button @onclick="NextQuestion">@btnText</button>
+</div>
+
+
 
 @code {
     [Parameter]
     public List<QuestionModel>? DisplayTheseQuestions{ get; set; }
 
+    private QuestionModel? QuestionShown;
+    private string btnText = "Correct it";
+
+
+
+
+
+
+
+
+
+
+    private void NextQuestion()
+    {
+        if (btnText == "Correct it")
+        {
+            btnText = "Next";
+            return;
+        }
+        QuestionShown = DisplayTheseQuestions.IndexOf(QuestionShown) < DisplayTheseQuestions.Count - 1
+           ? DisplayTheseQuestions[DisplayTheseQuestions.IndexOf(QuestionShown) + 1]
+           : null;
+    }
+
+    private bool HasNullEntry()
+    {
+        return DisplayTheseQuestions?.Any(entry => entry == null) ?? false;
+    }
 }
