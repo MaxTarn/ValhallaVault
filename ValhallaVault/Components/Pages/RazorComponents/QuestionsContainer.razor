@@ -8,16 +8,21 @@
     
     return;
 }
+
  @if (HasNullEntry())
+
 {
     
     <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
 
+
 } 
+
 
 
 <div>
     <p>Question @(_index + 1 )/@DisplayTheseQuestions.Count</p>
+
     @if (_moreQuestionsUnAnswerd)
     {
         <Question TheQuestion="@DisplayTheseQuestions[_index]" StyleToAddToCorrectAnswer="@StyleForCorrectAnswer" StyleToAddToWrongAnswer="@StyleForWrongAnswer" _resetAnswerState="@_resetAnswerState"></Question>
@@ -34,6 +39,7 @@
     <button @onclick="CorrectAnswers" style="width: 180px" disabled="@_disableCorrectTheAnswersButton">Correct Answers</button>
     <button @onclick="NextQuestion" style="width:100px;" disabled="@_disableNextQuestionButton">Next</button>
     
+
 </div>
 
 
@@ -48,6 +54,7 @@
     public string StyleForWrongAnswer { get; set; }
     private int _index = 0;
     private bool _resetAnswerState = false;
+
     private bool _moreQuestionsUnAnswerd = true;
 
 
@@ -112,4 +119,5 @@
 
         return _index <= 0 || _index >= DisplayTheseQuestions.Count - 1;
     }
+
 }
