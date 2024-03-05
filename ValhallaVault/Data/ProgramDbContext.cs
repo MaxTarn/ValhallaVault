@@ -5,16 +5,16 @@ namespace ValhallaVault.Data
 {
     public class ProgramDbContext : DbContext
     {
-        public ProgramDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ProgramDbContext(DbContextOptions<ProgramDbContext> options) : base(options)
         {
 
         }
 
-        DbSet<AnswerModel> Answers { get; set; }
-        DbSet<QuestionModel> Questions { get; set; }
-        DbSet<CategoryModel> Categories { get; set; }
-        DbSet<SubcategoryModel> Subcategories { get; set; }
-        DbSet<SegmentModel> Segments { get; set; }
+        public DbSet<AnswerModel> Answers { get; set; }
+        public DbSet<QuestionModel> Questions { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
+        public DbSet<SubcategoryModel> Subcategories { get; set; }
+        public DbSet<SegmentModel> Segments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,3 +39,4 @@ namespace ValhallaVault.Data
                 .HasForeignKey(q => q.QuestionModelId);
         }
     }
+}
