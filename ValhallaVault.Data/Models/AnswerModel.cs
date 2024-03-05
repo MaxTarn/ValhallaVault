@@ -6,7 +6,7 @@ public class AnswerModel
 {
     [Key]
     public int Id { get; set; }
-    public string? Answer { get; set; } = null!;
+    public string? Answer { get; set; }
     public int QuestionModelId { get; set; }
     public QuestionModel? Question { get; set; }
     public bool? IsCorrect { get; set; }
