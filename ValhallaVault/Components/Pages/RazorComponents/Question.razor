@@ -13,19 +13,16 @@
     <ul class="list-group list-group-flush">
         @foreach (AnswerModel answer in TheQuestion.Answers)
         {
-            @if (answer.IsCorrect.HasValue && answer.IsCorrect == true)
+            @if (answer.IsCorrect.HasValue)
             {
-                <li class="list-group-item" style="@StyleToAddToCorrectAnswer">
-                    <Answer TheAnswerModel="answer"></Answer>
+                <li class="list-group-item" >
+                    <Answer TheAnswerModel="@answer" StyleToAddToCorrectAnswer="@StyleToAddToCorrectAnswer" StyleToAddToWrongAnswer="@StyleToAddToWrongAnswer" ResetState="@_resetAnswerState"></Answer>
                 </li>
             }
             else
             {
-                <li class="list-group-item" style="@StyleToAddToWrongAnswer">
-                    <Answer TheAnswerModel="answer"></Answer>
-                </li>
+                <li><p>Something went wrong when trying to display this answer! Was unable to figure out wheter this answer was correct or incorrect</p></li>
             }
-            
         }
     </ul>
 </div>
@@ -41,4 +38,8 @@
 
     [Parameter] 
     public string? StyleToAddToWrongAnswer { get; set; }
+
+    [Parameter]
+    public bool _resetAnswerState { get; set; }
+    
 }
