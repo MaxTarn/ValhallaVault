@@ -13,9 +13,19 @@
     <ul class="list-group list-group-flush">
         @foreach (AnswerModel answer in TheQuestion.Answers)
         {
-            <li class="list-group-item">
-                <Answer TheAnswerModel="answer"></Answer>
-            </li>
+            @if (answer.IsCorrect.HasValue && answer.IsCorrect == true)
+            {
+                <li class="list-group-item" style="@StyleToAddToCorrectAnswer">
+                    <Answer TheAnswerModel="answer"></Answer>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item" style="@StyleToAddToWrongAnswer">
+                    <Answer TheAnswerModel="answer"></Answer>
+                </li>
+            }
+            
         }
     </ul>
 </div>
@@ -25,4 +35,10 @@
 @code {
     [Parameter]
     public QuestionModel? TheQuestion { get; set; }
+
+    [Parameter]
+    public string? StyleToAddToCorrectAnswer { get; set; }
+
+    [Parameter] 
+    public string? StyleToAddToWrongAnswer { get; set; }
 }
