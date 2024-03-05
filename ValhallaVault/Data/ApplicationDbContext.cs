@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data
 {
@@ -11,9 +10,5 @@ namespace ValhallaVault.Data
 
         }
 
-        DbSet<AnswerModel> Answers { get; set; }
-        DbSet<QuestionModel> Questions { get; set; }
-        DbSet<CategoryModel> Categories { get; set; }
-        DbSet<SubcategoryModel> Subcategories { get; set; }
     }
 }

@@ -10,6 +10,6 @@ public class QuestionModel
     public int SubcategoryModelId { get; set; }
     public SubcategoryModel? Subcategory { get; set; }
     public List<AnswerModel>? Answers { get; set; } = null!;
+    public List<int> AnswerIds { get; set; }
 
 }
-
