@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault", "ValhallaVault\ValhallaVault.csproj", "{63F247C0-CF0F-4245-AD29-B1A0FBD706C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValhallaVault", "ValhallaVault\ValhallaVault.csproj", "{63F247C0-CF0F-4245-AD29-B1A0FBD706C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault.Api", "ValhallaVault.Api\ValhallaVault.Api.csproj", "{BB625C1D-8105-494C-90F9-127495E39E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValhallaVault.Api", "ValhallaVault.Api\ValhallaVault.Api.csproj", "{BB625C1D-8105-494C-90F9-127495E39E92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValhallaVault.Data", "ValhallaVault.Data\ValhallaVault.Data.csproj", "{4A2873B7-A687-4634-A615-0CE8CCA30A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValhallaVault.Data", "ValhallaVault.Data\ValhallaVault.Data.csproj", "{4A2873B7-A687-4634-A615-0CE8CCA30A9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
