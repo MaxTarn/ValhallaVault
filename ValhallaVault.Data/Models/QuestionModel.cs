@@ -13,4 +13,3 @@ public class QuestionModel
     public List<int> AnswerIds { get; set; }
 
 }
-
