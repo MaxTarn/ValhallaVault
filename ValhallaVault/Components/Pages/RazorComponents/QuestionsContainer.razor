@@ -1,4 +1,5 @@
 ﻿@using ValhallaVault.Data.Models
+
 <h3>QuestionsContainer</h3>
 
 @if (DisplayTheseQuestions == null)
@@ -7,18 +8,19 @@
     
     return;
 }
-@if (HasNullEntry())
+@* @if (HasNullEntry())
 {
     
     <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
 
-}
+} *@
 
 
 <div>
-    <Question TheQuestion="@QuestionShown"></Question>
+    <p>Question @(_index + 1 )/@DisplayTheseQuestions.Count</p>
+    <Question TheQuestion="@DisplayTheseQuestions[_index]" StyleToAddToCorrectAnswer="@StyleForCorrectAnswer"></Question>
 
-    <button @onclick="NextQuestion">@btnText</button>
+    <button @onclick="NextQuestion"style="width: 100px">@btnText</button>
 </div>
 
 
@@ -27,32 +29,44 @@
     [Parameter]
     public List<QuestionModel>? DisplayTheseQuestions{ get; set; }
 
-    private QuestionModel? QuestionShown;
+    public  QuestionModel? QuestionShown { get; set; } 
     private string btnText = "Correct it";
+    public string StyleForCorrectAnswer { get; set; }
+    private int _index = 0;
+    
 
 
 
 
+    //TODO MAKE IT SO THAT USER CAN ONLY TICK ONE BOX
 
 
 
-
-
-
-    private void NextQuestion()
+    public void NextQuestion()
     {
         if (btnText == "Correct it")
         {
+            //TODO CORRECT THE ANSWER
+            StyleForCorrectAnswer = "background-color:green;";
             btnText = "Next";
             return;
         }
-        QuestionShown = DisplayTheseQuestions.IndexOf(QuestionShown) < DisplayTheseQuestions.Count - 1
-           ? DisplayTheseQuestions[DisplayTheseQuestions.IndexOf(QuestionShown) + 1]
-           : null;
+
+        if (_index +1 >= DisplayTheseQuestions.Count)
+        {
+            //TODO make sometin happen when there are no more questions left
+            return;
+        }
+
+
+        _index++;
+        btnText = "Correct it";
+
     }
 
-    private bool HasNullEntry()
+    public bool HasNullEntry()
     {
+        Console.WriteLine("dlfgkbn");
         return DisplayTheseQuestions?.Any(entry => entry == null) ?? false;
     }
 }
