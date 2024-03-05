@@ -8,12 +8,12 @@
     
     return;
 }
-@* @if (HasNullEntry())
+ @if (HasNullEntry())
 {
     
     <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
 
-} *@
+} 
 
 
 <div>
@@ -30,9 +30,9 @@
         
     }
     
-    <button @onclick="BackOneQuestion" disabled="@_disableBackButton">Back</button>
-    <button @onclick="NextOneQuestion"style="width: 100px" disabled="@(!_moreQuestionsUnAnswerd)">@btnText</button>
-
+    <button @onclick="BackOneQuestion" style="width:100px;"  disabled="@_disableBackButton">Back</button>
+    <button @onclick="CorrectAnswers" style="width: 180px" disabled="@_disableCorrectTheAnswersButton">Correct Answers</button>
+    <button @onclick="NextQuestion" style="width:100px;" disabled="@_disableNextQuestionButton">Next</button>
     
 </div>
 
@@ -49,52 +49,67 @@
     private int _index = 0;
     private bool _resetAnswerState = false;
     private bool _moreQuestionsUnAnswerd = true;
+
+
     private bool _disableBackButton = true;
-
-
+    private bool _disableCorrectTheAnswersButton = false;
+    private bool _disableNextQuestionButton = true;
 
     //TODO MAKE IT SO THAT USER CAN ONLY TICK ONE BOX
 
 
-    public void NextOneQuestion()
-    {
-        if (btnText == "Correct it")
-        {
-            //TODO CORRECT THE ANSWER
-            StyleForCorrectAnswer = "background-color:green;";
-            StyleForWrongAnswer = "background-color:red;";
-            btnText = "Next";
-            _resetAnswerState = false;
-            _disableBackButton = true;
-            return;
-        }
 
-        if (_index +1 >= DisplayTheseQuestions.Count)
-        {
-            //TODO make sometin happen when there are no more questions left
-            _moreQuestionsUnAnswerd = false;
-            return;
-        }
-
-
-        _index++;
-        btnText = "Correct it";
-        StyleForCorrectAnswer = "";
-        StyleForWrongAnswer = "";
-        _resetAnswerState = true;
-        _disableBackButton = false;
-
-    }
 
     private void BackOneQuestion()
     {
-        if(_index <=0)return;
+        if(_disableBackButton)return;
+        if (_index <= 0) return;
         _index--;
+        _disableBackButton = CheckIfBackButtonShouldBeDisabled();
     }
+
+    private void CorrectAnswers()
+    {
+        StyleForCorrectAnswer = "background-color:green;";
+        StyleForWrongAnswer = "background-color:red;";
+        _resetAnswerState = false;
+        _disableNextQuestionButton = false;
+    }
+
+    private void NextQuestion()
+    {
+        StyleForCorrectAnswer = "";
+        StyleForWrongAnswer = "";
+        _resetAnswerState = true;
+        _disableBackButton = !CheckIfBackButtonShouldBeDisabled();
+        if (_index + 1 <= DisplayTheseQuestions.Count) _index++;
+    }
+
+
+
+
 
     public bool HasNullEntry()
     {
-        Console.WriteLine("dlfgkbn");
         return DisplayTheseQuestions?.Any(entry => entry == null) ?? false;
+    }
+
+
+
+
+
+    /// <summary>
+    /// returns false when the Back button should be disabled
+    /// returns true when the Back button should be enabled
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckIfBackButtonShouldBeDisabled()
+    {
+        if (DisplayTheseQuestions == null || DisplayTheseQuestions.Count <= 0)
+        {
+            return true; // If there are no questions, the Back button should be disabled
+        }
+
+        return _index <= 0 || _index >= DisplayTheseQuestions.Count - 1;
     }
 }
