@@ -12,7 +12,7 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public IEnumerable<AnswerModel> GetAllAnswers()
+        public async Task<IEnumerable<AnswerModel>> GetAllAnswers()
         {
             return _dbContext.Set<AnswerModel>().ToList();
         }

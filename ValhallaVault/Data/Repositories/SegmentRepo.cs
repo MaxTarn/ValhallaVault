@@ -12,7 +12,7 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public IEnumerable<SegmentModel> GetAllSegments()
+        public async Task<IEnumerable<SegmentModel>> GetAllSegments()
         {
             return _dbContext.Set<SegmentModel>().ToList();
         }

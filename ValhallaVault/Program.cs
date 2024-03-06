@@ -17,6 +17,8 @@ namespace ValhallaVault
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddControllers();
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
@@ -136,6 +138,8 @@ namespace ValhallaVault
 
                 app.MapRazorComponents<App>()
                     .AddInteractiveServerRenderMode();
+
+                app.MapControllers();
 
                 // Add additional endpoints required by the Identity /Account Razor components.
                 app.MapAdditionalIdentityEndpoints();

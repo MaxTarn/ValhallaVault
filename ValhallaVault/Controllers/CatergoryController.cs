@@ -1,4 +1,4 @@
-﻿namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]

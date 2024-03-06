@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Data.Models;
 
+
 namespace ValhallaVault.Data.Repositories
 {
     public class QuestionRepo
@@ -12,8 +13,9 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public IEnumerable<QuestionModel> GetAllQuestions()
+        public async Task<IEnumerable<QuestionModel>> GetAllQuestions()
         {
+
             return _dbContext.Set<QuestionModel>().ToList();
         }
 

@@ -12,7 +12,7 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public IEnumerable<CategoryModel> GetAllCategories()
+        public async Task<IEnumerable<CategoryModel>> GetAllCategories()
         {
             return _dbContext.Set<CategoryModel>().ToList();
         }
