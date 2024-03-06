@@ -11,13 +11,13 @@ namespace ValhallaVault.Controllers
 
         private readonly QuestionRepo _questionRepo;
 
-        public QuestionController(QuestionRepo<QuestionModel> questionRepo)
+        public QuestionController(QuestionRepo questionRepo)
         {
             _questionRepo = questionRepo;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<QuestionModel>> GetAll()
+        public async Task<ActionResult<IEnumerable<QuestionModel>>> GetAll()
         {
             var question = await _questionRepo.GetAllQuestions();
 
@@ -26,14 +26,14 @@ namespace ValhallaVault.Controllers
                 return Ok(question);
             }
 
-            return (IEnumerable<QuestionModel>)NotFound("The questions could not be found");
+            return NotFound("The questions could not be found");
         }
 
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var question = await _questionRepo.Find(a => a.Id == id);
+            var question = await _questionRepo.GetQuestionById(id);
 
             if (question != null)
             {

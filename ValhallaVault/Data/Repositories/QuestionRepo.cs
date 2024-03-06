@@ -7,9 +7,9 @@ namespace ValhallaVault.Data.Repositories
 {
     public class QuestionRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public QuestionRepo(DbContext dbContext)
+        public QuestionRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -20,15 +20,15 @@ namespace ValhallaVault.Data.Repositories
             return _dbContext.Set<QuestionModel>().ToList();
         }
 
-        public QuestionModel GetQuestionById(int id)
+        public async Task<QuestionModel?> GetQuestionById(int id)
         {
-            return _dbContext.Set<QuestionModel>().Find(id);
+            return await _dbContext.Set<QuestionModel>().FindAsync(id);
         }
 
-        public void AddQuestion(QuestionModel question)
+        public async Task AddQuestion(QuestionModel question)
         {
             _dbContext.Set<QuestionModel>().Add(question);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateQuestion(QuestionModel question)
@@ -37,12 +37,12 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteQuestion(int id)
+        public async Task<QuestionModel?> DeleteQuestion(int id)
         {
-            var question = _dbContext.Set<QuestionModel>().Find(id);
+            var question = _dbContext.Questions.Find(id);
             if (question != null)
             {
-                _dbContext.Set<QuestionModel>().Remove(question);
+                await _dbContext.Questions.RemoveAsync(question);
             }
             else
             {
