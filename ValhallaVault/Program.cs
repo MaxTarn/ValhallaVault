@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
+using ValhallaVault.Data.Repositories;
+
 
 namespace ValhallaVault
 {
@@ -16,6 +18,8 @@ namespace ValhallaVault
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddControllers();
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
@@ -39,26 +43,32 @@ namespace ValhallaVault
                 options.UseSqlServer(DbString));
 
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddRoles<IdentityRole>()  //HÄR LÄGGER VI TILL DENNA RADEN 
+                .AddRoles<IdentityRole>()  //HÃ„R LÃ„GGER VI TILL DENNA RADEN 
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+            builder.Services.AddControllers();
+
+            //Dependency injection
+            builder.Services.AddScoped<AnswerRepo>();
+            builder.Services.AddScoped<CategoryRepo>();
+            builder.Services.AddScoped<QuestionRepo>();
+            builder.Services.AddScoped<SegmentRepo>();
+            builder.Services.AddScoped<SubcategoryRepo>();
 
 
-
-
-            //skapa users och roller som ska finnas med från start
+            //skapa users och roller som ska finnas med frÃ¥n start
 
             using (ServiceProvider sp = builder.Services.BuildServiceProvider())
             {
-                var context = sp.GetRequiredService<ApplicationDbContext>(); //plocka ut dessa ut vår dependency injection container
+                var context = sp.GetRequiredService<ApplicationDbContext>(); //plocka ut dessa ut vÃ¥r dependency injection container
                 var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
                 var roleManagaer = sp.GetRequiredService<RoleManager<IdentityRole>>();
 
-                context.Database.Migrate(); //har vi inte skapat databasen så görs det nu
+                //context.Database.Migrate(); //har vi inte skapat databasen sÃ¥ gÃ¶rs det nu
 
                 ApplicationUser newAdmin = new()
                 {
@@ -87,7 +97,7 @@ namespace ValhallaVault
                         };
                         roleManagaer.CreateAsync(adminRole).GetAwaiter().GetResult();
                     }
-                    //tilldela adminrollen till den nya användaren
+                    //tilldela adminrollen till den nya anvÃ¤ndaren
                     signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
                 }
 
@@ -136,6 +146,8 @@ namespace ValhallaVault
 
                 app.MapRazorComponents<App>()
                     .AddInteractiveServerRenderMode();
+
+                app.MapControllers();
 
                 // Add additional endpoints required by the Identity /Account Razor components.
                 app.MapAdditionalIdentityEndpoints();

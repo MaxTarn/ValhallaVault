@@ -94,6 +94,90 @@ namespace ValhallaVault.Migrations.ProgramDb
                             Answer = "Genomföra omedelbar investering för att inte missa möjligheten",
                             IsCorrect = false,
                             QuestionId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Answer = "Införa striktare lösenordspolicyer och tvåfaktorsautentisering för fjärråtkomst",
+                            IsCorrect = true,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Answer = "Återgå till kontorsarbete",
+                            IsCorrect = false,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Answer = "Förbjuda användning av personliga enheter för arbete",
+                            IsCorrect = false,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Answer = "Organiserade cyberbrottsliga grupper",
+                            IsCorrect = true,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Answer = "En enskild hackare med ett personligt vendetta",
+                            IsCorrect = false,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Answer = "Implementera en ny brandvägg",
+                            IsCorrect = false,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Answer = "Slå på tvåfaktorsautentisering för alla fjärranslutningar",
+                            IsCorrect = true,
+                            QuestionId = 5
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Answer = "Skriv ut alla dokument och undvik digital delning",
+                            IsCorrect = false,
+                            QuestionId = 6
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Answer = "Använd samma lösenord för alla konton för enkelhetens skull",
+                            IsCorrect = false,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Answer = "Social engineering",
+                            IsCorrect = true,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Answer = "Stark kryptering",
+                            IsCorrect = false,
+                            QuestionId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Answer = "Brandväggar",
+                            IsCorrect = false,
+                            QuestionId = 8
                         });
                 });
 
@@ -176,6 +260,48 @@ namespace ValhallaVault.Migrations.ProgramDb
                             Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier.",
                             Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag...",
                             SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Explanation = "Stärkt autentisering är kritisk för att säkra fjärråtkomst och skydda mot obehörig åtkomst i en distribuerad arbetsmiljö.",
+                            Question = "Vilken åtgärd bör företaget vidta för att adressera denna nya riskmiljö?",
+                            SubcategoryId = 14
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Explanation = "Ransomware-angrepp involverar kryptering av offerdata och kräver lösen för dekryptering, vilket är särskilt skadligt för kritiska sektorer som hälsovård.",
+                            Question = "Vilken typ av angrepp har de sannolikt blivit utsatta för?",
+                            SubcategoryId = 15
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Explanation = "Maersk utsattes för NotPetya ransomware-angreppet, som ledde till omfattande störningar och förluster genom att kryptera företagets globala system.",
+                            Question = "Vilken typ av malware var primärt ansvarig för denna incident?",
+                            SubcategoryId = 16
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Explanation = "DDoS-attacker kräver ofta betydande resurser och koordinering, vilket är karakteristiskt för organiserade cyberbrottsliga grupper.",
+                            Question = "Vilken typ av aktör är mest sannolikt ansvarig för denna typ av attack?",
+                            SubcategoryId = 17
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Explanation = "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor.",
+                            Question = "Vilken åtgärd bör prioriteras för att förhindra framtida incidenter?",
+                            SubcategoryId = 18
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Explanation = "Säkerhetsskyddslagen är en svensk lagstiftning som syftar till att skydda nationellt känslig information från spioneri, sabotage, terroristbrott och andra säkerhetshot.",
+                            Question = "Vilken lagstiftning ger ramverket för detta skydd?",
+                            SubcategoryId = 19
                         });
                 });
 
@@ -349,6 +475,78 @@ namespace ValhallaVault.Migrations.ProgramDb
                         {
                             Id = 13,
                             Name = "Virus, maskar och trojaner",
+                            SegmentId = 8
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Abonnemangsfällor och falska fakturor",
+                            SegmentId = 5
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Ransomware",
+                            SegmentId = 5
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Statistik och förhållningssätt",
+                            SegmentId = 5
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Utpressningsvirus",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Attacker mot servrar",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Cyberangrepp i Norden",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Varning för vishing",
+                            SegmentId = 7
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Identifiera VD-mejl",
+                            SegmentId = 7
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Öneangrepp och presentkortsbluffar",
+                            SegmentId = 7
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Värvningsförsök",
+                            SegmentId = 8
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "Affärsspionage",
+                            SegmentId = 8
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Påverkanskampanjer",
                             SegmentId = 8
                         });
                 });

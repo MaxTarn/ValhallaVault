@@ -5,27 +5,27 @@ namespace ValhallaVault.Data.Repositories
 {
     public class SegmentRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public SegmentRepo(DbContext dbContext)
+        public SegmentRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public IEnumerable<SegmentModel> GetAllSegments()
+        public async Task<IEnumerable<SegmentModel>> GetAllSegments()
         {
             return _dbContext.Set<SegmentModel>().ToList();
         }
 
-        public SegmentModel GetSegmentById(int id)
+        public async Task<SegmentModel?> GetSegmentById(int id)
         {
-            return _dbContext.Set<SegmentModel>().Find(id);
+            return await _dbContext.Set<SegmentModel>().FindAsync(id);
         }
 
-        public void AddSegment(SegmentModel segment)
+        public async Task AddSegment(SegmentModel segment)
         {
             _dbContext.Set<SegmentModel>().Add(segment);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateSegment(SegmentModel segment)
@@ -34,17 +34,23 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteSegment(int id)
+        public async Task<SegmentModel> DeleteSegment(int id)
         {
-            var segment = _dbContext.Set<SegmentModel>().Find(id);
+            var segment = await _dbContext.Set<SegmentModel>().FindAsync(id);
             if (segment != null)
             {
                 _dbContext.Set<SegmentModel>().Remove(segment);
+                return segment;
             }
             else
             {
                 throw new Exception("No segment found with the specified ID.");
             }
+        }
+
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
