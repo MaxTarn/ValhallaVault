@@ -4,7 +4,7 @@ using ValhallaVault.Data.Repositories;
 
 namespace ValhallaVault.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class QuestionController : ControllerBase
     {
