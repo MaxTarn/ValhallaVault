@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
 
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
     //public class CatergoryController : ControllerBase
     //{
-    //    private readonly CatergoryRepository _catergoryRepo;
+    //    private readonly CatergoryRepo _catergoryRepo;
 
-    //    public CatergoryController(CatergoryRepository<CategoryModel> catergoryRepo)
+    //    public CatergoryController(CatergoryRepo<CategoryModel> catergoryRepo)
     //    {
     //        _catergoryRepo = catergoryRepo;
     //    }
@@ -18,7 +15,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<CategoryModel>> GetAll()
     //    {
-    //        var categories = await _catergoryRepo.GetAll();
+    //        var categories = await _catergoryRepo.GetAllCategories();
 
     //        if (categories != null)
     //        {
@@ -43,13 +40,15 @@ namespace ValhallaVault.Api.Controllers
     //    }
 
 
+
+
     //    [HttpPost]
     //    public async Task<IActionResult> Post(CategoryModel category)
     //    {
 
     //        if (category != null)
     //        {
-    //            await _catergoryRepo.Add(category);
+    //            await _catergoryRepo.AddCategory(category);
 
     //            await _catergoryRepo.Complete();
 
@@ -58,6 +57,7 @@ namespace ValhallaVault.Api.Controllers
 
     //        return NotFound("The category that you were trying to post could not be found");
     //    }
+    
 
 
     //    [HttpPut("{Id}")]
@@ -70,20 +70,24 @@ namespace ValhallaVault.Api.Controllers
     //            result.Name = previousCategory.Name;
 
 
+//                await _catergoryRepo.Complete();
+
+
     //            await _catergoryRepo.Complete();
 
     //            return Ok(result);
     //        }
 
 
-    //        return NotFound("The category that you wanted to update could not be found");
-    //    }
+//            return NotFound("The category that you wanted to update could not be found");
+//        }
+
 
 
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var category = await _catergoryRepo.Delete(id);
+    //        var category = await _catergoryRepo.DeleteCategory(id);
 
     //        if (category != null)
     //        {
@@ -95,3 +99,4 @@ namespace ValhallaVault.Api.Controllers
 
     //}
 }
+

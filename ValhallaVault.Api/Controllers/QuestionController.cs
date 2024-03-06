@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
 
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
     //public class QuestionController : ControllerBase
     //{
 
-    //    private readonly QuestionRepository _questionRepo;
+    //    private readonly QuestionRepoy _questionRepo;
 
-    //    public QuestionController(QuestionRepository<QuestionModel> questionRepo)
+    //    public QuestionController(QuestionRepo<QuestionModel> questionRepo)
     //    {
     //        _questionRepo = questionRepo;
     //    }
@@ -19,7 +16,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<QuestionModel>> GetAll()
     //    {
-    //        var question = await _questionRepo.GetAll();
+    //        var question = await _questionRepo.GetAllQuestions();
 
     //        if (question != null)
     //        {
@@ -29,6 +26,8 @@ namespace ValhallaVault.Api.Controllers
     //        return (IEnumerable<QuestionModel>)NotFound("The questions could not be found");
     //    }
 
+
+//       
 
     //    [HttpGet("{id}")]
     //    public async Task<IActionResult> GetById(int id)
@@ -44,13 +43,15 @@ namespace ValhallaVault.Api.Controllers
     //    }
 
 
+
+
     //    [HttpPost]
     //    public async Task<IActionResult> Post(QuestionModel question)
     //    {
 
     //        if (question != null)
     //        {
-    //            await _questionRepo.Add(question);
+    //            await _questionRepo.AddQuestion(question);
 
     //            await _questionRepo.Complete();
 
@@ -64,7 +65,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpPut("{Id}")]
     //    public async Task<IActionResult> Put(QuestionModel previousQuestion, int Id)
     //    {
-    //        var result = await _questionRepo.Get(previousQuestion.Id);
+    //        var result = await _questionRepo.GetQuestion(previousQuestion.Id);
 
     //        if (result != null)
     //        {
@@ -79,10 +80,12 @@ namespace ValhallaVault.Api.Controllers
     //    }
 
 
+
+
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var question = await _questionRepo.Delete(id);
+    //        var question = await _questionRepo.DeleteQuestion(id);
 
     //        if (question != null)
     //        {
@@ -94,3 +97,4 @@ namespace ValhallaVault.Api.Controllers
 
     //}
 }
+
