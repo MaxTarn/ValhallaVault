@@ -1,4 +1,0 @@
-﻿namespace ValhallaVault.Data.Models
-{
-
-}
