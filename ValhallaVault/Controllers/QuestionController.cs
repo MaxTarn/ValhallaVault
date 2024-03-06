@@ -52,7 +52,7 @@ namespace ValhallaVault.Controllers
             {
                 await _questionRepo.AddQuestion(question);
 
-                await _questionRepo.Complete();
+
 
                 return Ok(question);
             }
@@ -69,8 +69,6 @@ namespace ValhallaVault.Controllers
             if (result != null)
             {
                 result.Question = previousQuestion.Question;
-
-                await _questionRepo.Complete();
 
                 return Ok(result);
             }
