@@ -40,7 +40,7 @@ namespace ValhallaVault.Data.Repositories
             return _dbContext.Set<SubcategoryModel>().Find(id);
         }
 
-        public IEnumerable<SubcategoryModel> GetAll()
+        public IEnumerable<SubcategoryModel> GetAllSubs()
         {
             return _dbContext.Set<SubcategoryModel>().ToList();
         }

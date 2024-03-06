@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
-
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
     //public class SubcategoryController : ControllerBase
     //{
-    //    private readonly SubcategoryRepository _subcategoryRepo;
+    //    private readonly SubcategoryRepoy _subcategoryRepo;
 
-    //    public SubcategoryController(SubcategoryRepository<SubcategoryModel> subcategoryRepo)
+    //    public SubcategoryController(SubcategoryRepo<SubcategoryModel> subcategoryRepo)
     //    {
     //        _subcategoryRepo = subcategoryRepo;
     //    }
@@ -18,7 +14,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<SubcategoryModel>> GetAll()
     //    {
-    //        var subcategorys = await _subcategoryRepo.GetAll();
+    //        var subcategorys = await _subcategoryRepo.GetAllSubs();
 
     //        if (subcategorys != null)
     //        {
@@ -49,7 +45,7 @@ namespace ValhallaVault.Api.Controllers
 
     //        if (subcategory != null)
     //        {
-    //            await _subcategoryRepo.Add(subcategory);
+    //            await _subcategoryRepo.AddSub(subcategory);
 
     //            await _subcategoryRepo.Complete();
 
@@ -81,7 +77,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var subcategory = await _subcategoryRepo.Delete(id);
+    //        var subcategory = await _subcategoryRepo.DeleteSub(id);
 
     //        if (subcategory != null)
     //        {
