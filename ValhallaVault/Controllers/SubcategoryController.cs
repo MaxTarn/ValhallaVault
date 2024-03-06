@@ -51,7 +51,7 @@ namespace ValhallaVault.Controllers
             {
                 await _subcategoryRepo.AddSub(subcategory);
 
-                await _subcategoryRepo.Complete();
+                await _subcategoryRepo.Save();
 
                 return Ok(subcategory);
             }
@@ -69,7 +69,7 @@ namespace ValhallaVault.Controllers
             {
                 result.Name = previousSubcategory.Name;
 
-                await _subcategoryRepo.Complete();
+                await _subcategoryRepo.Save();
 
                 return Ok(result);
             }

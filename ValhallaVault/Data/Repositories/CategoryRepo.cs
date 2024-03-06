@@ -47,5 +47,10 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No category found with the specified ID.");
             }
         }
+
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

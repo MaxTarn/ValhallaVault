@@ -51,7 +51,7 @@ namespace ValhallaVault.Controllers
             {
                 await _segmentRepo.AddSegment(segment);
 
-                await _segmentRepo.Complete();
+                await _segmentRepo.Save();
 
                 return Ok(segment);
             }
@@ -69,7 +69,7 @@ namespace ValhallaVault.Controllers
             {
                 result.Name = previousSegment.Name;
 
-                await _segmentRepo.Complete();
+                await _segmentRepo.Save();
 
                 return Ok(result);
             }

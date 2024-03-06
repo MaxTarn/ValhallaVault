@@ -54,7 +54,7 @@ namespace ValhallaVault.Controllers
             {
                 await _answerRepo.AddAnswer(answer);
 
-                await _answerRepo.Complete();
+                await _answerRepo.Save();
 
                 return Ok(answer);
             }
@@ -73,7 +73,7 @@ namespace ValhallaVault.Controllers
                 result.Answer = previousAnswer.Answer;
                 result.IsCorrect = previousAnswer.IsCorrect;
 
-                await _answerRepo.Complete();
+                await _answerRepo.Save();
 
                 return Ok(result);
             }

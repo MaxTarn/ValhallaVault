@@ -52,5 +52,10 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No question found with the specified ID.");
             }
         }
+
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
