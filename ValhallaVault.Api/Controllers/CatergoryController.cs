@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
-
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
     //public class CatergoryController : ControllerBase
     //{
-    //    private readonly CatergoryRepository _catergoryRepo;
+    //    private readonly CatergoryRepo _catergoryRepo;
 
-    //    public CatergoryController(CatergoryRepository<CategoryModel> catergoryRepo)
+    //    public CatergoryController(CatergoryRepo<CategoryModel> catergoryRepo)
     //    {
     //        _catergoryRepo = catergoryRepo;
     //    }
@@ -18,7 +14,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<CategoryModel>> GetAll()
     //    {
-    //        var categories = await _catergoryRepo.GetAll();
+    //        var categories = await _catergoryRepo.GetAllCategories();
 
     //        if (categories != null)
     //        {
@@ -49,7 +45,7 @@ namespace ValhallaVault.Api.Controllers
 
     //        if (category != null)
     //        {
-    //            await _catergoryRepo.Add(category);
+    //            await _catergoryRepo.AddCategory(category);
 
     //            await _catergoryRepo.Complete();
 
@@ -83,7 +79,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var category = await _catergoryRepo.Delete(id);
+    //        var category = await _catergoryRepo.DeleteCategory(id);
 
     //        if (category != null)
     //        {

@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
-
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
     //public class SegmentController : ControllerBase
     //{
-    //    private readonly SegmentRepository _segmentRepo;
+    //    private readonly SegmentRepo _segmentRepo;
 
-    //    public SegmentController(SegmentRepository<SegmentModel> segmentRepo)
+    //    public SegmentController(SegmentRepo<SegmentModel> segmentRepo)
     //    {
     //        _segmentRepo = segmentRepo;
     //    }
@@ -18,7 +14,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<AnswerModel>> GetAll()
     //    {
-    //        var segment = await _segmentRepo.GetAll();
+    //        var segment = await _segmentRepo.GetAllSegments();
 
     //        if (segment != null)
     //        {
@@ -49,7 +45,7 @@ namespace ValhallaVault.Api.Controllers
 
     //        if (segment != null)
     //        {
-    //            await _segmentRepo.Add(segment);
+    //            await _segmentRepo.AddSegment(segment);
 
     //            await _segmentRepo.Complete();
 
@@ -81,7 +77,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var segment = await _segmentRepo.Delete(id);
+    //        var segment = await _segmentRepo.DeleteQuestion(id);
 
     //        if (segment != null)
     //        {
