@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
 
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ValhallaVault.Api.Controllers
 {
@@ -11,9 +9,9 @@ namespace ValhallaVault.Api.Controllers
     //public class AnswerController : ControllerBase
     //{
 
-    //    private readonly AnswerRepository _answerRepo;
+    //    private readonly AnswerRepo _answerRepo;
 
-    //    public AnswerController(AnswerRepository<AnswerModel> answerRepo)
+    //    public AnswerController(AnswerRepo<AnswerModel> answerRepo)
     //    {
     //        _answerRepo = answerRepo;
     //    }
@@ -21,7 +19,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpGet]
     //    public async Task<IEnumerable<AnswerModel>> GetAll()
     //    {
-    //        var answers = await _answerRepo.GetAll();
+    //        var answers = await _answerRepo.GetAllAnswers();
 
     //        if (answers != null)
     //        {
@@ -52,7 +50,7 @@ namespace ValhallaVault.Api.Controllers
 
     //        if (answer != null)
     //        {
-    //            await _answerRepo.Add(answer);
+    //            await _answerRepo.AddAnswer(answer);
 
     //            await _answerRepo.Complete();
 
@@ -85,7 +83,7 @@ namespace ValhallaVault.Api.Controllers
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
-    //        var answer = await _answerRepo.Delete(id);
+    //        var answer = await _answerRepo.DeleteAnswer(id);
 
     //        if (answer != null)
     //        {
@@ -96,3 +94,4 @@ namespace ValhallaVault.Api.Controllers
     //    }
     //    }
 }
+

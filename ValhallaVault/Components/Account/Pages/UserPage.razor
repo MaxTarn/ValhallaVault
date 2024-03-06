@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage
 @using ValhallaVault.Data
+@using System.Text.Encodings.Web <!-- För email -->
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -13,7 +14,14 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ChangePassword> Logger
 
+@inject NavigationManager NavigationManager  
+@inject IEmailSender<ApplicationUser> EmailSender
+<!-- de två sista raderna här ovanför är för email -->
+
+   
+
 <PageTitle>UserPage</PageTitle>
+
 
 <h4 class="text-center">Here you can change your email and password</h4>
 <h5>Change password</h5>
@@ -39,13 +47,49 @@
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Update password</button>
-            
-
-        </EditForm>
+		</EditForm>
     </div>
 </div>
 
+<!--För epost här nedan-->
+<h5>Change email</h5>
 
+<StatusMessage Message="@message" />
+<div class="row">
+    <div class="col-md-6">
+        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+            <AntiforgeryToken />
+        </form>
+        <EditForm Model="InputEmail" FormName="change-email" OnValidSubmit="OnValidSubmitEmailAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            @if (isEmailConfirmed)
+            {
+                <div class="form-floating mb-3 input-group">
+                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
+                    <div class="input-group-append">
+                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                    </div>
+                    <label for="email" class="form-label">Email</label>
+                </div>
+            }
+            else
+            {
+                <div class="form-floating mb-3">
+                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
+                    <label for="email" class="form-label">Email</label>
+                    <button type="submit" class="btn btn-link" form="send-verification-form">Send verification email</button>
+                </div>
+            }
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="InputEmail.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
+                <label for="new-email" class="form-label">New email</label>
+                <ValidationMessage For="() => InputEmail.NewEmail" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Change email</button>
+        </EditForm>
+    </div>
+</div>
 
 
 
@@ -61,12 +105,19 @@
     private string? message;
     private ApplicationUser user = default!;
     private bool hasPassword;
+    private string? email;     //för epost
+    private bool isEmailConfirmed; //för epost
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm]
     private InputPasswordModel Input { get; set; } = new();
+
+
+    [SupplyParameterFromForm]  //för epost
+    private InputEpostModel InputEmail  { get; set; } = new();   //för epost
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +127,15 @@
         {
             RedirectManager.RedirectTo("Account/Manage/SetPassword");
         }
+        email = await UserManager.GetEmailAsync(user); //för epost
+        isEmailConfirmed = await UserManager.IsEmailConfirmedAsync(user); //för epost
+
+        InputEmail.NewEmail ??= email;
+    }
+
+    private async Task OnValidSubmitEmailAsync()
+    {
+        
     }
 
     private async Task OnValidSubmitAsync()
@@ -91,8 +151,43 @@
         Logger.LogInformation("User changed their password successfully.");
 
         RedirectManager.RedirectToCurrentPageWithStatus("Your password has been changed", HttpContext);
-    }
 
+        //HÄRIFRÅN OCH NED ÄR DET FÖR EPOST
+        if (InputEmail.NewEmail is null || InputEmail.NewEmail == email)
+        {
+            message = "Your email is unchanged.";
+            return;
+        }
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateChangeEmailTokenAsync(user, InputEmail.NewEmail);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmailChange").AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["email"] = InputEmail.NewEmail, ["code"] = code });
+
+        await EmailSender.SendConfirmationLinkAsync(user, InputEmail.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
+
+        message = "Confirmation link to change email sent. Please check your email.";
+    }
+    private async Task OnSendEmailVerificationAsync()
+    {
+        if (email is null)
+        {
+            return;
+        }
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+
+        await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
+
+        message = "Verification email sent. Please check your email.";
+    }
     private sealed class InputPasswordModel
     {
         [Required]
@@ -110,17 +205,12 @@
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
-
-        // [Required]
-        // [EmailAddress]
-        // [Display(Name = "New email")]
-        // public string? NewEmail { get; set; }
-
-
-
-
     }
-
-
-
+    private sealed class InputEpostModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "New email")]
+        public string? NewEmail { get; set; } 
+    }  
 }

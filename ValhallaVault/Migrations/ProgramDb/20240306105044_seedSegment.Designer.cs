@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ValhallaVault.Data;
 
@@ -11,9 +12,11 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations.ProgramDb
 {
     [DbContext(typeof(ProgramDbContext))]
-    partial class ProgramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240306105044_seedSegment")]
+    partial class seedSegment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,57 +47,6 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Answer = "Ett potentiellt telefonbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Answer = "Ett legitimt försök från banken att skydda ditt konto",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Answer = "En informationsinsamling för en marknadsundersökning",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Answer = "Ett romansbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Answer = "En legitim begäran om hjälp från en person i nöd",
-                            IsCorrect = false,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Answer = "Investeringsbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Answer = "Genomföra omedelbar investering för att inte missa möjligheten",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>
@@ -154,29 +106,6 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.HasIndex("SubcategoryId");
 
                     b.ToTable("Questions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Explanation = "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri.",
-                            Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank...",
-                            SubcategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Explanation = "Begäran om pengar, särskilt under omständigheter där två personer aldrig har träffats fysiskt, är ett vanligt tecken på romansbedrägeri.",
-                            Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida...",
-                            SubcategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier.",
-                            Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag...",
-                            SubcategoryId = 3
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>
@@ -271,86 +200,6 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.HasIndex("SegmentId");
 
                     b.ToTable("Subcategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Kreditkortsbedrägeri",
-                            SegmentId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Romansbedrägeri",
-                            SegmentId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Investeringsbedrägeri",
-                            SegmentId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Telefonbedrägeri",
-                            SegmentId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Digital säkerhet på företag",
-                            SegmentId = 4
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Risker och beredskap",
-                            SegmentId = 4
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Cyberangrepp mot känsliga sektorer",
-                            SegmentId = 4
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Allmänt om cyberspionage",
-                            SegmentId = 6
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Metoder för cyberspionage",
-                            SegmentId = 6
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Säkerhetsskyddslagen",
-                            SegmentId = 6
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Cyberspionagets aktörer",
-                            SegmentId = 6
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Social engineering",
-                            SegmentId = 7
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Virus, maskar och trojaner",
-                            SegmentId = 8
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.AnswerModel", b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ValhallaVault.Data;
 
@@ -11,9 +12,11 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations.ProgramDb
 {
     [DbContext(typeof(ProgramDbContext))]
-    partial class ProgramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240306105153_seedQuestion")]
+    partial class seedQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,57 +47,6 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Answer = "Ett potentiellt telefonbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Answer = "Ett legitimt försök från banken att skydda ditt konto",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Answer = "En informationsinsamling för en marknadsundersökning",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Answer = "Ett romansbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Answer = "En legitim begäran om hjälp från en person i nöd",
-                            IsCorrect = false,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Answer = "Investeringsbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Answer = "Genomföra omedelbar investering för att inte missa möjligheten",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>

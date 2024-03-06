@@ -9,11 +9,11 @@ using ValhallaVault.Data;
 
 #nullable disable
 
-namespace ValhallaVault.Migrations
+namespace ValhallaVault.Migrations.ProgramDb
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240305091207_fix")]
-    partial class fix
+    [DbContext(typeof(ProgramDbContext))]
+    [Migration("20240306105120_seedSubcategory")]
+    partial class seedSubcategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,12 +39,12 @@ namespace ValhallaVault.Migrations
                     b.Property<bool?>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionModelId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionModelId");
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
                 });
@@ -61,13 +61,26 @@ namespace ValhallaVault.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SegmentIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Att skydda sig mot Bedrägerier"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cybersäkerhet för företag"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Cyberspionage"
+                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.QuestionModel", b =>
@@ -78,19 +91,19 @@ namespace ValhallaVault.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AnswerIds")
+                    b.Property<string>("Explanation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubcategoryModelId")
+                    b.Property<int>("SubcategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubcategoryModelId");
+                    b.HasIndex("SubcategoryId");
 
                     b.ToTable("Questions");
                 });
@@ -103,22 +116,68 @@ namespace ValhallaVault.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryModelId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubcategoryIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryModelId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Segments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Name = "Del 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            Name = "Del 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 1,
+                            Name = "Del 3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 2,
+                            Name = "Del 1"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 2,
+                            Name = "Del 2"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            Name = "Del 1"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 3,
+                            Name = "Del 2"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 3,
+                            Name = "Del 3"
+                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SubcategoryModel", b =>
@@ -133,25 +192,101 @@ namespace ValhallaVault.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QuestionIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SegmentModelId")
+                    b.Property<int>("SegmentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SegmentModelId");
+                    b.HasIndex("SegmentId");
 
                     b.ToTable("Subcategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Kreditkortsbedrägeri",
+                            SegmentId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Romansbedrägeri",
+                            SegmentId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Investeringsbedrägeri",
+                            SegmentId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Telefonbedrägeri",
+                            SegmentId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Digital säkerhet på företag",
+                            SegmentId = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Risker och beredskap",
+                            SegmentId = 4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Cyberangrepp mot känsliga sektorer",
+                            SegmentId = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Allmänt om cyberspionage",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Metoder för cyberspionage",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Säkerhetsskyddslagen",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Cyberspionagets aktörer",
+                            SegmentId = 6
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Social engineering",
+                            SegmentId = 7
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Virus, maskar och trojaner",
+                            SegmentId = 8
+                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.AnswerModel", b =>
                 {
                     b.HasOne("ValhallaVault.Data.Models.QuestionModel", "Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionModelId")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -162,7 +297,7 @@ namespace ValhallaVault.Migrations
                 {
                     b.HasOne("ValhallaVault.Data.Models.SubcategoryModel", "Subcategory")
                         .WithMany("Questions")
-                        .HasForeignKey("SubcategoryModelId")
+                        .HasForeignKey("SubcategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -173,7 +308,7 @@ namespace ValhallaVault.Migrations
                 {
                     b.HasOne("ValhallaVault.Data.Models.CategoryModel", "Category")
                         .WithMany("Segments")
-                        .HasForeignKey("CategoryModelId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -184,7 +319,7 @@ namespace ValhallaVault.Migrations
                 {
                     b.HasOne("ValhallaVault.Data.Models.SegmentModel", "Segment")
                         .WithMany("Subcategories")
-                        .HasForeignKey("SegmentModelId")
+                        .HasForeignKey("SegmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
