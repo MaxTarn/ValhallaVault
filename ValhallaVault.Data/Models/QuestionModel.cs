@@ -11,5 +11,6 @@ public class QuestionModel
     public SubcategoryModel? Subcategory { get; set; }
     public List<AnswerModel>? Answers { get; set; } = null!;
     public List<int> AnswerIds { get; set; }
+    public string Explanation { get; set; }
 
 }
