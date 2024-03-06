@@ -9,11 +9,11 @@ using ValhallaVault.Data;
 
 #nullable disable
 
-namespace ValhallaVault.Migrations
+namespace ValhallaVault.Migrations.ProgramDb
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240305091207_fix")]
-    partial class fix
+    [DbContext(typeof(ProgramDbContext))]
+    [Migration("20240306095524_AddedUserQuestion")]
+    partial class AddedUserQuestion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,6 +147,31 @@ namespace ValhallaVault.Migrations
                     b.ToTable("Subcategories");
                 });
 
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("UserQuestions");
+                });
+
             modelBuilder.Entity("ValhallaVault.Data.Models.AnswerModel", b =>
                 {
                     b.HasOne("ValhallaVault.Data.Models.QuestionModel", "Question")
@@ -189,6 +214,15 @@ namespace ValhallaVault.Migrations
                         .IsRequired();
 
                     b.Navigation("Segment");
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.Models.QuestionModel", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>

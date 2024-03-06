@@ -3,6 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data
 {
+
 	public class ProgramDbContext : DbContext
 	{
 		public ProgramDbContext(DbContextOptions<ProgramDbContext> options) : base(options)
@@ -15,6 +16,7 @@ namespace ValhallaVault.Data
 		public DbSet<CategoryModel> Categories { get; set; }
 		public DbSet<SubcategoryModel> Subcategories { get; set; }
 		public DbSet<SegmentModel> Segments { get; set; }
+    public DbSet<UserQuestionModel> UserQuestions { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -38,6 +40,10 @@ namespace ValhallaVault.Data
 				.WithOne(s => s.Question)
 				.HasForeignKey(q => q.QuestionModelId);
 
+modelBuilder.Entity<UserQuestionModel>()
+                .HasOne<QuestionModel>() // One UserQuestionModel has one associated QuestionModel
+                .WithMany()
+                .HasForeignKey(uq => uq.QuestionId);
 			//Seed data
 			modelBuilder.Entity<CategoryModel>().HasData(
 				new CategoryModel()
@@ -70,4 +76,5 @@ namespace ValhallaVault.Data
 			});
 		}
 	}
+
 }
