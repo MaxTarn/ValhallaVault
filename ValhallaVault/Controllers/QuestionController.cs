@@ -64,7 +64,7 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(QuestionModel previousQuestion, int Id)
         {
-            var result = await _questionRepo.Get(previousQuestion.Id);
+            var result = await _questionRepo.GetQuestionById(previousQuestion.Id);
 
             if (result != null)
             {

@@ -1,93 +1,97 @@
-﻿namespace ValhallaVault.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using ValhallaVault.Data.Models;
+using ValhallaVault.Data.Repositories;
+
+namespace ValhallaVault.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
-    //public class CatergoryController : ControllerBase
-    //{
-    //    private readonly CatergoryRepo _catergoryRepo;
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CatergoryController : ControllerBase
+    {
+        private readonly CategoryRepo _catergoryRepo;
 
-    //    public CatergoryController(CatergoryRepo<CategoryModel> catergoryRepo)
-    //    {
-    //        _catergoryRepo = catergoryRepo;
-    //    }
+        public CatergoryController(CategoryRepo catergoryRepo)
+        {
+            _catergoryRepo = catergoryRepo;
+        }
 
-    //    [HttpGet]
-    //    public async Task<IEnumerable<CategoryModel>> GetAll()
-    //    {
-    //        var categories = await _catergoryRepo.GetAllCategories();
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CategoryModel>>> GetAll()
+        {
+            var categories = await _catergoryRepo.GetAllCategories();
 
-    //        if (categories != null)
-    //        {
-    //            return Ok(categories);
-    //        }
+            if (categories != null)
+            {
+                return Ok(categories);
+            }
 
-    //        return (IEnumerable<CategoryModel>)NotFound("The categories could not be found");
-    //    }
-
-
-    //    [HttpGet("{id}")]
-    //    public async Task<IActionResult> GetById(int id)
-    //    {
-    //        var category = await _catergoryRepo.Find(a => a.Id == id);
-
-    //        if (category != null)
-    //        {
-    //            return Ok(category);
-    //        }
-
-    //        return NotFound("The category that you were looking for could not be found");
-    //    }
+            return NotFound("The categories could not be found");
+        }
 
 
-    //    [HttpPost]
-    //    public async Task<IActionResult> Post(CategoryModel category)
-    //    {
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var category = await _catergoryRepo.GetCategoryById(id);
 
-    //        if (category != null)
-    //        {
-    //            await _catergoryRepo.AddCategory(category);
+            if (category != null)
+            {
+                return Ok(category);
+            }
 
-    //            await _catergoryRepo.Complete();
-
-    //            return Ok(category);
-    //        }
-
-    //        return NotFound("The category that you were trying to post could not be found");
-    //    }
+            return NotFound("The category that you were looking for could not be found");
+        }
 
 
-    //    [HttpPut("{Id}")]
-    //    public async Task<IActionResult> Put(CategoryModel previousCategory, int Id)
-    //    {
-    //        var result = await _catergoryRepo.Get(previousCategory.Id);
+        [HttpPost]
+        public async Task<IActionResult> Post(CategoryModel category)
+        {
 
-    //        if (result != null)
-    //        {
-    //            result.Name = previousCategory.Name;
+            if (category != null)
+            {
+                await _catergoryRepo.AddCategory(category);
 
+                await _catergoryRepo.Complete();
 
-    //            await _catergoryRepo.Complete();
+                return Ok(category);
+            }
 
-    //            return Ok(result);
-    //        }
-
-
-    //        return NotFound("The category that you wanted to update could not be found");
-    //    }
+            return NotFound("The category that you were trying to post could not be found");
+        }
 
 
-    //    [HttpDelete("{id}")]
-    //    public async Task<IActionResult> Delete(int id)
-    //    {
-    //        var category = await _catergoryRepo.DeleteCategory(id);
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> Put(CategoryModel previousCategory, int Id)
+        {
+            var result = await _catergoryRepo.GetCategoryById(previousCategory.Id);
 
-    //        if (category != null)
-    //        {
-    //            return Ok(category);
-    //        }
+            if (result != null)
+            {
+                result.Name = previousCategory.Name;
 
-    //        return NotFound("The category that you wanted to delete could not be found");
-    //    }
 
-    //}
+                await _catergoryRepo.Complete();
+
+                return Ok(result);
+            }
+
+
+            return NotFound("The category that you wanted to update could not be found");
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await _catergoryRepo.DeleteCategory(id);
+
+            if (category != null)
+            {
+                return Ok(category);
+            }
+
+            return NotFound("The category that you wanted to delete could not be found");
+        }
+
+    }
 }
