@@ -5,9 +5,9 @@ namespace ValhallaVault.Data.Repositories
 {
     public class CategoryRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public CategoryRepo(DbContext dbContext)
+        public CategoryRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -17,21 +17,21 @@ namespace ValhallaVault.Data.Repositories
             return _dbContext.Set<CategoryModel>().ToList();
         }
 
-        public CategoryModel GetCategoryById(int id)
+        public async Task<CategoryModel?> GetCategoryById(int id)
         {
-            return _dbContext.Set<CategoryModel>().Find(id);
+            return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
 
-        public void AddCategory(CategoryModel category)
+        public async Task AddCategory(CategoryModel category)
         {
             _dbContext.Set<CategoryModel>().Add(category);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateCategory(CategoryModel category)
+        public async Task UpdateCategory(CategoryModel category)
         {
             _dbContext.Entry(category).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void DeleteCategory(int id)

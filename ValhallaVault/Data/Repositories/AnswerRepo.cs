@@ -5,9 +5,9 @@ namespace ValhallaVault.Data.Repositories
 {
     public class AnswerRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public AnswerRepo(DbContext dbContext)
+        public AnswerRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -17,15 +17,15 @@ namespace ValhallaVault.Data.Repositories
             return _dbContext.Set<AnswerModel>().ToList();
         }
 
-        public AnswerModel GetAnswerById(int id)
+        public async Task<AnswerModel?> GetAnswerById(int id)
         {
-            return _dbContext.Set<AnswerModel>().Find(id);
+            return await _dbContext.Set<AnswerModel>().FindAsync(id);
         }
 
-        public void AddAnswer(AnswerModel answer)
+        public async Task AddAnswer(AnswerModel answer)
         {
             _dbContext.Set<AnswerModel>().Add(answer);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateAnswer(AnswerModel answer)

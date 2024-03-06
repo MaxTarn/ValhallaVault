@@ -52,7 +52,7 @@ namespace ValhallaVault.Controllers
             {
                 await _questionRepo.AddQuestion(question);
 
-                await _questionRepo.Complete();
+
 
                 return Ok(question);
             }
@@ -64,13 +64,11 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(QuestionModel previousQuestion, int Id)
         {
-            var result = await _questionRepo.Get(previousQuestion.Id);
+            var result = await _questionRepo.GetQuestionById(previousQuestion.Id);
 
             if (result != null)
             {
                 result.Question = previousQuestion.Question;
-
-                await _questionRepo.Complete();
 
                 return Ok(result);
             }
