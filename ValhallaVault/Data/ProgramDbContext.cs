@@ -72,17 +72,30 @@ namespace ValhallaVault.Data
 				new SubcategoryModel { Id = 11, Name = "Cyberspionagets aktörer", SegmentId = 6 },
 				new SubcategoryModel { Id = 12, Name = "Social engineering", SegmentId = 7 },
 				new SubcategoryModel { Id = 13, Name = "Virus, maskar och trojaner", SegmentId = 8 }
-			// Fyll i resten av subkategorierna här
+
 			);
 
 			modelBuilder.Entity<QuestionModel>().HasData(
 				new QuestionModel { Id = 1, Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank...", SubcategoryId = 1, Explanation = "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri." },
 				new QuestionModel { Id = 2, Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida...", SubcategoryId = 2, Explanation = "Begäran om pengar, särskilt under omständigheter där två personer aldrig har träffats fysiskt, är ett vanligt tecken på romansbedrägeri." },
 				new QuestionModel { Id = 3, Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag...", SubcategoryId = 3, Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier." }
-			// Fyll i resten av frågorna här
+
 			);
+			modelBuilder.Entity<AnswerModel>().HasData(
+	new AnswerModel { Id = 1, Answer = "Ett potentiellt telefonbedrägeri", QuestionId = 1, IsCorrect = true },
+	new AnswerModel { Id = 2, Answer = "Ett legitimt försök från banken att skydda ditt konto", QuestionId = 1, IsCorrect = false },
+	new AnswerModel { Id = 3, Answer = "En informationsinsamling för en marknadsundersökning", QuestionId = 1, IsCorrect = false },
+
+
+	new AnswerModel { Id = 4, Answer = "Ett romansbedrägeri", QuestionId = 2, IsCorrect = true },
+	new AnswerModel { Id = 5, Answer = "En legitim begäran om hjälp från en person i nöd", QuestionId = 2, IsCorrect = false },
+
+	new AnswerModel { Id = 6, Answer = "Investeringsbedrägeri", QuestionId = 3, IsCorrect = true },
+	new AnswerModel { Id = 7, Answer = "Genomföra omedelbar investering för att inte missa möjligheten", QuestionId = 3, IsCorrect = false },
+
+
+);
 
 		}
 	}
-
 }
