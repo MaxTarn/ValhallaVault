@@ -85,16 +85,10 @@ namespace ValhallaVault.Data
 	new AnswerModel { Id = 1, Answer = "Ett potentiellt telefonbedrägeri", QuestionId = 1, IsCorrect = true },
 	new AnswerModel { Id = 2, Answer = "Ett legitimt försök från banken att skydda ditt konto", QuestionId = 1, IsCorrect = false },
 	new AnswerModel { Id = 3, Answer = "En informationsinsamling för en marknadsundersökning", QuestionId = 1, IsCorrect = false },
-
-
 	new AnswerModel { Id = 4, Answer = "Ett romansbedrägeri", QuestionId = 2, IsCorrect = true },
 	new AnswerModel { Id = 5, Answer = "En legitim begäran om hjälp från en person i nöd", QuestionId = 2, IsCorrect = false },
-
 	new AnswerModel { Id = 6, Answer = "Investeringsbedrägeri", QuestionId = 3, IsCorrect = true },
-	new AnswerModel { Id = 7, Answer = "Genomföra omedelbar investering för att inte missa möjligheten", QuestionId = 3, IsCorrect = false },
-
-
-);
+	new AnswerModel { Id = 7, Answer = "Genomföra omedelbar investering för att inte missa möjligheten", QuestionId = 3, IsCorrect = false });
 
 		}
 	}
