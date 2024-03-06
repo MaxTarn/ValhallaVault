@@ -5,29 +5,33 @@ namespace ValhallaVault.Data.Repositories
 {
     public class SubcategoryRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public SubcategoryRepo(DbContext dbContext)
+        public SubcategoryRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public void AddSub(SubcategoryModel subcategory)
+        public async Task AddSub(SubcategoryModel subcategory)
         {
+
             _dbContext.Set<SubcategoryModel>().Add(subcategory);
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateSub(SubcategoryModel subcategory)
         {
-            _dbContext.Set<SubcategoryModel>().Update(subcategory);
+            _dbContext.Entry(subcategory).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
-        public void DeleteSub(int id)
+        public async Task<SubcategoryModel> DeleteSub(int id)
         {
-            var subcategory = _dbContext.Set<SubcategoryModel>().Find(id);
+            var subcategory = await _dbContext.Set<SubcategoryModel>().FindAsync(id);
             if (subcategory != null)
             {
                 _dbContext.Set<SubcategoryModel>().Remove(subcategory);
+                return subcategory;
             }
             else
             {
@@ -35,14 +39,18 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
-        public SubcategoryModel GetById(int id)
+        public async Task<SubcategoryModel?> GetById(int id)
         {
-            return _dbContext.Set<SubcategoryModel>().Find(id);
+            return await _dbContext.Set<SubcategoryModel>().FindAsync(id);
         }
 
         public async Task<IEnumerable<SubcategoryModel>> GetAllSubs()
         {
             return _dbContext.Set<SubcategoryModel>().ToList();
+        }
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

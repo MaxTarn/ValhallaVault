@@ -37,12 +37,15 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public async Task<QuestionModel?> DeleteQuestion(int id)
+        public async Task<QuestionModel> DeleteQuestion(int id)
         {
-            var question = _dbContext.Questions.Find(id);
+            var question = await _dbContext.Questions.FindAsync(id);
+
             if (question != null)
             {
-                await _dbContext.Questions.RemoveAsync(question);
+                _dbContext.Questions.Remove(question);
+
+                return question;
             }
             else
             {
