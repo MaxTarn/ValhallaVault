@@ -14,7 +14,9 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task AddSub(SubcategoryModel subcategory)
         {
-            await _dbContext.Set<SubcategoryModel>().AddAsync(subcategory);
+
+            _dbContext.Set<SubcategoryModel>().Add(subcategory);
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateSub(SubcategoryModel subcategory)
@@ -23,12 +25,13 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteSub(int id)
+        public async Task<SubcategoryModel> DeleteSub(int id)
         {
-            var subcategory = _dbContext.Set<SubcategoryModel>().Find(id);
+            var subcategory = await _dbContext.Set<SubcategoryModel>().FindAsync(id);
             if (subcategory != null)
             {
                 _dbContext.Set<SubcategoryModel>().Remove(subcategory);
+                return subcategory;
             }
             else
             {
@@ -44,6 +47,10 @@ namespace ValhallaVault.Data.Repositories
         public async Task<IEnumerable<SubcategoryModel>> GetAllSubs()
         {
             return _dbContext.Set<SubcategoryModel>().ToList();
+        }
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

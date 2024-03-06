@@ -34,12 +34,13 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public void DeleteCategory(int id)
+        public async Task<CategoryModel> DeleteCategory(int id)
         {
-            var category = _dbContext.Set<CategoryModel>().Find(id);
+            var category = await _dbContext.Set<CategoryModel>().FindAsync(id);
             if (category != null)
             {
                 _dbContext.Set<CategoryModel>().Remove(category);
+                return category;
             }
             else
             {

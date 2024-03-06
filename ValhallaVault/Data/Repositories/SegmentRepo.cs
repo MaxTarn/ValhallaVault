@@ -34,12 +34,13 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteSegment(int id)
+        public async Task<SegmentModel> DeleteSegment(int id)
         {
-            var segment = _dbContext.Set<SegmentModel>().Find(id);
+            var segment = await _dbContext.Set<SegmentModel>().FindAsync(id);
             if (segment != null)
             {
                 _dbContext.Set<SegmentModel>().Remove(segment);
+                return segment;
             }
             else
             {

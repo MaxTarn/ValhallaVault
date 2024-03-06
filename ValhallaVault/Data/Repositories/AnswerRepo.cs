@@ -34,12 +34,13 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteAnswer(int id)
+        public async Task<AnswerModel?> DeleteAnswer(int id)
         {
-            var answer = _dbContext.Set<AnswerModel>().Find(id);
+            var answer = await _dbContext.Set<AnswerModel>().FindAsync(id);
             if (answer != null)
             {
                 _dbContext.Set<AnswerModel>().Remove(answer);
+                return answer;
             }
             else
             {
