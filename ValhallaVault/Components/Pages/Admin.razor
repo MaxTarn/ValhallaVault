@@ -4,6 +4,25 @@
 
 <PageTitle>Admin Dashboard </PageTitle>
 
+<nav>
+    <select name="CrudOptions" id="CrudOptions">
+        <option @onselect" value="Post">Post</option>
+            <h1> Post</h1>
+        <option value="Put">Update</option>
+            <h1> Put</h1>
+        <option value="Delete">Delete</option>
+    </select>
+    <select label="TypeOptions" name="TypeOptions" id="TypeOptions">
+        <option  value="Category">Category</option>
+        <option value="Subcategory">Subcategory</option>
+        <option value="Segment">Segment</option>
+        <option value="Question">Question</option>
+        <option value="Answer">Answer</option>
+    </select>
+</nav>
+
+
 @code {
 
 }
+  
