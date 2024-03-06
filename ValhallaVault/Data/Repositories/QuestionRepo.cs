@@ -1,31 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Data.Models;
+
 
 namespace ValhallaVault.Data.Repositories
 {
     public class QuestionRepo
     {
-        private readonly DbContext _dbContext;
+        private readonly ProgramDbContext _dbContext;
 
-        public QuestionRepo(DbContext dbContext)
+        public QuestionRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public IEnumerable<QuestionModel> GetAllQuestions()
+        public async Task<IEnumerable<QuestionModel>> GetAllQuestions()
         {
+
             return _dbContext.Set<QuestionModel>().ToList();
         }
 
-        public QuestionModel GetQuestionById(int id)
+        public async Task<QuestionModel?> GetQuestionById(int id)
         {
-            return _dbContext.Set<QuestionModel>().Find(id);
+            return await _dbContext.Set<QuestionModel>().FindAsync(id);
         }
 
-        public void AddQuestion(QuestionModel question)
+        public async Task AddQuestion(QuestionModel question)
         {
             _dbContext.Set<QuestionModel>().Add(question);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateQuestion(QuestionModel question)
@@ -34,17 +37,25 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public void DeleteQuestion(int id)
+        public async Task<QuestionModel> DeleteQuestion(int id)
         {
-            var question = _dbContext.Set<QuestionModel>().Find(id);
+            var question = await _dbContext.Questions.FindAsync(id);
+
             if (question != null)
             {
-                _dbContext.Set<QuestionModel>().Remove(question);
+                _dbContext.Questions.Remove(question);
+
+                return question;
             }
             else
             {
                 throw new Exception("No question found with the specified ID.");
             }
+        }
+
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
