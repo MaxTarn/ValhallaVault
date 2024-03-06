@@ -144,6 +144,31 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.ToTable("Subcategories");
                 });
 
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("UserQuestions");
+                });
+
             modelBuilder.Entity("ValhallaVault.Data.Models.AnswerModel", b =>
                 {
                     b.HasOne("ValhallaVault.Data.Models.QuestionModel", "Question")
@@ -186,6 +211,15 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired();
 
                     b.Navigation("Segment");
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.Models.QuestionModel", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>

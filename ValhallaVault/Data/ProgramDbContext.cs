@@ -16,6 +16,8 @@ namespace ValhallaVault.Data
         public DbSet<SubcategoryModel> Subcategories { get; set; }
         public DbSet<SegmentModel> Segments { get; set; }
 
+        public DbSet<UserQuestionModel> UserQuestions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryModel>()
@@ -37,6 +39,11 @@ namespace ValhallaVault.Data
                 .HasMany(q => q.Answers)
                 .WithOne(s => s.Question)
                 .HasForeignKey(q => q.QuestionModelId);
+
+            modelBuilder.Entity<UserQuestionModel>()
+                .HasOne<QuestionModel>() // One UserQuestionModel has one associated QuestionModel
+                .WithMany()
+                .HasForeignKey(uq => uq.QuestionId);
         }
     }
 }
