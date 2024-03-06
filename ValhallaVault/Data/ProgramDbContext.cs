@@ -21,12 +21,12 @@ public class ProgramDbContext : DbContext
         modelBuilder.Entity<CategoryModel>()
             .HasMany(c => c.Segments)
             .WithOne(s => s.Category)
-            .HasForeignKey(s => s.CategoryId);
+            .HasForeignKey(s => s.CategoryModelId);
 
         modelBuilder.Entity<SegmentModel>()
             .HasMany(s => s.Subcategories)
             .WithOne(s => s.Segment)
-            .HasForeignKey(s => s.SegmentId);
+            .HasForeignKey(s => s.SegmentModelId);
 
         modelBuilder.Entity<SubcategoryModel>()
             .HasMany(s => s.Questions)
@@ -48,44 +48,44 @@ public class ProgramDbContext : DbContext
         );
 
         modelBuilder.Entity<SegmentModel>().HasData(
-            new SegmentModel { Id = 1, Name = "Del 1", CategoryId = 1 },
-            new SegmentModel { Id = 2, Name = "Del 2", CategoryId = 1 },
-            new SegmentModel { Id = 3, Name = "Del 3", CategoryId = 1 },
-            new SegmentModel { Id = 4, Name = "Del 1", CategoryId = 2 },
-            new SegmentModel { Id = 5, Name = "Del 2", CategoryId = 2 },
-            new SegmentModel { Id = 6, Name = "Del 1", CategoryId = 3 },
-            new SegmentModel { Id = 7, Name = "Del 2", CategoryId = 3 },
-            new SegmentModel { Id = 8, Name = "Del 3", CategoryId = 3 }
+            new SegmentModel { Id = 1, Name = "Del 1", CategoryModelId = 1 },
+            new SegmentModel { Id = 2, Name = "Del 2", CategoryModelId = 1 },
+            new SegmentModel { Id = 3, Name = "Del 3", CategoryModelId = 1 },
+            new SegmentModel { Id = 4, Name = "Del 1", CategoryModelId = 2 },
+            new SegmentModel { Id = 5, Name = "Del 2", CategoryModelId = 2 },
+            new SegmentModel { Id = 6, Name = "Del 1", CategoryModelId = 3 },
+            new SegmentModel { Id = 7, Name = "Del 2", CategoryModelId = 3 },
+            new SegmentModel { Id = 8, Name = "Del 3", CategoryModelId = 3 }
         );
 
         modelBuilder.Entity<SubcategoryModel>().HasData(
-            new SubcategoryModel { Id = 1, Name = "Kreditkortsbedrägeri", SegmentId = 1 },
-            new SubcategoryModel { Id = 2, Name = "Romansbedrägeri", SegmentId = 1 },
-            new SubcategoryModel { Id = 3, Name = "Investeringsbedrägeri", SegmentId = 1 },
-            new SubcategoryModel { Id = 4, Name = "Telefonbedrägeri", SegmentId = 1 },
-            new SubcategoryModel { Id = 5, Name = "Digital säkerhet på företag", SegmentId = 4 },
-            new SubcategoryModel { Id = 6, Name = "Risker och beredskap", SegmentId = 4 },
-            new SubcategoryModel { Id = 7, Name = "Cyberangrepp mot känsliga sektorer", SegmentId = 4 },
-            new SubcategoryModel { Id = 8, Name = "Allmänt om cyberspionage", SegmentId = 6 },
-            new SubcategoryModel { Id = 9, Name = "Metoder för cyberspionage", SegmentId = 6 },
-            new SubcategoryModel { Id = 10, Name = "Säkerhetsskyddslagen", SegmentId = 6 },
-            new SubcategoryModel { Id = 11, Name = "Cyberspionagets aktörer", SegmentId = 6 },
-            new SubcategoryModel { Id = 12, Name = "Social engineering", SegmentId = 7 },
-            new SubcategoryModel { Id = 13, Name = "Virus, maskar och trojaner", SegmentId = 8 },
+            new SubcategoryModel { Id = 1, Name = "Kreditkortsbedrägeri", SegmentModelId = 1 },
+            new SubcategoryModel { Id = 2, Name = "Romansbedrägeri", SegmentModelId = 1 },
+            new SubcategoryModel { Id = 3, Name = "Investeringsbedrägeri", SegmentModelId = 1 },
+            new SubcategoryModel { Id = 4, Name = "Telefonbedrägeri", SegmentModelId = 1 },
+            new SubcategoryModel { Id = 5, Name = "Digital säkerhet på företag", SegmentModelId = 4 },
+            new SubcategoryModel { Id = 6, Name = "Risker och beredskap", SegmentModelId = 4 },
+            new SubcategoryModel { Id = 7, Name = "Cyberangrepp mot känsliga sektorer", SegmentModelId = 4 },
+            new SubcategoryModel { Id = 8, Name = "Allmänt om cyberspionage", SegmentModelId = 6 },
+            new SubcategoryModel { Id = 9, Name = "Metoder för cyberspionage", SegmentModelId = 6 },
+            new SubcategoryModel { Id = 10, Name = "Säkerhetsskyddslagen", SegmentModelId = 6 },
+            new SubcategoryModel { Id = 11, Name = "Cyberspionagets aktörer", SegmentModelId = 6 },
+            new SubcategoryModel { Id = 12, Name = "Social engineering", SegmentModelId = 7 },
+            new SubcategoryModel { Id = 13, Name = "Virus, maskar och trojaner", SegmentModelId = 8 },
 
             //NY DATA PÅHITTAD AV CHAT GPT
-            new SubcategoryModel { Id = 14, Name = "Abonnemangsfällor och falska fakturor", SegmentId = 5 },
-            new SubcategoryModel { Id = 15, Name = "Ransomware", SegmentId = 5 },
-            new SubcategoryModel { Id = 16, Name = "Statistik och förhållningssätt", SegmentId = 5 },
-             new SubcategoryModel { Id = 17, Name = "Utpressningsvirus", SegmentId = 6 },
-             new SubcategoryModel { Id = 18, Name = "Attacker mot servrar", SegmentId = 6 },
-             new SubcategoryModel { Id = 19, Name = "Cyberangrepp i Norden", SegmentId = 6 },
-             new SubcategoryModel { Id = 20, Name = "Varning för vishing", SegmentId = 7 },
-              new SubcategoryModel { Id = 21, Name = "Identifiera VD-mejl", SegmentId = 7 },
-             new SubcategoryModel { Id = 22, Name = "Öneangrepp och presentkortsbluffar", SegmentId = 7 },
-             new SubcategoryModel { Id = 23, Name = "Värvningsförsök", SegmentId = 8 },
-             new SubcategoryModel { Id = 24, Name = "Affärsspionage", SegmentId = 8 },
-              new SubcategoryModel { Id = 25, Name = "Påverkanskampanjer", SegmentId = 8 }
+            new SubcategoryModel { Id = 14, Name = "Abonnemangsfällor och falska fakturor", SegmentModelId = 5 },
+            new SubcategoryModel { Id = 15, Name = "Ransomware", SegmentModelId = 5 },
+            new SubcategoryModel { Id = 16, Name = "Statistik och förhållningssätt", SegmentModelId = 5 },
+             new SubcategoryModel { Id = 17, Name = "Utpressningsvirus", SegmentModelId = 6 },
+             new SubcategoryModel { Id = 18, Name = "Attacker mot servrar", SegmentModelId = 6 },
+             new SubcategoryModel { Id = 19, Name = "Cyberangrepp i Norden", SegmentModelId = 6 },
+             new SubcategoryModel { Id = 20, Name = "Varning för vishing", SegmentModelId = 7 },
+              new SubcategoryModel { Id = 21, Name = "Identifiera VD-mejl", SegmentModelId = 7 },
+             new SubcategoryModel { Id = 22, Name = "Öneangrepp och presentkortsbluffar", SegmentModelId = 7 },
+             new SubcategoryModel { Id = 23, Name = "Värvningsförsök", SegmentModelId = 8 },
+             new SubcategoryModel { Id = 24, Name = "Affärsspionage", SegmentModelId = 8 },
+              new SubcategoryModel { Id = 25, Name = "Påverkanskampanjer", SegmentModelId = 8 }
 
 
         );
