@@ -1,3 +1,4 @@
+
 ﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
@@ -39,6 +40,8 @@
     //    }
 
 
+
+
     //    [HttpPost]
     //    public async Task<IActionResult> Post(CategoryModel category)
     //    {
@@ -54,6 +57,7 @@
 
     //        return NotFound("The category that you were trying to post could not be found");
     //    }
+    
 
 
     //    [HttpPut("{Id}")]
@@ -66,14 +70,18 @@
     //            result.Name = previousCategory.Name;
 
 
+//                await _catergoryRepo.Complete();
+
+
     //            await _catergoryRepo.Complete();
 
     //            return Ok(result);
     //        }
 
 
-    //        return NotFound("The category that you wanted to update could not be found");
-    //    }
+//            return NotFound("The category that you wanted to update could not be found");
+//        }
+
 
 
     //    [HttpDelete("{id}")]
@@ -91,3 +99,4 @@
 
     //}
 }
+

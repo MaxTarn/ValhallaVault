@@ -1,3 +1,4 @@
+
 ﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
@@ -24,7 +25,6 @@
     //        return (IEnumerable<SubcategoryModel>)NotFound("The subcategories could not be found");
     //    }
 
-
     //    [HttpGet("{id}")]
     //    public async Task<IActionResult> GetById(int id)
     //    {
@@ -37,7 +37,6 @@
 
     //        return NotFound("The subcategory that you were looking for could not be found");
     //    }
-
 
     //    [HttpPost]
     //    public async Task<IActionResult> Post(SubcategoryModel subcategory)
@@ -55,7 +54,6 @@
     //        return NotFound("The subcategory that you were trying to post could not be found");
     //    }
 
-
     //    [HttpPut("{Id}")]
     //    public async Task<IActionResult> Put(SubcategoryModel previousSubcategory, int Id)
     //    {
@@ -72,7 +70,6 @@
 
     //        return NotFound("The subcategory that you wanted to update could not be found");
     //    }
-
 
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)

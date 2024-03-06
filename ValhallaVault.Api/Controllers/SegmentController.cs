@@ -1,3 +1,4 @@
+
 ﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
@@ -25,6 +26,7 @@
     //    }
 
 
+
     //    [HttpGet("{id}")]
     //    public async Task<IActionResult> GetById(int id)
     //    {
@@ -37,7 +39,6 @@
 
     //        return NotFound("The segment that you were looking for could not be found");
     //    }
-
 
     //    [HttpPost]
     //    public async Task<IActionResult> Post(SegmentModel segment)
@@ -54,7 +55,6 @@
 
     //        return NotFound("The segment that you were trying to post could not be found");
     //    }
-
 
     //    [HttpPut("{Id}")]
     //    public async Task<IActionResult> Put(SegmentModel previousSegment, int Id)
@@ -73,7 +73,6 @@
     //        return NotFound("The segment that you wanted to update could not be found");
     //    }
 
-
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
@@ -90,3 +89,4 @@
     //    }
     //}
 }
+

@@ -1,3 +1,4 @@
+
 ﻿namespace ValhallaVault.Api.Controllers
 {
     //[Route("api/[controller]")]
@@ -26,6 +27,8 @@
     //    }
 
 
+//       
+
     //    [HttpGet("{id}")]
     //    public async Task<IActionResult> GetById(int id)
     //    {
@@ -38,6 +41,8 @@
 
     //        return NotFound("The question that you were looking for could not be found");
     //    }
+
+
 
 
     //    [HttpPost]
@@ -75,6 +80,8 @@
     //    }
 
 
+
+
     //    [HttpDelete("{id}")]
     //    public async Task<IActionResult> Delete(int id)
     //    {
@@ -90,3 +97,4 @@
 
     //}
 }
+
