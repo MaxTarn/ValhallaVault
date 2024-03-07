@@ -11,7 +11,6 @@ namespace ValhallaVault.Data.Repositories
         public SubcategoryRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
-            new SegmentModel().
         }
 
         public async Task AddSub(SubcategoryModel subcategory)
