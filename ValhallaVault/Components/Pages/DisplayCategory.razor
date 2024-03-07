@@ -1,8 +1,12 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/{CategoryId:int}"
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data.Models
+@using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@inject CategoryRepo CategoryRepo
+@inject SegmentRepo SegmentRepo
 
+<h1>dfghfkbjnfgdb</h1>
 @if (CategoryId == null)
 {
     <p>Something went Wrong! There was no routed Category. If you entered this page directly, and did not get redirected here, go
@@ -41,4 +45,12 @@
     public CategoryModel? Category { get; set; }
 
     public List<SegmentModel> SegementsThatBelongToCategory { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(CategoryId == null)return;
+        Category = (await CategoryRepo.GetCategoryById((int)CategoryId));
+        SegementsThatBelongToCategory = (await SegmentRepo.GetAllSegments()).ToList();
+    }
+
 }
