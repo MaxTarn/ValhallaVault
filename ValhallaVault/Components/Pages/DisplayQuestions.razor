@@ -1,9 +1,19 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{SubCategoryId:int}"
+@rendermode InteractiveServer
 @using ValhallaVault.Data.Repositories
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
+@using Microsoft.Data.SqlClient
+@using Microsoft.AspNetCore.Identity
 @inject SubcategoryRepo SubcategoryRepo
 @inject QuestionRepo QuestionRepo
+@inject AnswerRepo AnswerRepo
+@inject UserQuestionRepo UserQuestionRepo
+@inject UserManager<IdentityUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+
 
 @if (SubcategoryId == null)
 {
@@ -21,31 +31,299 @@
     return;
 }
 
+@if (Subcategory.Questions == null)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Someting went wrong! The Questions could not be reterived.</p>
+    </div>
+    return;
+}
+
+@if (CurrentQuestion == null || CurrentQuestion.Answers == null)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Someting went wrong! This Question or the questions answers could not be reterived.</p>
+    </div>
+    return;
+}
+
+
+
+
+
+
+
+
+
 <div class="container mt-4">
-    <QuestionsContainer DisplayTheseQuestions="@QuestionsForThisSubcategory"></QuestionsContainer>
+    <h1 class="text-primary">@Subcategory.Name</h1>
+    <p class="text-muted">Total Questions: @(Subcategory.Questions.Count)</p>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-4">@CurrentQuestion.Question</h4>
+            <ul class="list-group list-group-flush">
+                @foreach (AnswerModel answer in CurrentQuestion.Answers)
+                {
+                    <li class="list-group-item" style="@(styleForAnswers[answer.Id])">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" @bind="answer.IsChecked" />
+                            <label class="form-check-label">@answer.Answer</label>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="card-footer">
+            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@_disableBackButton">Back</button>
+            <button @onclick="CorrectAnswers" class="btn btn-primary" disabled="@(_disableCorrectTheAnswersButton || UserHasChosenAnswer() != true)">Correct Answer</button>
+            <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@_disableNextQuestionButton">Next</button>
+        </div>
+    </div>
 </div>
 
 
+
+
+
 @code {
-    
+    //ooo didnt know #region was a thing?? how have I not found out this before????!?!?
+
+    #region Parameters
 
     [Parameter] 
     public int? SubcategoryId { get; set; }
 
-    private SubcategoryModel? Subcategory;
-    private List<QuestionModel> QuestionsForThisSubcategory;
+    #endregion
 
+
+
+
+
+    #region Variables
+
+    private const string _styleForCorrectAnswer = "background-color:green;";
+    private const string _styleForWrongAnswer = "background-color:red;";
+
+
+    private SubcategoryModel? Subcategory;
+    private List<QuestionModel> QuestionsForThisSubcategory; 
+    private QuestionModel? CurrentQuestion;
+    private Dictionary<int, string> styleForAnswers = new();
+    private AnswerModel ChosenAnswer;
+
+
+
+
+    private bool _disableBackButton = true;
+    private bool _disableCorrectTheAnswersButton = false;
+    private bool _disableNextQuestionButton = false;
+
+    #endregion
+
+
+    #region EventHandlers
+
+
+    private void BackOneQuestion(MouseEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+    private void CorrectAnswers(MouseEventArgs e)
+    {
+        string? ids = GetCurretlyLoggedInUsersId().GetAwaiter().GetResult();
+        if (UserHasChosenAnswer() == null || UserHasChosenAnswer() == false)
+        {
+            return;
+        }
+
+
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            //when the answer is correct
+            if (a.IsCorrect == true)
+            {
+                if (!styleForAnswers.ContainsKey(a.Id)) return;
+                styleForAnswers[a.Id] = _styleForCorrectAnswer;
+                return;
+            }
+
+            //when the answer is wrong and ticked 
+            if (a.IsChecked == true)
+            {
+                if (!styleForAnswers.ContainsKey(a.Id)) return;
+                styleForAnswers[a.Id] = _styleForWrongAnswer;
+                return;
+            }
+
+
+        });
+
+        if (UserChoseCorrectAnswer())
+        {
+            SetAnswerOfQuestionInDb();
+        }
+
+
+    }
+    private void NextQuestion(MouseEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+
+    #endregion
+
+
+    #region Methods
+
+    private bool BackButtonShouldBeDisabled()
+    {
+        return true;
+    }
+    private bool NextButtonShouldBeDisabled()
+    {
+        return true;
+    }
+
+
+    private void ClearStyleForAnswers()
+    {
+        foreach (var dic in styleForAnswers)
+        {
+            styleForAnswers[dic.Key] = "";
+        }
+    }
+
+
+    private bool UserChoseCorrectAnswer()
+    {
+        if (UserHasChosenAnswer() != true) return false;
+
+        bool answerIsCorrect = false;
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            if (a.IsChecked == true && a.IsCorrect == true)
+            {
+                answerIsCorrect = true;
+            }
+        });
+        return answerIsCorrect;
+    }
+
+
+    /// <summary>
+    /// null when user has NOT chosen answer
+    /// true when user has chosen ONE answer
+    /// false when user has chosen MORE THAN ONE answer
+    /// </summary>
+    /// <returns>
+    /// null when user has NOT chosen answer
+    /// true when user has chosen ONE answer
+    /// false when user has chosen MORE THAN ONE answer
+    /// </returns>
+    private bool? UserHasChosenAnswer()
+    {
+        int tickedAnswers = 0;
+
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            if (a.IsChecked == true) tickedAnswers++;
+        });
+
+
+        return tickedAnswers switch
+        {
+            0 => null,        // user has not ticked any answer
+            1 => true,        // user has ticked ONLY ONE answer
+            _ => false    // user has ticked MORE THAN ONE
+        };
+    }
+
+
+    /// <summary>
+    /// This add a entry in the UserQuestions table in the db.
+    /// Where all the information is stored about what user has answerd what question what correctly
+    /// </summary>
+    private void SetAnswerOfQuestionInDb()
+    {
+        if(CurrentQuestion == null)return;
+        if(UserHasChosenAnswer() != true)return;
+
+
+
+        UserQuestionRepo.Add(new UserQuestionModel()
+        {
+            UserId = "", // TODO FIND THE USER ID OF THE CURRENTLY LOGGED IN USER
+            QuestionId = CurrentQuestion.Id,
+            IsCorrect = UserChoseCorrectAnswer()
+        });
+    }
+
+
+    private async Task<string?> GetCurretlyLoggedInUsersId()
+    {
+
+        return (await UserManager
+            .GetUserAsync((
+                await AuthenticationStateProvider.GetAuthenticationStateAsync())
+                .User))?
+            .Id;
+    }
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region WhenFirstLoadingPage
+
+    //----------When first loading in this page BELOW THIS----------
     protected override async Task OnInitializedAsync()
     {
         if (SubcategoryId == null) return;
-
         Subcategory = await SubcategoryRepo.GetById((int)SubcategoryId);
+
         if(Subcategory == null)return;
 
-        QuestionsForThisSubcategory = (await QuestionRepo.GetAllQuestions())
+
+
+        //TODO FIX THIS SHIT, THE DATA HANDLING/ SEARCHING / FILTERING SHOULD NOT HERE
+
+        //horribly ineffective way to do this :/
+        //but since no methods in repo does what I need...
+
+        Subcategory.Questions = (await QuestionRepo.GetAllQuestions())
             .Where(q => q.SubcategoryId == SubcategoryId)
             .ToList();
 
-        Console.WriteLine("lngdr");
+        foreach (QuestionModel question in Subcategory.Questions)
+        {
+            int index = Subcategory.Questions.FindIndex(q => q.Id == question.Id);
+            Subcategory.Questions[index].Answers = (await AnswerRepo.GetAllAnswers())
+                .Where(a => a.QuestionId == question.Id)
+                .ToList();
+        }
+
+        CurrentQuestion = Subcategory.Questions.FirstOrDefault();
+
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            styleForAnswers.Add(a.Id, "");
+        });
     }
+
+    #endregion
+    
 }
