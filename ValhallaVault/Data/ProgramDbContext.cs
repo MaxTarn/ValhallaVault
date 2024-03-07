@@ -23,7 +23,7 @@ namespace ValhallaVault.Data
             modelBuilder.Entity<CategoryModel>()
                 .HasMany(c => c.Segments)
                 .WithOne(s => s.Category)
-                .HasForeignKey(s => s.CategoryModelId);
+                .HasForeignKey(s => s.CategoryId);
 
             modelBuilder.Entity<SegmentModel>()
                 .HasMany(s => s.Subcategories)

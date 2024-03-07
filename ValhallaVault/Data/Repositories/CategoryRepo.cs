@@ -19,17 +19,38 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task<CategoryModel?> GetCategoryById(int id)
         {
-            return await _dbContext.Set<CategoryModel>().FindAsync(id);
+            if (id != 0)
+            {
+                return await _dbContext.Set<CategoryModel>().FindAsync(id);
+            }
+            else
+            {
+                throw new Exception("Use valid ID");
+            }
         }
 
         public async Task AddCategory(CategoryModel category)
         {
-            _dbContext.Set<CategoryModel>().Add(category);
+            if (category != null)
+            {
+                _dbContext.Set<CategoryModel>().Add(category);
+            }
+            else
+            {
+                throw new Exception("Category cannot be null");
+            }
         }
 
         public async Task UpdateCategory(CategoryModel category)
         {
-            _dbContext.Entry(category).State = EntityState.Modified;
+            if (category != null)
+            {
+                _dbContext.Entry(category).State = EntityState.Modified;
+            }
+            else
+            {
+                throw new Exception("Select category to update");
+            }
         }
 
         public async Task<CategoryModel> DeleteCategory(int id)

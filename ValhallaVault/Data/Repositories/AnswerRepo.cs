@@ -19,17 +19,38 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task<AnswerModel?> GetAnswerById(int id)
         {
-            return await _dbContext.Set<AnswerModel>().FindAsync(id);
+            if (id != 0)
+            {
+                return await _dbContext.Set<AnswerModel>().FindAsync(id);
+            }
+            else
+            {
+                throw new Exception("Use valid Id");
+            }
         }
 
         public async Task AddAnswer(AnswerModel answer)
         {
-            _dbContext.Set<AnswerModel>().Add(answer);
+            if (answer != null)
+            {
+                _dbContext.Set<AnswerModel>().Add(answer);
+            }
+            else
+            {
+                throw new Exception("Answer cannot be null");
+            }
         }
 
         public void UpdateAnswer(AnswerModel answer)
         {
-            _dbContext.Entry(answer).State = EntityState.Modified;
+            if (answer != null)
+            {
+                _dbContext.Entry(answer).State = EntityState.Modified;
+            }
+            else
+            {
+                throw new Exception("Select answer to update");
+            }
         }
 
         public async Task<AnswerModel?> DeleteAnswer(int id)
