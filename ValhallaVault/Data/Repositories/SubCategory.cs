@@ -3,6 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
+    //TODO make method that returns all segments with specific category id
     public class SubcategoryRepo
     {
         private readonly ProgramDbContext _dbContext;
@@ -10,6 +11,7 @@ namespace ValhallaVault.Data.Repositories
         public SubcategoryRepo(ProgramDbContext dbContext)
         {
             _dbContext = dbContext;
+            new SegmentModel().
         }
 
         public async Task AddSub(SubcategoryModel subcategory)
