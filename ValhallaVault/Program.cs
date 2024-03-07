@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
+using ValhallaVault.Data.Repositories;
 
 namespace ValhallaVault
 {
@@ -13,6 +14,7 @@ namespace ValhallaVault
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddControllers();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -34,6 +36,9 @@ namespace ValhallaVault
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+
+            builder.Services.AddScoped<MaxCategoryRepo>();
 
             builder.Services.AddAuthentication(options =>
                 {
@@ -133,6 +138,7 @@ namespace ValhallaVault
                 app.UseRouting();
 
                 app.UseCors("AllowAll");
+
                 app.MapControllers();
 
                 // Configure the HTTP request pipeline.
