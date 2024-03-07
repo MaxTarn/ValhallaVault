@@ -1,0 +1,44 @@
+﻿@page "/DisplayAllCategories"
+@using ValhallaVault.Data.Models
+@using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data.Repositories
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@inject MaxCategoryRepo MaxCategoryRepo
+@inject CategoryRepo CategoryRepo
+
+@* TODO ACTIVATE THE IF STATEMENTS *@
+ @if (AllCategories == null)
+{
+    <p>Something Went Wrong! Unable to Gather all of the Categories</p>
+    return;
+}
+
+@if (AllCategories.Count <= 0)
+{
+    <p>Something went Wrong! There were no categories in the database!</p>
+} 
+
+
+
+@* TODO USE FOR EACH LOOP *@
+ @foreach (CategoryModel category in AllCategories)
+{
+    <a href="@($"{Navigation.BaseUri}DisplayCategory?CategoryId={category.Id}")">@category.Name</a>
+} 
+
+@code {
+    //TODO CONACT DB TO GET ALL Categories
+    public List<CategoryModel>? AllCategories { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AllCategories = MaxCategoryRepo.GetAll();
+        //AllCategories = CategoryRepo.GetAllCategories().ToList();
+
+    }
+
+    
+
+}

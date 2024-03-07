@@ -1,0 +1,44 @@
+﻿@page "/DisplayAllCategories/DisplayCategory/{CategoryId:int}"
+@using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data.Models
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+
+@if (CategoryId == null)
+{
+    <p>Something went Wrong! There was no routed Category. If you entered this page directly, and did not get redirected here, go
+        <a href="@($"{Navigation.BaseUri}DisplayAllCategories")">HERE</a>
+
+    </p>
+    return;
+}
+@if (Category == null || Category?.Name == null)
+{
+    <p>Something went wrong! The category that was reterived from the database was null.</p>
+    return;
+}
+
+<div>
+    <h1>
+        @Category.Name
+    </h1>
+    
+    <h3>Content:</h3>
+    @foreach (SegmentModel? segemnt in SegementsThatBelongToCategory)
+    {
+        if(segemnt == null)continue;
+        
+        <a href="">@segemnt.Name</a>
+        
+    }
+    
+</div>
+
+@code {
+    [Parameter]
+    public int? CategoryId { get; set; }
+
+    // RUN CODE SO THAT YOU CONTACT DB WITH THE GIVEN CATEGORY ID AND IT THEN GETS THE CATEGORYMODEL
+    public CategoryModel? Category { get; set; }
+
+    public List<SegmentModel> SegementsThatBelongToCategory { get; set; }
+}

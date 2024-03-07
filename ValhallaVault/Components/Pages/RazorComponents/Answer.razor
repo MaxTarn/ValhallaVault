@@ -1,5 +1,5 @@
 ﻿@using ValhallaVault.Data.Models
-@using Humanizer
+@* @using Humanizer *@
 @rendermode InteractiveServer
 @if (TheAnswerModel == null)
 {
@@ -72,6 +72,9 @@ else
 
     [Parameter]
     public string? StyleToAddToWrongAnswer { get; set; }
+
+
+
 
     [Parameter]
     public bool ResetState { get; set; }
