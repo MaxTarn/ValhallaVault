@@ -39,6 +39,7 @@ namespace ValhallaVault
 
 
             builder.Services.AddScoped<MaxCategoryRepo>();
+            //builder.Services.AddScoped<CategoryRepo>();
 
             builder.Services.AddAuthentication(options =>
                 {

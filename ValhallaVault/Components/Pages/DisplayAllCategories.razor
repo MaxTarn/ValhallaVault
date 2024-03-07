@@ -4,6 +4,7 @@
 @using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @inject MaxCategoryRepo MaxCategoryRepo
+@inject CategoryRepo CategoryRepo
 
 @* TODO ACTIVATE THE IF STATEMENTS *@
  @if (AllCategories == null)
@@ -34,6 +35,7 @@
     {
         base.OnInitialized();
         AllCategories = MaxCategoryRepo.GetAll();
+        //AllCategories = CategoryRepo.GetAllCategories().ToList();
 
     }
 
