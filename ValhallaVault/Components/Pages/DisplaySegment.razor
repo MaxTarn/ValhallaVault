@@ -1,71 +1,29 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
 @using ValhallaVault.Data.Models
-@using ValhallaVault.Data.Repositories
-@inject SegmentRepo SegmentRepo
-@inject SubcategoryRepo SubcategoryRepo
-@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-
 @if (SegmentId == null)
 {
-    <div class="container mt-4">
-        <p class="alert alert-warning">Something Went Wrong! The given segment id Was null</p>
-    </div>
-    return;
-}
-@if (Segment == null)
-{
-    <div class="container mt-4">
-        <p class="alert alert-warning">Something went wrong! Unable to find segment with given Id</p>
-    </div>
+    <p>Something Went Wrong! The given segment id Was null</p>
     return;
 }
 
 @if (SubCategories == null || SubCategories?.Count <= 0)
 {
-    <div class="container mt-4">
-        <p class="alert alert-warning">Something went Wrong! Unable to find any subcategories or there were none in the database. </p>
-    </div>
+    <p>Something went Wrong! Unable to find any subcategories or there were none in the database. </p>
     return;
 }
 
-<div class="container mt-4">
-    <h1>@Segment.Name</h1>
-    <div class="list-group">
-        @foreach (SubcategoryModel subcategory in SubCategories)
-        {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Id}")" class="list-group-item list-group-item-action">@subcategory.Name</a>
-
-        }
-    </div>
+<div>
+    @foreach (SubcategoryModel subcategory in SubCategories)
+    {
+        <a>@subcategory.Name</a>
+    }
 </div>
-
 
 @code {
     [Parameter]
     public int? SegmentId { get; set; }
 
-    private SegmentModel? Segment;
-
-    
+    //TODO GET THE ACTUCAL DATA FROM DB
 
     public List<SubcategoryModel>? SubCategories { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (SegmentId == null)
-        {
-            await base.OnInitializedAsync();
-            return;
-        }
-
-        Segment =  await SegmentRepo.GetSegmentById((int)SegmentId);
-
-        if(Segment == null)return;
-
-
-        SubCategories = (await SubcategoryRepo.GetAllSubs())
-            .Where(s => s.SegmentId == SegmentId)
-            .ToList();
-
-    }
 }

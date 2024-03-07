@@ -1,6 +1,4 @@
 ﻿@using ValhallaVault.Data.Models
-@using ValhallaVault.Data.Repositories
-
 
 <h3>QuestionsContainer</h3>
 
@@ -10,6 +8,16 @@
     
     return;
 }
+
+ @if (HasNullEntry())
+
+{
+    
+    <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
+
+
+} 
+
 
 
 <div>
@@ -85,11 +93,16 @@
     }
 
 
-    protected override Task OnInitializedAsync()
+
+
+
+    public bool HasNullEntry()
     {
-        
-        return base.OnInitializedAsync();
+        return DisplayTheseQuestions?.Any(entry => entry == null) ?? false;
     }
+
+
+
 
 
     /// <summary>

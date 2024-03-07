@@ -1,51 +1,6 @@
-﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{SubCategoryId:int}"
-@using ValhallaVault.Data.Repositories
-@using ValhallaVault.Data.Models
-@using ValhallaVault.Components.Pages.RazorComponents
-@inject SubcategoryRepo SubcategoryRepo
-@inject QuestionRepo QuestionRepo
-
-@if (SubcategoryId == null)
-{
-    <div class="container mt-4">
-        <p class="alert alert-warning">Something went wrong! The Subcategory Id was null.</p>
-    </div>
-    return;
-}
-
-@if (Subcategory == null)
-{
-    <div class="container mt-4">
-        <p class="alert alert-warning">Someting went wrong! The Subcategory was not found.</p>
-    </div>
-    return;
-}
-
-<div class="container mt-4">
-    <QuestionsContainer DisplayTheseQuestions="@QuestionsForThisSubcategory"></QuestionsContainer>
-</div>
-
+﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/"
+<h3>DisplayQuestions</h3>
 
 @code {
-    
-
-    [Parameter] 
-    public int? SubcategoryId { get; set; }
-
-    private SubcategoryModel? Subcategory;
-    private List<QuestionModel> QuestionsForThisSubcategory;
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (SubcategoryId == null) return;
-
-        Subcategory = await SubcategoryRepo.GetById((int)SubcategoryId);
-        if(Subcategory == null)return;
-
-        QuestionsForThisSubcategory = (await QuestionRepo.GetAllQuestions())
-            .Where(q => q.SubcategoryId == SubcategoryId)
-            .ToList();
-
-        Console.WriteLine("lngdr");
-    }
+    // NOT YETTTTTTT
 }

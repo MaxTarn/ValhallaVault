@@ -3,7 +3,6 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    //TODO make method that gets all segments with a specific category Id
     public class SegmentRepo
     {
         private readonly ProgramDbContext _dbContext;
