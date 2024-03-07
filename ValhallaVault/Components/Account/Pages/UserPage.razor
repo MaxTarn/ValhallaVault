@@ -4,7 +4,8 @@
 @using System.Text
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
-@using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage
+@* @using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage *@
+@using ValhallaVault.Components.Account.Pages.Manage
 @using ValhallaVault.Data
 @* @using System.Text.Encodings.Web <!-- För email --> *@
 
@@ -172,7 +173,7 @@
         // await EmailSender.SendConfirmationLinkAsync(user, InputEmail.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
 
         // message = "Confirmation link to change email sent. Please check your email.";
-    }
+        }
     // private async Task OnSendEmailVerificationAsync()
     // {
     //     if (email is null)
