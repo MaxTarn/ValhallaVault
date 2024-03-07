@@ -4,6 +4,8 @@ using ValhallaVault.Data.Models;
 namespace ValhallaVault.Data.Repositories
 {
     //TODO make method that returns all segments with specific category id
+    //TODO make method that return a single subcategory with the questions and answers joined/added
+    // TODO GetQuestionsBySubcategoryIdAsync method
     public class SubcategoryRepo
     {
         private readonly ProgramDbContext _dbContext;
