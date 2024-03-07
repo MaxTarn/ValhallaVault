@@ -44,18 +44,18 @@
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Log in</button>
+                    <button type="submit" class="btn-custom">Log in</button>
                 </div>
                 <br />
                 <div>
                     <p>
-                                <a class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="Account/ForgotPassword">Forgot your password?</a>
+                                @* <a class="link-custom" href="Account/ForgotPassword">Forgot your password?</a> *@
                     </p>
                     <p>
-                                <a class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                                <a class="link-custom" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
                     </p>
                     <p>
-                                <a class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                               @*  <a class="link-custom" href="Account/ResendEmailConfirmation">Resend email confirmation</a> *@
                     </p>
                 </div>
             </EditForm>

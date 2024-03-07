@@ -38,6 +38,10 @@
         {
             RedirectManager.RedirectTo("");
         }
+        else
+        {
+            RedirectManager.RedirectTo("/");
+        }
 
         var user = await UserManager.FindByIdAsync(UserId);
         if (user is null)

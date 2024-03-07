@@ -23,14 +23,24 @@
 
 <PageTitle>UserPage</PageTitle>
 
+        <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            
+            <div class="text-center">
 
-<h4 class="text-center">Want to change your password?</h4>
-<h5>Change password</h5>
+
+
+                <hr />
+                <h4>Want to change your password?</h4>
+                <hr />
 <StatusMessage Message="@message" />
-<div class="row">
-    <div class="col-md-6">
+                <div class="row justify-content-center">
+
+                    <div class="col-md-6">
         <EditForm Model="Input" FormName="change-password" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator />
+                           
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.OldPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your old password." />
@@ -47,14 +57,28 @@
                 <label for="confirm-password" class="form-label">Confirm password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Update password</button>
+            <button type="submit" class="btn-custom">Update password</button>
 		</EditForm>
+    </div>
+                    <div class="text-center">
+                        <hr />
+                        <h4>Want to change your email?</h4>
+                        <hr />
+
+                        <a class="link-custom" href="/Accounts/UserPageEmail">Click here</a>
+                       
+                    </div>
+</div>
+                
+            </div>
+        </div>
+        <div style="text-align: right;">
+
+            <a class="link-custom" href="/DisplayAllCategories">Go back</a>
+        </div>
     </div>
 </div>
 
-<h4>Want to change your email?</h4>
-
-<a href="/Accounts/UserPageEmail">Click here</a>
 <!--För epost här nedan-->
 @* <h5>Change email</h5>
 

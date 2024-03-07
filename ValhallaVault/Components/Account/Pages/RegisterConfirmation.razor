@@ -11,8 +11,9 @@
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Register confirmation</PageTitle>
-
+<hr />
 <h1 class="text-center">Register confirmation</h1>
+<hr />
 
 <StatusMessage Message="@statusMessage" />
 
@@ -23,7 +24,7 @@
         @*  Normally this would be emailed: *@ 
     </p>
     <div class="text-center">
-    <a class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="@emailConfirmationLink">Click here to confirm your account</a>
+    <a class="link-custom" href="@emailConfirmationLink">Click here to confirm your account</a>
     </div>
 }
 else
