@@ -36,149 +36,14 @@ namespace ValhallaVault.Migrations.ProgramDb
                     b.Property<bool?>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int>("QuestionModelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionModelId");
 
                     b.ToTable("Answers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Answer = "Ett potentiellt telefonbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Answer = "Ett legitimt försök från banken att skydda ditt konto",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Answer = "En informationsinsamling för en marknadsundersökning",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Answer = "Ett romansbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Answer = "En legitim begäran om hjälp från en person i nöd",
-                            IsCorrect = false,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Answer = "Investeringsbedrägeri",
-                            IsCorrect = true,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Answer = "Genomföra omedelbar investering för att inte missa möjligheten",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Answer = "Införa striktare lösenordspolicyer och tvåfaktorsautentisering för fjärråtkomst",
-                            IsCorrect = true,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Answer = "Återgå till kontorsarbete",
-                            IsCorrect = false,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Answer = "Förbjuda användning av personliga enheter för arbete",
-                            IsCorrect = false,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Answer = "Organiserade cyberbrottsliga grupper",
-                            IsCorrect = true,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Answer = "En enskild hackare med ett personligt vendetta",
-                            IsCorrect = false,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Answer = "Implementera en ny brandvägg",
-                            IsCorrect = false,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Answer = "Slå på tvåfaktorsautentisering för alla fjärranslutningar",
-                            IsCorrect = true,
-                            QuestionId = 5
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Answer = "Skriv ut alla dokument och undvik digital delning",
-                            IsCorrect = false,
-                            QuestionId = 6
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Answer = "Använd samma lösenord för alla konton för enkelhetens skull",
-                            IsCorrect = false,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Answer = "Social engineering",
-                            IsCorrect = true,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Answer = "Stark kryptering",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Answer = "Brandväggar",
-                            IsCorrect = false,
-                            QuestionId = 8
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>
@@ -193,26 +58,13 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SegmentIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Att skydda sig mot Bedrägerier"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Cybersäkerhet för företag"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Cyberspionage"
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.QuestionModel", b =>
@@ -223,86 +75,21 @@ namespace ValhallaVault.Migrations.ProgramDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Explanation")
+                    b.Property<string>("AnswerIds")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubcategoryId")
+                    b.Property<int>("SubcategoryModelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubcategoryId");
+                    b.HasIndex("SubcategoryModelId");
 
                     b.ToTable("Questions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Explanation = "Banker och andra finansiella institutioner begär aldrig känslig information såsom kontonummer eller lösenord via telefon. Detta är ett klassiskt tecken på telefonbedrägeri.",
-                            Question = "Du får ett oväntat telefonsamtal från någon som påstår sig vara från din bank...",
-                            SubcategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Explanation = "Begäran om pengar, särskilt under omständigheter där två personer aldrig har träffats fysiskt, är ett vanligt tecken på romansbedrägeri.",
-                            Question = "Efter flera månader av daglig kommunikation med någon du träffade på en datingsida...",
-                            SubcategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Explanation = "Erbjudanden som lovar hög avkastning med liten eller ingen risk, särskilt via oönskade e-postmeddelanden, är ofta tecken på investeringsbedrägerier.",
-                            Question = "Du får ett e-postmeddelande/samtal om ett exklusivt erbjudande att investera i ett startup-företag...",
-                            SubcategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Explanation = "Stärkt autentisering är kritisk för att säkra fjärråtkomst och skydda mot obehörig åtkomst i en distribuerad arbetsmiljö.",
-                            Question = "Vilken åtgärd bör företaget vidta för att adressera denna nya riskmiljö?",
-                            SubcategoryId = 14
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Explanation = "Ransomware-angrepp involverar kryptering av offerdata och kräver lösen för dekryptering, vilket är särskilt skadligt för kritiska sektorer som hälsovård.",
-                            Question = "Vilken typ av angrepp har de sannolikt blivit utsatta för?",
-                            SubcategoryId = 15
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Explanation = "Maersk utsattes för NotPetya ransomware-angreppet, som ledde till omfattande störningar och förluster genom att kryptera företagets globala system.",
-                            Question = "Vilken typ av malware var primärt ansvarig för denna incident?",
-                            SubcategoryId = 16
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Explanation = "DDoS-attacker kräver ofta betydande resurser och koordinering, vilket är karakteristiskt för organiserade cyberbrottsliga grupper.",
-                            Question = "Vilken typ av aktör är mest sannolikt ansvarig för denna typ av attack?",
-                            SubcategoryId = 17
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Explanation = "Utbildning i digital säkerhet är avgörande för att hjälpa anställda att känna igen och undvika säkerhetshot som phishing, vilket är en vanlig attackvektor.",
-                            Question = "Vilken åtgärd bör prioriteras för att förhindra framtida incidenter?",
-                            SubcategoryId = 18
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Explanation = "Säkerhetsskyddslagen är en svensk lagstiftning som syftar till att skydda nationellt känslig information från spioneri, sabotage, terroristbrott och andra säkerhetshot.",
-                            Question = "Vilken lagstiftning ger ramverket för detta skydd?",
-                            SubcategoryId = 19
-                        });
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>
@@ -320,6 +107,10 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SubcategoryIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryModelId");
@@ -330,49 +121,49 @@ namespace ValhallaVault.Migrations.ProgramDb
                         new
                         {
                             Id = 1,
-                            CategoryModelId = 1,
+                            CategoryId = 1,
                             Name = "Del 1"
                         },
                         new
                         {
                             Id = 2,
-                            CategoryModelId = 1,
+                            CategoryId = 1,
                             Name = "Del 2"
                         },
                         new
                         {
                             Id = 3,
-                            CategoryModelId = 1,
+                            CategoryId = 1,
                             Name = "Del 3"
                         },
                         new
                         {
                             Id = 4,
-                            CategoryModelId = 2,
+                            CategoryId = 2,
                             Name = "Del 1"
                         },
                         new
                         {
                             Id = 5,
-                            CategoryModelId = 2,
+                            CategoryId = 2,
                             Name = "Del 2"
                         },
                         new
                         {
                             Id = 6,
-                            CategoryModelId = 3,
+                            CategoryId = 3,
                             Name = "Del 1"
                         },
                         new
                         {
                             Id = 7,
-                            CategoryModelId = 3,
+                            CategoryId = 3,
                             Name = "Del 2"
                         },
                         new
                         {
                             Id = 8,
-                            CategoryModelId = 3,
+                            CategoryId = 3,
                             Name = "Del 3"
                         });
                 });
@@ -389,7 +180,7 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SegmentModelId")
+                    b.Property<int>("SegmentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -403,151 +194,151 @@ namespace ValhallaVault.Migrations.ProgramDb
                         {
                             Id = 1,
                             Name = "Kreditkortsbedrägeri",
-                            SegmentModelId = 1
+                            SegmentId = 1
                         },
                         new
                         {
                             Id = 2,
                             Name = "Romansbedrägeri",
-                            SegmentModelId = 1
+                            SegmentId = 1
                         },
                         new
                         {
                             Id = 3,
                             Name = "Investeringsbedrägeri",
-                            SegmentModelId = 1
+                            SegmentId = 1
                         },
                         new
                         {
                             Id = 4,
                             Name = "Telefonbedrägeri",
-                            SegmentModelId = 1
+                            SegmentId = 1
                         },
                         new
                         {
                             Id = 5,
                             Name = "Digital säkerhet på företag",
-                            SegmentModelId = 4
+                            SegmentId = 4
                         },
                         new
                         {
                             Id = 6,
                             Name = "Risker och beredskap",
-                            SegmentModelId = 4
+                            SegmentId = 4
                         },
                         new
                         {
                             Id = 7,
                             Name = "Cyberangrepp mot känsliga sektorer",
-                            SegmentModelId = 4
+                            SegmentId = 4
                         },
                         new
                         {
                             Id = 8,
                             Name = "Allmänt om cyberspionage",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 9,
                             Name = "Metoder för cyberspionage",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 10,
                             Name = "Säkerhetsskyddslagen",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 11,
                             Name = "Cyberspionagets aktörer",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 12,
                             Name = "Social engineering",
-                            SegmentModelId = 7
+                            SegmentId = 7
                         },
                         new
                         {
                             Id = 13,
                             Name = "Virus, maskar och trojaner",
-                            SegmentModelId = 8
+                            SegmentId = 8
                         },
                         new
                         {
                             Id = 14,
                             Name = "Abonnemangsfällor och falska fakturor",
-                            SegmentModelId = 5
+                            SegmentId = 5
                         },
                         new
                         {
                             Id = 15,
                             Name = "Ransomware",
-                            SegmentModelId = 5
+                            SegmentId = 5
                         },
                         new
                         {
                             Id = 16,
                             Name = "Statistik och förhållningssätt",
-                            SegmentModelId = 5
+                            SegmentId = 5
                         },
                         new
                         {
                             Id = 17,
                             Name = "Utpressningsvirus",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 18,
                             Name = "Attacker mot servrar",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 19,
                             Name = "Cyberangrepp i Norden",
-                            SegmentModelId = 6
+                            SegmentId = 6
                         },
                         new
                         {
                             Id = 20,
                             Name = "Varning för vishing",
-                            SegmentModelId = 7
+                            SegmentId = 7
                         },
                         new
                         {
                             Id = 21,
                             Name = "Identifiera VD-mejl",
-                            SegmentModelId = 7
+                            SegmentId = 7
                         },
                         new
                         {
                             Id = 22,
                             Name = "Öneangrepp och presentkortsbluffar",
-                            SegmentModelId = 7
+                            SegmentId = 7
                         },
                         new
                         {
                             Id = 23,
                             Name = "Värvningsförsök",
-                            SegmentModelId = 8
+                            SegmentId = 8
                         },
                         new
                         {
                             Id = 24,
                             Name = "Affärsspionage",
-                            SegmentModelId = 8
+                            SegmentId = 8
                         },
                         new
                         {
                             Id = 25,
                             Name = "Påverkanskampanjer",
-                            SegmentModelId = 8
+                            SegmentId = 8
                         });
                 });
 
@@ -555,7 +346,7 @@ namespace ValhallaVault.Migrations.ProgramDb
                 {
                     b.HasOne("ValhallaVault.Data.Models.QuestionModel", "Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
+                        .HasForeignKey("QuestionModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -566,7 +357,7 @@ namespace ValhallaVault.Migrations.ProgramDb
                 {
                     b.HasOne("ValhallaVault.Data.Models.SubcategoryModel", "Subcategory")
                         .WithMany("Questions")
-                        .HasForeignKey("SubcategoryId")
+                        .HasForeignKey("SubcategoryModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

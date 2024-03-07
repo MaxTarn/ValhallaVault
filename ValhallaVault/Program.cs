@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Data;
-using ValhallaVault.Data.Repositories;
-
 
 namespace ValhallaVault
 {
@@ -31,8 +29,6 @@ namespace ValhallaVault
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-
-            builder.Services.AddControllers();
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
@@ -63,19 +59,11 @@ namespace ValhallaVault
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-            builder.Services.AddControllers();
-
-
-            //Dependency injection
-            builder.Services.AddScoped<AnswerRepo>();
-            builder.Services.AddScoped<CategoryRepo>();
-            builder.Services.AddScoped<QuestionRepo>();
-            builder.Services.AddScoped<SegmentRepo>();
-            builder.Services.AddScoped<SubcategoryRepo>();
 
 
 
-            //skapa users och roller som ska finnas med från start
+
+            //skapa users och roller som ska finnas med fr�n start
 
             using (ServiceProvider sp = builder.Services.BuildServiceProvider())
             {
@@ -88,7 +76,7 @@ namespace ValhallaVault
                 ApplicationUser newAdmin = new()
                 {
                     UserName = "admin",
-                    Email = "admin@mail.com",
+                    Email = "adminuser@mail.com",
                     EmailConfirmed = true
                 };
 
@@ -114,21 +102,29 @@ namespace ValhallaVault
                     }
                     //tilldela adminrollen till den nya användaren
                     signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
-
-                    ApplicationUser newUser = new()
-                    {
-                        UserName = "user",
-                        Email = "user@mail.com",
-                        EmailConfirmed = true
-                    };
-
-                    var user = signInManager.UserManager.FindByNameAsync(newUser.UserName).GetAwaiter().GetResult();
-                    if (user == null)
-                    {
-                        //skapa en ny user
-                        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
-                    }
                 }
+
+                ApplicationUser newUser = new()
+                {
+                    UserName = "user",
+                    Email = "user@mail.com",
+                    EmailConfirmed = true
+                };
+
+                var user = signInManager.UserManager.FindByNameAsync(newUser.UserName).GetAwaiter().GetResult();
+                if (user == null)
+                {
+                    //skapa en ny user
+                    signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+                }
+
+
+
+
+
+
+
+
 
 
 
@@ -167,43 +163,3 @@ namespace ValhallaVault
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

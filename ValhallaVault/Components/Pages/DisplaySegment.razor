@@ -1,0 +1,29 @@
+﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
+@using ValhallaVault.Data.Models
+@if (SegmentId == null)
+{
+    <p>Something Went Wrong! The given segment id Was null</p>
+    return;
+}
+
+@if (SubCategories == null || SubCategories?.Count <= 0)
+{
+    <p>Something went Wrong! Unable to find any subcategories or there were none in the database. </p>
+    return;
+}
+
+<div>
+    @foreach (SubcategoryModel subcategory in SubCategories)
+    {
+        <a>@subcategory.Name</a>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int? SegmentId { get; set; }
+
+    //TODO GET THE ACTUCAL DATA FROM DB
+
+    public List<SubcategoryModel>? SubCategories { get; set; }
+}

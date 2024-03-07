@@ -1,95 +1,88 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ValhallaVault.Data.Models;
 
-namespace ValhallaVault.Api.Controllers
+﻿namespace ValhallaVault.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SubcategoryController : ControllerBase
-    {
-        private readonly SubcategoryRepository _subcategoryRepo;
+    //[Route("api/[controller]")]
+    //[ApiController]
+    //public class SubcategoryController : ControllerBase
+    //{
+    //    private readonly SubcategoryRepoy _subcategoryRepo;
 
-        public SubcategoryController(SubcategoryRepository<SubcategoryModel> subcategoryRepo)
-        {
-            _subcategoryRepo = subcategoryRepo;
-        }
+    //    public SubcategoryController(SubcategoryRepo<SubcategoryModel> subcategoryRepo)
+    //    {
+    //        _subcategoryRepo = subcategoryRepo;
+    //    }
 
-        [HttpGet]
-        public async Task<IEnumerable<SubcategoryModel>> GetAll()
-        {
-            var subcategorys = await _subcategoryRepo.GetAll();
+    //    [HttpGet]
+    //    public async Task<IEnumerable<SubcategoryModel>> GetAll()
+    //    {
+    //        var subcategorys = await _subcategoryRepo.GetAllSubs();
 
-            if (subcategorys != null)
-            {
-                return Ok(subcategorys);
-            }
+    //        if (subcategorys != null)
+    //        {
+    //            return Ok(subcategorys);
+    //        }
 
-            return (IEnumerable<SubcategoryModel>)NotFound("The subcategories could not be found");
-        }
+    //        return (IEnumerable<SubcategoryModel>)NotFound("The subcategories could not be found");
+    //    }
 
+    //    [HttpGet("{id}")]
+    //    public async Task<IActionResult> GetById(int id)
+    //    {
+    //        var subcategory = await _subcategoryRepo.Find(a => a.Id == id);
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var subcategory = await _subcategoryRepo.Find(a => a.Id == id);
+    //        if (subcategory != null)
+    //        {
+    //            return Ok(subcategory);
+    //        }
 
-            if (subcategory != null)
-            {
-                return Ok(subcategory);
-            }
+    //        return NotFound("The subcategory that you were looking for could not be found");
+    //    }
 
-            return NotFound("The subcategory that you were looking for could not be found");
-        }
+    //    [HttpPost]
+    //    public async Task<IActionResult> Post(SubcategoryModel subcategory)
+    //    {
 
+    //        if (subcategory != null)
+    //        {
+    //            await _subcategoryRepo.AddSub(subcategory);
 
-        [HttpPost]
-        public async Task<IActionResult> Post(SubcategoryModel subcategory)
-        {
+    //            await _subcategoryRepo.Complete();
 
-            if (subcategory != null)
-            {
-                await _subcategoryRepo.Add(subcategory);
+    //            return Ok(subcategory);
+    //        }
 
-                await _subcategoryRepo.Complete();
+    //        return NotFound("The subcategory that you were trying to post could not be found");
+    //    }
 
-                return Ok(subcategory);
-            }
+    //    [HttpPut("{Id}")]
+    //    public async Task<IActionResult> Put(SubcategoryModel previousSubcategory, int Id)
+    //    {
+    //        var result = await _subcategoryRepo.Get(previousSubcategory.Id);
 
-            return NotFound("The subcategory that you were trying to post could not be found");
-        }
+    //        if (result != null)
+    //        {
+    //            result.Name = previousSubcategory.Name;
 
+    //            await _subcategoryRepo.Complete();
 
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(SubcategoryModel previousSubcategory, int Id)
-        {
-            var result = await _subcategoryRepo.Get(previousSubcategory.Id);
+    //            return Ok(result);
+    //        }
 
-            if (result != null)
-            {
-                result.Name = previousSubcategory.Name;
+    //        return NotFound("The subcategory that you wanted to update could not be found");
+    //    }
 
-                await _subcategoryRepo.Complete();
+    //    [HttpDelete("{id}")]
+    //    public async Task<IActionResult> Delete(int id)
+    //    {
+    //        var subcategory = await _subcategoryRepo.DeleteSub(id);
 
-                return Ok(result);
-            }
+    //        if (subcategory != null)
+    //        {
+    //            return Ok(subcategory);
+    //        }
 
-            return NotFound("The subcategory that you wanted to update could not be found");
-        }
+    //        return NotFound("The subcategory that you wanted to delete could not be found");
+    //    }
 
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var subcategory = await _subcategoryRepo.Delete(id);
-
-            if (subcategory != null)
-            {
-                return Ok(subcategory);
-            }
-
-            return NotFound("The subcategory that you wanted to delete could not be found");
-        }
-
-    }
+    //}
 }
