@@ -1,0 +1,27 @@
+﻿@using ValhallaVault.Data.Models
+@if (DisplayThisCategory == null)
+{
+    <p>Something Went wrong! Given Category was null.</p>
+    return;
+}
+
+@if (LinkTo == null)
+{
+    <p>Something went wrong! Given Link Was null.</p>
+    return;
+}
+
+
+
+<a>
+    <p>@DisplayThisCategory.Name</p>
+</a>
+
+@code {
+    [Parameter]
+    public CategoryModel? DisplayThisCategory { get; set; }
+
+    [Parameter]
+    public string? LinkTo { get; set; }
+    
+}
