@@ -40,8 +40,10 @@ namespace ValhallaVault.Data
                 .WithOne(s => s.Question)
                 .HasForeignKey(q => q.QuestionId);
 
-
-
+            modelBuilder.Entity<UserQuestionModel>()
+                .HasOne<QuestionModel>() // One UserQuestionModel has one associated QuestionModel
+                .WithMany()
+                .HasForeignKey(uq => uq.QuestionId);
 
             modelBuilder.Entity<CategoryModel>().HasData(
                 new CategoryModel { Id = 1, Name = "Att skydda sig mot Bedrägerier" },
