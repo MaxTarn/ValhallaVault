@@ -39,7 +39,12 @@ namespace ValhallaVault
 
 
             builder.Services.AddScoped<MaxCategoryRepo>();
-            //builder.Services.AddScoped<CategoryRepo>();
+            builder.Services.AddScoped<CategoryRepo>();
+            builder.Services.AddScoped<AnswerRepo>();
+            builder.Services.AddScoped<QuestionRepo>();
+            builder.Services.AddScoped<SubcategoryRepo>();
+            builder.Services.AddScoped<SegmentRepo>();
+
 
             builder.Services.AddAuthentication(options =>
                 {
