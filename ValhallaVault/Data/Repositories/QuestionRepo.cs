@@ -28,13 +28,11 @@ namespace ValhallaVault.Data.Repositories
         public async Task AddQuestion(QuestionModel question)
         {
             _dbContext.Set<QuestionModel>().Add(question);
-            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateQuestion(QuestionModel question)
         {
             _dbContext.Entry(question).State = EntityState.Modified;
-            _dbContext.SaveChanges();
         }
 
         public async Task<QuestionModel> DeleteQuestion(int id)

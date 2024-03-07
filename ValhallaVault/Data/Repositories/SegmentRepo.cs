@@ -25,13 +25,11 @@ namespace ValhallaVault.Data.Repositories
         public async Task AddSegment(SegmentModel segment)
         {
             _dbContext.Set<SegmentModel>().Add(segment);
-            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateSegment(SegmentModel segment)
         {
             _dbContext.Entry(segment).State = EntityState.Modified;
-            _dbContext.SaveChanges();
         }
 
         public async Task<SegmentModel> DeleteSegment(int id)

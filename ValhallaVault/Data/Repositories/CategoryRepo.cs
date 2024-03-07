@@ -25,13 +25,11 @@ namespace ValhallaVault.Data.Repositories
         public async Task AddCategory(CategoryModel category)
         {
             _dbContext.Set<CategoryModel>().Add(category);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateCategory(CategoryModel category)
         {
             _dbContext.Entry(category).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<CategoryModel> DeleteCategory(int id)

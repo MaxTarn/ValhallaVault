@@ -16,13 +16,11 @@ namespace ValhallaVault.Data.Repositories
         {
 
             _dbContext.Set<SubcategoryModel>().Add(subcategory);
-            await _dbContext.SaveChangesAsync();
         }
 
         public void UpdateSub(SubcategoryModel subcategory)
         {
             _dbContext.Entry(subcategory).State = EntityState.Modified;
-            _dbContext.SaveChanges();
         }
 
         public async Task<SubcategoryModel> DeleteSub(int id)
