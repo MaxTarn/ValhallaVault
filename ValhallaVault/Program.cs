@@ -52,17 +52,17 @@ namespace ValhallaVault
 
             builder.Services.AddControllers();
 
-            
+
             //Dependency injection
             builder.Services.AddScoped<AnswerRepo>();
             builder.Services.AddScoped<CategoryRepo>();
             builder.Services.AddScoped<QuestionRepo>();
             builder.Services.AddScoped<SegmentRepo>();
             builder.Services.AddScoped<SubcategoryRepo>();
-          
 
-          
-                      //skapa users och roller som ska finnas med från start
+
+
+            //skapa users och roller som ska finnas med från start
 
             using (ServiceProvider sp = builder.Services.BuildServiceProvider())
             {
@@ -147,44 +147,43 @@ namespace ValhallaVault
         }
     }
 }
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
