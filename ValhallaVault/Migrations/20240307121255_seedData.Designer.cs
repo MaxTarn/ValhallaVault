@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ValhallaVault.Data;
 
 #nullable disable
 
-namespace ValhallaVault.Migrations.ProgramDb
+namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    partial class ProgramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307121255_seedData")]
+    partial class seedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -571,6 +574,8 @@ namespace ValhallaVault.Migrations.ProgramDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("UserQuestions");
                 });
 
@@ -616,6 +621,15 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired();
 
                     b.Navigation("Segment");
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.Models.QuestionModel", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>
