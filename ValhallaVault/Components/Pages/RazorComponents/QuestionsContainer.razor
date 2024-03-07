@@ -11,6 +11,11 @@
     return;
 }
 
+@if (DisplayTheseQuestions.Count == 0)
+{
+    <h1>Something went wrong! No questions found for this Subcategory.</h1>
+    return;
+}
 
 <div>
     <p>Question @(_index + 1 )/@DisplayTheseQuestions.Count</p>
@@ -64,7 +69,7 @@
         if(_disableBackButton)return;
         if (_index <= 0) return;
         _index--;
-        _disableBackButton = CheckIfBackButtonShouldBeDisabled();
+        _disableBackButton = CheckIfBackButtonShouldBeEnabled();
     }
 
     private void CorrectAnswers()
@@ -80,7 +85,7 @@
         StyleForCorrectAnswer = "";
         StyleForWrongAnswer = "";
         _resetAnswerState = true;
-        _disableBackButton = !CheckIfBackButtonShouldBeDisabled();
+        _disableBackButton = CheckIfBackButtonShouldBeEnabled();
         if (_index + 1 <= DisplayTheseQuestions.Count) _index++;
     }
 
@@ -92,19 +97,15 @@
     }
 
 
-    /// <summary>
-    /// returns false when the Back button should be disabled
-    /// returns true when the Back button should be enabled
-    /// </summary>
-    /// <returns></returns>
-    private bool CheckIfBackButtonShouldBeDisabled()
+    
+    private bool CheckIfBackButtonShouldBeEnabled()
     {
         if (DisplayTheseQuestions == null || DisplayTheseQuestions.Count <= 0)
         {
-            return true; // If there are no questions, the Back button should be disabled
+            return false; // If there are no questions, the Back button should be disabled
         }
 
-        return _index <= 0 || _index >= DisplayTheseQuestions.Count - 1;
+        return _index > 0;
     }
 
 }
