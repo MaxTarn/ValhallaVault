@@ -6,7 +6,7 @@ namespace ValhallaVault.Data.Repositories;
 
 public class UserQuestionRepo
 {
-    //TODO add Crud operations
+
     private readonly ProgramDbContext _dbContext;
 
     public UserQuestionRepo(ProgramDbContext dbContext)

@@ -28,10 +28,10 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateAnswerAsync(AnswerModel answer)
+        public async Task UpdateAnswerAsync(AnswerModel answer)
         {
             _dbContext.Entry(answer).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<AnswerModel?> DeleteAnswerAsync(int id)
@@ -43,7 +43,8 @@ namespace ValhallaVault.Data.Repositories
             var answer = await _dbContext.Answers.FindAsync(id);
             if (answer != null)
             {
-                _dbContext.Set<AnswerModel>().Remove(answer);
+                _dbContext.Answers.Remove(answer);
+                await _dbContext.SaveChangesAsync();
                 return answer;
             }
             else
@@ -51,7 +52,7 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No answer found with the specified ID.");
             }
         }
-        public async Task SaveAsyncAsync()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

@@ -56,7 +56,7 @@ namespace ValhallaVault.Data.Repositories
             if (question != null)
             {
                 _dbContext.Questions.Remove(question);
-
+                await _dbContext.SaveChangesAsync();
                 return question;
             }
             else

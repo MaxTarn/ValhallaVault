@@ -37,8 +37,7 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task AddSubcategoryAsync(SubcategoryModel subcategory)
         {
-
-            _dbContext.Set<SubcategoryModel>().Add(subcategory);
+            _dbContext.Subcategories.Add(subcategory);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -58,6 +57,7 @@ namespace ValhallaVault.Data.Repositories
             if (subcategory != null)
             {
                 _dbContext.Subcategories.Remove(subcategory);
+                await _dbContext.SaveChangesAsync();
                 return subcategory;
             }
             else
@@ -65,14 +65,7 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No subcategory found with the specified ID.");
             }
         }
-
-
-
-
-
-
-
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

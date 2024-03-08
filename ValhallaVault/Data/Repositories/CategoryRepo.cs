@@ -51,6 +51,7 @@ namespace ValhallaVault.Data.Repositories
             if (category != null)
             {
                 _dbContext.Set<CategoryModel>().Remove(category);
+                await _dbContext.SaveChangesAsync();
                 return category;
             }
             else
