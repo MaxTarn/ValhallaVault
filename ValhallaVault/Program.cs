@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,8 @@ namespace ValhallaVault
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddControllers();
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
@@ -44,6 +47,8 @@ namespace ValhallaVault
             builder.Services.AddScoped<QuestionRepo>();
             builder.Services.AddScoped<SubcategoryRepo>();
             builder.Services.AddScoped<SegmentRepo>();
+            builder.Services.AddScoped<UserQuestionRepo>();
+            builder.Services.AddBlazoredLocalStorage();
 
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
@@ -57,6 +62,7 @@ namespace ValhallaVault
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
@@ -170,6 +176,8 @@ namespace ValhallaVault
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
+
+            app.MapControllers();
 
             app.Run();
 
