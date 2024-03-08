@@ -6,7 +6,7 @@ namespace ValhallaVault.Data.Repositories
 
 
 
-    public class SubcategoryRepo
+    public class SubcategoryRepo : ISubcategoryRepository
     {
         private readonly ProgramDbContext _dbContext;
 

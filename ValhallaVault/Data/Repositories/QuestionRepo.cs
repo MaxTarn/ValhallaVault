@@ -6,7 +6,7 @@ using ValhallaVault.Data.Models;
 namespace ValhallaVault.Data.Repositories
 {
 
-    public class QuestionRepo
+    public class QuestionRepo : IQuestionRepository
     {
         private readonly ProgramDbContext _dbContext;
 

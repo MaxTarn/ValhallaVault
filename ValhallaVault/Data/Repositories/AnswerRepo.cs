@@ -3,7 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    public class AnswerRepo
+    public class AnswerRepo : IAnswerRepository
     {
         private readonly ProgramDbContext _dbContext;
 

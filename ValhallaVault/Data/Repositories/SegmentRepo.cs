@@ -4,7 +4,7 @@ using ValhallaVault.Data.Models;
 namespace ValhallaVault.Data.Repositories
 {
 
-    public class SegmentRepo
+    public class SegmentRepo : ISegmentRepository
     {
         private readonly ProgramDbContext _dbContext;
 

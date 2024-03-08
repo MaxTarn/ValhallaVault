@@ -3,7 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    public class CategoryRepo
+    public class CategoryRepo : ICategoryRepository
     {
         private readonly ProgramDbContext _dbContext;
 
@@ -21,8 +21,6 @@ namespace ValhallaVault.Data.Repositories
         {
             return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
-
-        //make method that returns all segments with specific category id
 
         public async Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
         {
