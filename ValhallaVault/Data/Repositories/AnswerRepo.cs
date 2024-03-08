@@ -12,31 +12,35 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<AnswerModel>> GetAllAnswers()
+        public async Task<IEnumerable<AnswerModel>> GetAllAnswersAsync()
         {
-            return _dbContext.Set<AnswerModel>().ToList();
+            return await _dbContext.Answers.ToListAsync();
         }
 
-        public async Task<AnswerModel?> GetAnswerById(int id)
+        public async Task<AnswerModel?> GetAnswerByIdAsync(int id)
         {
-            return await _dbContext.Set<AnswerModel>().FindAsync(id);
+            return await _dbContext.Answers.FindAsync(id);
         }
 
-        public async Task AddAnswer(AnswerModel answer)
+        public async Task AddAnswerAsync(AnswerModel answer)
         {
             _dbContext.Set<AnswerModel>().Add(answer);
             await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateAnswer(AnswerModel answer)
+        public void UpdateAnswerAsync(AnswerModel answer)
         {
             _dbContext.Entry(answer).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
 
-        public async Task<AnswerModel?> DeleteAnswer(int id)
+        public async Task<AnswerModel?> DeleteAnswerAsync(int id)
         {
-            var answer = await _dbContext.Set<AnswerModel>().FindAsync(id);
+            if (id <= 0)
+            {
+                return null;
+            }
+            var answer = await _dbContext.Answers.FindAsync(id);
             if (answer != null)
             {
                 _dbContext.Set<AnswerModel>().Remove(answer);
@@ -47,7 +51,7 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No answer found with the specified ID.");
             }
         }
-        public async Task Save()
+        public async Task SaveAsyncAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

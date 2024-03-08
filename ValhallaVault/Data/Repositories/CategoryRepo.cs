@@ -12,30 +12,41 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<CategoryModel>> GetAllCategories()
+        public async Task<IEnumerable<CategoryModel>> GetAllCategoriesAsync()
         {
-            return _dbContext.Set<CategoryModel>().ToList();
+            return await _dbContext.Set<CategoryModel>().ToListAsync();
         }
 
-        public async Task<CategoryModel?> GetCategoryById(int id)
+        public async Task<CategoryModel?> GetCategoryByIdAsync(int id)
         {
             return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
 
-        public async Task AddCategory(CategoryModel category)
+        //make method that returns all segments with specific category id
+
+        public async Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
+        {
+            return await _dbContext.Categories.Include(x => x.Segments).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task AddCategoryAsync(CategoryModel category)
         {
             _dbContext.Set<CategoryModel>().Add(category);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateCategory(CategoryModel category)
+        public async Task UpdateCategoryAsync(CategoryModel category)
         {
             _dbContext.Entry(category).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<CategoryModel> DeleteCategory(int id)
+        public async Task<CategoryModel?> DeleteCategoryAsync(int id)
         {
+            if (id <= 0)
+            {
+                return null;
+            }
             var category = await _dbContext.Set<CategoryModel>().FindAsync(id);
             if (category != null)
             {
@@ -48,7 +59,7 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

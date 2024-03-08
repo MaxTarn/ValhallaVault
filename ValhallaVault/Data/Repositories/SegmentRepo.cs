@@ -3,7 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    //TODO make method that gets all segments with a specific category Id
+
     public class SegmentRepo
     {
         private readonly ProgramDbContext _dbContext;
@@ -15,12 +15,18 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task<IEnumerable<SegmentModel>> GetAllSegments()
         {
-            return _dbContext.Set<SegmentModel>().ToList();
+            return await _dbContext.Segments.ToListAsync();
         }
 
         public async Task<SegmentModel?> GetSegmentById(int id)
         {
             return await _dbContext.Set<SegmentModel>().FindAsync(id);
+        }
+
+        //make method that gets all segments with a specific category Id //menade du kanske segemnt med sub?
+        public async Task<SegmentModel?> GetSegmentByIdIncludingSubcategoriesAsync(int id)
+        {
+            return await _dbContext.Segments.Include(x => x.Subcategories).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddSegment(SegmentModel segment)
@@ -35,8 +41,12 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public async Task<SegmentModel> DeleteSegment(int id)
+        public async Task<SegmentModel?> DeleteSegment(int id)
         {
+            if (id <= 0)
+            {
+                return null;
+            }
             var segment = await _dbContext.Set<SegmentModel>().FindAsync(id);
             if (segment != null)
             {
