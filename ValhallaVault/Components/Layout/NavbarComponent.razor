@@ -1,0 +1,36 @@
+﻿@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavaigationManager
+ 
+
+@if (!string.IsNullOrEmpty(LoggedInUser))
+{
+    <h5>@LoggedInUser</h5>
+}
+else
+{
+    <p>No user logged in.</p>
+}
+
+
+@* <button class="btn-custom" @onclick="LogOutAsync">Log out</button> *@
+
+
+
+@code {
+
+    private string? LoggedInUser;
+    private string? currentUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoggedInUser = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
+    }
+
+    private async Task LogOutAsync()
+    {
+       // await 
+       //  NavigationManager.NavigateTo("/");
+    }
+}
+
+	
