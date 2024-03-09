@@ -5,14 +5,13 @@
 @using ValhallaVault.Components.Pages.RazorComponents
 @using Microsoft.Data.SqlClient
 @using Microsoft.AspNetCore.Identity
+@using ValhallaVault.Data
 @inject SubcategoryRepo SubcategoryRepo
 @inject QuestionRepo QuestionRepo
 @inject AnswerRepo AnswerRepo
 @inject UserQuestionRepo UserQuestionRepo
-@inject UserManager<IdentityUser> UserManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
 
 
 @if (SubcategoryId == null)
@@ -131,7 +130,7 @@
     }
     private void CorrectAnswers(MouseEventArgs e)
     {
-        string? ids = GetCurretlyLoggedInUsersId().GetAwaiter().GetResult();
+        //string? ids = GetCurretlyLoggedInUsersId().GetAwaiter().GetResult();
         if (UserHasChosenAnswer() == null || UserHasChosenAnswer() == false)
         {
             return;
@@ -260,16 +259,17 @@
         });
     }
 
-
-    private async Task<string?> GetCurretlyLoggedInUsersId()
+    private async Task<string?> GetUserIdByNormalizedUserName(string? userName)
     {
+        if (userName == null) return null;
+        userName = userName.Trim().ToUpper();
+        ApplicationUser? user = await UserManager.FindByNameAsync(userName);
+        string? userId = user?.Id;
+        return userId;
 
-        return (await UserManager
-            .GetUserAsync((
-                await AuthenticationStateProvider.GetAuthenticationStateAsync())
-                .User))?
-            .Id;
     }
+
+    
     #endregion
 
 
@@ -297,6 +297,11 @@
 
         if(Subcategory == null)return;
 
+
+
+        var userName = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
+
+        await GetUserIdByNormalizedUserName(userName);
 
 
         //TODO FIX THIS SHIT, THE DATA HANDLING/ SEARCHING / FILTERING SHOULD NOT HERE
