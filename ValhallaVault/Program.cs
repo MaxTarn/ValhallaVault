@@ -12,6 +12,9 @@ namespace ValhallaVault
     {
         public static void Main(string[] args)
         {
+
+            //TODO authorize the pages that Max has made, DisplayCategory | DisplayAllCategories | DisplaySegment | DisplaySubcategory | DisplayQuestions
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
