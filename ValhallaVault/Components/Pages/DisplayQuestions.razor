@@ -6,6 +6,7 @@
 @using Microsoft.Data.SqlClient
 @using Microsoft.AspNetCore.Identity
 @using ValhallaVault.Data
+@using System.Reflection.Metadata.Ecma335
 @inject SubcategoryRepo SubcategoryRepo
 @inject QuestionRepo QuestionRepo
 @inject AnswerRepo AnswerRepo
@@ -110,7 +111,7 @@
     private QuestionModel? CurrentQuestion;
     private Dictionary<int, string> styleForAnswers = new();
     private AnswerModel ChosenAnswer;
-
+    private string? UserName;
 
 
 
@@ -130,13 +131,19 @@
     }
     private void CorrectAnswers(MouseEventArgs e)
     {
-        //string? ids = GetCurretlyLoggedInUsersId().GetAwaiter().GetResult();
-        if (UserHasChosenAnswer() == null || UserHasChosenAnswer() == false)
+
+        if (UserHasChosenAnswer() != true) { return; }
+
+        if (UserName == null)
         {
+            //there is no logged in user
             return;
         }
 
 
+        //sets the style for the answers
+        //green background for the correct answer despite if the user has ticked in the wrong or right answer
+        //red for a wrong answer that is ticked in
         CurrentQuestion?.Answers?.ForEach(a =>
         {
             //when the answer is correct
@@ -188,9 +195,9 @@
 
     private void ClearStyleForAnswers()
     {
-        foreach (var dic in styleForAnswers)
+        foreach (var dictionaryIntString in styleForAnswers)
         {
-            styleForAnswers[dic.Key] = "";
+            styleForAnswers[dictionaryIntString.Key] = "";
         }
     }
 
@@ -250,22 +257,58 @@
         if(UserHasChosenAnswer() != true)return;
 
 
+        string? userId = GetUserIdByNormalizedUserName().GetAwaiter().GetResult();
+        if(userId == null )return;
+
+        if (AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestion.Id) == true)
+        {
+
+            //edit the entry
+        }
+
 
         UserQuestionRepo.Add(new UserQuestionModel()
         {
-            UserId = "", // TODO FIND THE USER ID OF THE CURRENTLY LOGGED IN USER
+            UserId = userId, 
             QuestionId = CurrentQuestion.Id,
             IsCorrect = UserChoseCorrectAnswer()
         });
+        UserQuestionRepo.Save().GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Checks if the logged in user has already answerd this particular question
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
+    {
+        if (userId == null || questionId == null) return null;
+        int? count = UserQuestionRepo.GetAll()
+            .Where(q => q.QuestionId == questionId)
+            .Where(q => q.UserId == userId)
+            .ToList().Count;
+        if (count != 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<string?> GetUserIdByNormalizedUserName(string? userName)
     {
         if (userName == null) return null;
         userName = userName.Trim().ToUpper();
-        ApplicationUser? user = await UserManager.FindByNameAsync(userName);
+        ApplicationUser? user = UserManager.FindByNameAsync(userName).GetAwaiter().GetResult();
         string? userId = user?.Id;
         return userId;
+
+    }
+    private async Task<string?> GetUserIdByNormalizedUserName()
+    {
+        return await GetUserIdByNormalizedUserName(UserName);
 
     }
 
@@ -299,9 +342,9 @@
 
 
 
-        var userName = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
+        UserName = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
 
-        await GetUserIdByNormalizedUserName(userName);
+        await GetUserIdByNormalizedUserName(UserName);
 
 
         //TODO FIX THIS SHIT, THE DATA HANDLING/ SEARCHING / FILTERING SHOULD NOT HERE
