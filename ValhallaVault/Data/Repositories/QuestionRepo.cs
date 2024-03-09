@@ -26,7 +26,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Questions.FindAsync(id);
         }
 
-        // make method that takes in a question id and then returns that question with all the associated answers
         public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
         {
             return await _dbContext.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);

@@ -44,7 +44,6 @@ public class UserQuestionRepo : IUserQuestionRepository
         }
     }
 
-
     public async Task DeleteUserQuestionAsync(int id)
     {
         //tror inte metoden behövs?
