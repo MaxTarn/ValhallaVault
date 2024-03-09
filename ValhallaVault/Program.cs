@@ -1,4 +1,3 @@
-using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +47,6 @@ namespace ValhallaVault
             builder.Services.AddScoped<SubcategoryRepo>();
             builder.Services.AddScoped<SegmentRepo>();
             builder.Services.AddScoped<UserQuestionRepo>();
-            builder.Services.AddBlazoredLocalStorage();
 
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
