@@ -57,7 +57,7 @@
 
 <div class="container mt-4">
     <h1 class="text-primary">@Subcategory.Name</h1>
-    <p class="text-muted">Total Questions: @(Subcategory.Questions.Count)</p>
+    <p class="text-muted">Question: @(Subcategory.Questions.IndexOf(CurrentQuestion)+1)/@(Subcategory.Questions.Count)</p>
 
     <div class="card">
         <div class="card-body">
@@ -112,6 +112,7 @@
     private Dictionary<int, string> styleForAnswers = new();
     private AnswerModel ChosenAnswer;
     private string? UserName;
+    private List<AnswerContainer> Answers = new();
 
 
 
@@ -165,16 +166,24 @@
 
         });
 
-        if (UserChoseCorrectAnswer())
-        {
-            SetAnswerOfQuestionInDb();
-        }
+        if (!UserChoseCorrectAnswer()) return;
+        SetAnswerOfQuestionInDb();
+
+
 
 
     }
     private void NextQuestion(MouseEventArgs e)
     {
-        throw new NotImplementedException();
+        //goes to next question
+        if (CurrentQuestion == null) return;
+        int? count = Subcategory?.Questions.Count;
+        int? currentQuestionIndex = Subcategory?.Questions.IndexOf(CurrentQuestion);
+
+        if(count == null || currentQuestionIndex == null || count <= currentQuestionIndex+1)return;
+
+        CurrentQuestion = Subcategory?.Questions?[(int)currentQuestionIndex+1];
+        ResetKeysInStyleDictionary();
     }
 
 
@@ -199,6 +208,19 @@
         {
             styleForAnswers[dictionaryIntString.Key] = "";
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void ResetKeysInStyleDictionary()
+    {
+        styleForAnswers.Clear();
+
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            styleForAnswers.Add(a.Id, "");
+        });
     }
 
 
@@ -370,6 +392,22 @@
         {
             styleForAnswers.Add(a.Id, "");
         });
+
+
+
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            Answers.Add(new AnswerContainer()
+            {
+                IsChecked = false,
+                Style = "",
+                Answer = a
+            });
+        });
+
+
+
+
     }
 
     #endregion
