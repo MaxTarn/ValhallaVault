@@ -51,6 +51,13 @@ namespace ValhallaVault.Data.Repositories
         {
             return _dbContext.Set<SubcategoryModel>().ToList();
         }
+        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
+        {
+            return await _dbContext?.Set<SubcategoryModel>()
+                .Include(s => s.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
         public async Task Save()
         {
             await _dbContext.SaveChangesAsync();
