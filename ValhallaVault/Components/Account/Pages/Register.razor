@@ -55,25 +55,34 @@
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-                    <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Register</button>
+                    <button type="submit" class="btn-custom">Register</button>
         </EditForm>
     </div>
+    <br />
+            
+            <div class="text-center">
+            <a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+            </div>
+           
+        </div>
+        <div style="text-align: right">
+            
+            <a class="link-custom" href="/">Go back</a>
         </div>
     </div>
-   @*  <div class="col-md-6 col-md-offset-2">
+   @*   <div class="col-md-6 col-md-offset-2">
         <section>
             <h3>Use another service to register.</h3>
             <hr />
             <ExternalLoginPicker />
         </section>
-    </div> *@
+    </div>  *@
 </div>
 
 <style>
     body {
         background-color: lavenderblush;
     }
-
 </style>
 
 @code {
@@ -169,4 +178,10 @@
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
     }
-}
+} 
+
+
+
+
+
+
