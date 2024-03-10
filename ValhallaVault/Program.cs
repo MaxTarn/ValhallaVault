@@ -12,6 +12,9 @@ namespace ValhallaVault
     {
         public static void Main(string[] args)
         {
+
+            //TODO authorize the pages that Max has made, DisplayCategory | DisplayAllCategories | DisplaySegment | DisplaySubcategory | DisplayQuestions
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
@@ -32,6 +35,8 @@ namespace ValhallaVault
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddControllers();
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
@@ -44,7 +49,9 @@ namespace ValhallaVault
             builder.Services.AddScoped<QuestionRepo>();
             builder.Services.AddScoped<SubcategoryRepo>();
             builder.Services.AddScoped<SegmentRepo>();
+            builder.Services.AddScoped<UserQuestionRepo>();
 
+            //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
             builder.Services.AddAuthentication(options =>
                 {
@@ -56,6 +63,7 @@ namespace ValhallaVault
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
@@ -76,102 +84,104 @@ namespace ValhallaVault
 
             //skapa users och roller som ska finnas med fr�n start
 
-            using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+            //using (ServiceProvider sp = builder.Services.BuildServiceProvider())
+            //{
+            //    var context = sp.GetRequiredService<ApplicationDbContext>(); //plocka ut dessa ut vår dependency injection container
+            //    var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+            //    var roleManagaer = sp.GetRequiredService<RoleManager<IdentityRole>>();
+
+            //    context.Database.Migrate(); //har vi inte skapat databasen så görs det nu
+
+            //    ApplicationUser newAdmin = new()
+            //    {
+            //        UserName = "admin",
+            //        Email = "adminuser@mail.com",
+            //        EmailConfirmed = true
+            //    };
+
+            //    var admin = signInManager.UserManager.FindByNameAsync(newAdmin.UserName).GetAwaiter().GetResult();
+            //    if (admin == null)
+            //    {
+            //        //skapa en ny user
+            //        signInManager.UserManager.CreateAsync(newAdmin, "Password1234!").GetAwaiter().GetResult();
+
+
+
+            //        //kolla om adminrollen existerar
+            //        bool adminRoleExists = roleManagaer.RoleExistsAsync("Admin").GetAwaiter().GetResult();
+            //        if (!adminRoleExists)
+            //        {
+            //            //edminrollen existerar ej, skapa den!
+
+            //            IdentityRole adminRole = new()
+            //            {
+            //                Name = "Admin",
+            //            };
+            //            roleManagaer.CreateAsync(adminRole).GetAwaiter().GetResult();
+            //        }
+            //        //tilldela adminrollen till den nya användaren
+            //        signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
+            //    }
+
+            //    ApplicationUser newUser = new()
+            //    {
+            //        UserName = "user",
+            //        Email = "user@mail.com",
+            //        EmailConfirmed = true
+            //    };
+
+            //    var user = signInManager.UserManager.FindByNameAsync(newUser.UserName).GetAwaiter().GetResult();
+            //    if (user == null)
+            //    {
+            //        //skapa en ny user
+            //        signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+            //    }
+
+
+
+
+
+
+
+
+            //}
+
+
+            var app = builder.Build();
+
+            app.UseRouting();
+
+            app.UseCors("AllowAll");
+
+            app.MapControllers();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                var context = sp.GetRequiredService<ApplicationDbContext>(); //plocka ut dessa ut vår dependency injection container
-                var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
-                var roleManagaer = sp.GetRequiredService<RoleManager<IdentityRole>>();
-
-                context.Database.Migrate(); //har vi inte skapat databasen så görs det nu
-
-                ApplicationUser newAdmin = new()
-                {
-                    UserName = "admin",
-                    Email = "adminuser@mail.com",
-                    EmailConfirmed = true
-                };
-
-                var admin = signInManager.UserManager.FindByNameAsync(newAdmin.UserName).GetAwaiter().GetResult();
-                if (admin == null)
-                {
-                    //skapa en ny user
-                    signInManager.UserManager.CreateAsync(newAdmin, "Password1234!").GetAwaiter().GetResult();
-
-
-
-                    //kolla om adminrollen existerar
-                    bool adminRoleExists = roleManagaer.RoleExistsAsync("Admin").GetAwaiter().GetResult();
-                    if (!adminRoleExists)
-                    {
-                        //edminrollen existerar ej, skapa den!
-
-                        IdentityRole adminRole = new()
-                        {
-                            Name = "Admin",
-                        };
-                        roleManagaer.CreateAsync(adminRole).GetAwaiter().GetResult();
-                    }
-                    //tilldela adminrollen till den nya användaren
-                    signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
-                }
-
-                ApplicationUser newUser = new()
-                {
-                    UserName = "user",
-                    Email = "user@mail.com",
-                    EmailConfirmed = true
-                };
-
-                var user = signInManager.UserManager.FindByNameAsync(newUser.UserName).GetAwaiter().GetResult();
-                if (user == null)
-                {
-                    //skapa en ny user
-                    signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
-                }
-
-
-
-
-
-
-
-
-
-
-
-                var app = builder.Build();
-
-                app.UseRouting();
-
-                app.UseCors("AllowAll");
-
-                app.MapControllers();
-
-                // Configure the HTTP request pipeline.
-                if (app.Environment.IsDevelopment())
-                {
-                    app.UseMigrationsEndPoint();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Error");
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                    app.UseHsts();
-                }
-
-                app.UseHttpsRedirection();
-
-                app.UseStaticFiles();
-                app.UseAntiforgery();
-
-                app.MapRazorComponents<App>()
-                    .AddInteractiveServerRenderMode();
-
-                // Add additional endpoints required by the Identity /Account Razor components.
-                app.MapAdditionalIdentityEndpoints();
-
-                app.Run();
+                app.UseMigrationsEndPoint();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+            app.UseAntiforgery();
+
+            app.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode();
+
+            // Add additional endpoints required by the Identity /Account Razor components.
+            app.MapAdditionalIdentityEndpoints();
+
+            app.MapControllers();
+
+            app.Run();
+
         }
     }
 }

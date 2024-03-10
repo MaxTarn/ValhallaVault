@@ -3,6 +3,9 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
+    //TODO make method that returns all segments with specific category id
+    //TODO make method that return a single subcategory with the questions and answers joined/added
+    // TODO GetQuestionsBySubcategoryIdAsync method
     public class SubcategoryRepo
     {
         private readonly ProgramDbContext _dbContext;
@@ -47,6 +50,13 @@ namespace ValhallaVault.Data.Repositories
         public async Task<IEnumerable<SubcategoryModel>> GetAllSubs()
         {
             return _dbContext.Set<SubcategoryModel>().ToList();
+        }
+        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
+        {
+            return await _dbContext?.Set<SubcategoryModel>()
+                .Include(s => s.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
         public async Task Save()
         {
