@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Identity
 @using ValhallaVault.Data
 @using System.Reflection.Metadata.Ecma335
+@using ValhallaVault.Data.Containers
 @inject SubcategoryRepo SubcategoryRepo
 @inject QuestionRepo QuestionRepo
 @inject AnswerRepo AnswerRepo
@@ -63,21 +64,24 @@
         <div class="card-body">
             <h4 class="card-title mb-4">@CurrentQuestion.Question</h4>
             <ul class="list-group list-group-flush">
-                @foreach (AnswerModel answer in CurrentQuestion.Answers)
+                @foreach (AnswerContainer answerContainer in Answers)
                 {
-                    <li class="list-group-item" style="@(styleForAnswers[answer.Id])">
+                    <li class="list-group-item" style="@(answerContainer.Style)">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" @bind="answer.IsChecked" />
-                            <label class="form-check-label">@answer.Answer</label>
+                            <input class="form-check-input" type="checkbox" @bind="answerContainer.IsChecked" />
+                            <label class="form-check-label">@answerContainer.Answer.Answer</label>
                         </div>
                     </li>
                 }
             </ul>
         </div>
         <div class="card-footer">
-            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@_disableBackButton">Back</button>
-            <button @onclick="CorrectAnswers" class="btn btn-primary" disabled="@(_disableCorrectTheAnswersButton || UserHasChosenAnswer() != true)">Correct Answer</button>
-            <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@_disableNextQuestionButton">Next</button>
+            
+
+            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back</button>
+            <button @onclick="CorrectAnswerUsingAnswerContainers" class="btn btn-primary" disabled="@(UserHasChosenAnswerUsingAnswerContainers() != true)">Correct Answer</button>
+            <button @onclick="NextQuestion" class="btn btn-secondary" >Next</button>
+            
         </div>
     </div>
 </div>
@@ -109,15 +113,13 @@
     private SubcategoryModel? Subcategory;
     private List<QuestionModel> QuestionsForThisSubcategory; 
     private QuestionModel? CurrentQuestion;
-    private Dictionary<int, string> styleForAnswers = new();
-    private AnswerModel ChosenAnswer;
     private string? UserName;
     private List<AnswerContainer> Answers = new();
 
 
 
     private bool _disableBackButton = true;
-    private bool _disableCorrectTheAnswersButton = false;
+    
     private bool _disableNextQuestionButton = false;
 
     #endregion
@@ -128,12 +130,23 @@
 
     private void BackOneQuestion(MouseEventArgs e)
     {
-        throw new NotImplementedException();
+        //goes to next question
+        if (CurrentQuestion == null) return;
+        int? count = Subcategory?.Questions?.Count;
+        int? currentQuestionIndex = Subcategory?.Questions?.IndexOf(CurrentQuestion);
+
+        if(count == null || currentQuestionIndex == null || currentQuestionIndex <= 0)return;
+
+        CurrentQuestion = Subcategory?.Questions?[(int)currentQuestionIndex -1];
+
+
+        ResetAnswersContainerList();
     }
-    private void CorrectAnswers(MouseEventArgs e)
+
+    private async Task CorrectAnswerUsingAnswerContainers(MouseEventArgs e)
     {
 
-        if (UserHasChosenAnswer() != true) { return; }
+        if (UserHasChosenAnswerUsingAnswerContainers() != true) { return; }
 
         if (UserName == null)
         {
@@ -145,29 +158,23 @@
         //sets the style for the answers
         //green background for the correct answer despite if the user has ticked in the wrong or right answer
         //red for a wrong answer that is ticked in
-        CurrentQuestion?.Answers?.ForEach(a =>
+        foreach (AnswerContainer answerContainer in Answers)
         {
-            //when the answer is correct
-            if (a.IsCorrect == true)
+            if (answerContainer.Answer.IsCorrect == true)
             {
-                if (!styleForAnswers.ContainsKey(a.Id)) return;
-                styleForAnswers[a.Id] = _styleForCorrectAnswer;
-                return;
+                answerContainer.Style = _styleForCorrectAnswer;
+                continue;
             }
 
-            //when the answer is wrong and ticked 
-            if (a.IsChecked == true)
+            if(answerContainer.IsChecked)
             {
-                if (!styleForAnswers.ContainsKey(a.Id)) return;
-                styleForAnswers[a.Id] = _styleForWrongAnswer;
-                return;
+                answerContainer.Style = _styleForWrongAnswer;
+                continue;
             }
+        }
 
-
-        });
-
-        if (!UserChoseCorrectAnswer()) return;
-        SetAnswerOfQuestionInDb();
+        if (!UserChoseCorrectAnswerUsingAnswerContainer()) return;
+        await SetAnswerOfQuestionInDbUsingAnswerContainers();
 
 
 
@@ -177,20 +184,39 @@
     {
         //goes to next question
         if (CurrentQuestion == null) return;
-        int? count = Subcategory?.Questions.Count;
-        int? currentQuestionIndex = Subcategory?.Questions.IndexOf(CurrentQuestion);
+        int? count = Subcategory?.Questions?.Count;
+        int? currentQuestionIndex = Subcategory?.Questions?.IndexOf(CurrentQuestion);
 
         if(count == null || currentQuestionIndex == null || count <= currentQuestionIndex+1)return;
 
         CurrentQuestion = Subcategory?.Questions?[(int)currentQuestionIndex+1];
-        ResetKeysInStyleDictionary();
+        
+
+        ResetAnswersContainerList();
     }
+
+
+    
 
 
     #endregion
 
 
     #region Methods
+
+    private void ResetAnswersContainerList()
+    {
+        Answers.Clear();
+        CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            Answers.Add(new AnswerContainer()
+            {
+                IsChecked = false,
+                Style = "",
+                Answer = a
+            });
+        });
+    }
 
     private bool BackButtonShouldBeDisabled()
     {
@@ -202,26 +228,9 @@
     }
 
 
-    private void ClearStyleForAnswers()
-    {
-        foreach (var dictionaryIntString in styleForAnswers)
-        {
-            styleForAnswers[dictionaryIntString.Key] = "";
-        }
-    }
+    
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private void ResetKeysInStyleDictionary()
-    {
-        styleForAnswers.Clear();
-
-        CurrentQuestion?.Answers?.ForEach(a =>
-        {
-            styleForAnswers.Add(a.Id, "");
-        });
-    }
+    
 
 
     private bool UserChoseCorrectAnswer()
@@ -232,6 +241,20 @@
         CurrentQuestion?.Answers?.ForEach(a =>
         {
             if (a.IsChecked == true && a.IsCorrect == true)
+            {
+                answerIsCorrect = true;
+            }
+        });
+        return answerIsCorrect;
+    }
+    private bool UserChoseCorrectAnswerUsingAnswerContainer()
+    {
+        if (UserHasChosenAnswerUsingAnswerContainers() != true) return false;
+
+        bool answerIsCorrect = false;
+        Answers.ForEach(a =>
+        {
+            if (a.IsChecked == true && a.Answer.IsCorrect == true)
             {
                 answerIsCorrect = true;
             }
@@ -255,6 +278,34 @@
         int tickedAnswers = 0;
 
         CurrentQuestion?.Answers?.ForEach(a =>
+        {
+            if (a.IsChecked == true) tickedAnswers++;
+        });
+
+
+        return tickedAnswers switch
+        {
+            0 => null,        // user has not ticked any answer
+            1 => true,        // user has ticked ONLY ONE answer
+            _ => false    // user has ticked MORE THAN ONE
+        };
+    }
+
+    /// <summary>
+    /// null when user has NOT chosen answer
+    /// true when user has chosen ONE answer
+    /// false when user has chosen MORE THAN ONE answer
+    /// </summary>
+    /// <returns>
+    /// null when user has NOT chosen answer
+    /// true when user has chosen ONE answer
+    /// false when user has chosen MORE THAN ONE answer
+    /// </returns>
+    private bool? UserHasChosenAnswerUsingAnswerContainers()
+    {
+        int tickedAnswers = 0;
+
+        Answers.ForEach(a =>
         {
             if (a.IsChecked == true) tickedAnswers++;
         });
@@ -299,6 +350,35 @@
     }
 
     /// <summary>
+    /// This add a entry in the UserQuestions table in the db.
+    /// Where all the information is stored about what user has answerd what question what correctly
+    /// </summary>
+    private async Task SetAnswerOfQuestionInDbUsingAnswerContainers()
+    {
+        if (CurrentQuestion == null) return;
+        if (UserHasChosenAnswerUsingAnswerContainers() != true) return;
+
+
+        string? userId = await GetUserIdByNormalizedUserName();
+        if (userId == null) return;
+
+        if (AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestion.Id) == true)
+        {
+
+            //edit the entry
+        }
+
+
+        UserQuestionRepo.Add(new UserQuestionModel()
+            {
+                UserId = userId,
+                QuestionId = CurrentQuestion.Id,
+                IsCorrect = UserChoseCorrectAnswer()
+            });
+        await UserQuestionRepo.Save();
+    }
+
+    /// <summary>
     /// Checks if the logged in user has already answerd this particular question
     /// </summary>
     /// <param name="userId"></param>
@@ -334,6 +414,15 @@
 
     }
 
+    private bool ShouldDisableBackButton()
+    {
+        if (CurrentQuestion == null) { return true; }
+
+        int? currentQuestionIndex = Subcategory?.Questions?.IndexOf(CurrentQuestion);
+
+        // Disable if the current question is the first one or if there's an issue with the index
+        return currentQuestionIndex == null || currentQuestionIndex <= 0;
+    }
     
     #endregion
 
@@ -388,25 +477,7 @@
 
         CurrentQuestion = Subcategory.Questions.FirstOrDefault();
 
-        CurrentQuestion?.Answers?.ForEach(a =>
-        {
-            styleForAnswers.Add(a.Id, "");
-        });
-
-
-
-        CurrentQuestion?.Answers?.ForEach(a =>
-        {
-            Answers.Add(new AnswerContainer()
-            {
-                IsChecked = false,
-                Style = "",
-                Answer = a
-            });
-        });
-
-
-
+        ResetAnswersContainerList();
 
     }
 
