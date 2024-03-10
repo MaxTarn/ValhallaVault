@@ -12,10 +12,6 @@ else
 }
 
 
-@* <button class="btn-custom" @onclick="LogOutAsync">Log out</button> *@
-
-
-
 @code {
 
     private string? LoggedInUser;
@@ -24,12 +20,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         LoggedInUser = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
-    }
-
-    private async Task LogOutAsync()
-    {
-       // await 
-       //  NavigationManager.NavigateTo("/");
     }
 }
 
