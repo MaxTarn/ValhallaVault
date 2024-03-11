@@ -50,7 +50,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Answers = (await AnswerRepo.GetAllAnswers())
+        Answers = (await AnswerRepo.GetAllAnswersAsync())
             .Where(q => q.QuestionId == TheQuestion.Id)
             .ToList();
 

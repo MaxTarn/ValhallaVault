@@ -55,8 +55,8 @@
     {
         if (CategoryId != null)
         {
-            Category = await CategoryRepo.GetCategoryById((int)CategoryId);
-            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegments())
+            Category = await CategoryRepo.GetCategoryByIdAsync((int)CategoryId);
+            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegmentsAsync())
                 .Where(segment => segment.CategoryId == CategoryId)
                 .ToList();
         }

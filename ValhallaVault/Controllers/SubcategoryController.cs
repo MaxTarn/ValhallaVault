@@ -18,7 +18,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SubcategoryModel>>> GetAll()
         {
-            var subcategorys = await _subcategoryRepo.GetAllSubs();
+            var subcategorys = await _subcategoryRepo.GetAllSubscategoriesAsync();
 
             if (subcategorys != null)
             {
@@ -32,7 +32,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var subcategory = await _subcategoryRepo.GetById(id);
+            var subcategory = await _subcategoryRepo.GetSubcategoryByIdAsync(id);
 
             if (subcategory != null)
             {
@@ -49,9 +49,9 @@ namespace ValhallaVault.Controllers
 
             if (subcategory != null)
             {
-                await _subcategoryRepo.AddSub(subcategory);
+                await _subcategoryRepo.AddSubcategoryAsync(subcategory);
 
-                await _subcategoryRepo.Save();
+                await _subcategoryRepo.SaveAsync();
 
                 return Ok(subcategory);
             }
@@ -63,13 +63,13 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(SubcategoryModel previousSubcategory, int Id)
         {
-            var result = await _subcategoryRepo.GetById(previousSubcategory.Id);
+            var result = await _subcategoryRepo.GetSubcategoryByIdAsync(previousSubcategory.Id);
 
             if (result != null)
             {
                 result.Name = previousSubcategory.Name;
 
-                await _subcategoryRepo.Save();
+                await _subcategoryRepo.SaveAsync();
 
                 return Ok(result);
             }
@@ -81,7 +81,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var subcategory = await _subcategoryRepo.DeleteSub(id);
+            var subcategory = await _subcategoryRepo.DeleteSubcategoryAsync(id);
 
             if (subcategory != null)
             {

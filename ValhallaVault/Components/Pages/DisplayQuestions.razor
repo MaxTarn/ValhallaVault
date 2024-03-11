@@ -201,13 +201,13 @@
             //edit the entry
         }
 
-        UserQuestionRepo.Add(new UserQuestionModel()
+        UserQuestionRepo.AddUserQuestionAsync(new UserQuestionModel()
             {
                 UserId = userId,
                 QuestionId = CurrentQuestionContainer.Original.Id,
                 IsCorrect = UserChoseCorrectAnswer()
             });
-        await UserQuestionRepo.Save();
+        await UserQuestionRepo.SaveAsync();
     }
 
     /// <summary>
@@ -219,7 +219,7 @@
     private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAll()
+        int? count = UserQuestionRepo.GetAllUserQuestionsAsync()
             .Where(q => q.QuestionId == questionId)
             .Where(q => q.UserId == userId)
             .ToList().Count;

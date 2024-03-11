@@ -58,12 +58,12 @@
             return;
         }
 
-        Segment =  await SegmentRepo.GetSegmentById((int)SegmentId);
+        Segment =  await SegmentRepo.GetSegmentByIdAsync((int)SegmentId);
 
         if(Segment == null)return;
 
 
-        SubCategories = (await SubcategoryRepo.GetAllSubs())
+        SubCategories = (await SubcategoryRepo.GetAllSubscategoriesAsync())
             .Where(s => s.SegmentId == SegmentId)
             .ToList();
 

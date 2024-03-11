@@ -3,29 +3,58 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories;
 
-
-public class UserQuestionRepo
+public class UserQuestionRepo : IUserQuestionRepository
 {
-    //TODO add Crud operations
+
     private readonly ProgramDbContext _dbContext;
 
     public UserQuestionRepo(ProgramDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-
-    public List<UserQuestionModel> GetAll()
+    public async Task<IEnumerable<UserQuestionModel>> GetAllUserQuestionsAsync()
     {
-        return _dbContext.UserQuestions.ToList();
+        return await _dbContext.UserQuestions.ToListAsync();
     }
 
-    public void Add(UserQuestionModel addThis)
+    public async Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id)
     {
-        _dbContext.UserQuestions.Add(addThis);
+        return await _dbContext.UserQuestions.FindAsync(id);
     }
 
-    public async Task Save()
+    public async Task AddUserQuestionAsync(UserQuestionModel userQuestion)
+    {
+        _dbContext.UserQuestions.Add(userQuestion);
+        await _dbContext.SaveChangesAsync();
+    }
+
+
+    public async Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
+    {
+        UserQuestionModel? userQuestionToUpdate = await GetUserQuestionByIdAsync(id);
+        if (userQuestionToUpdate != null)
+        {
+            userQuestionToUpdate.UserId = updatedUserQuestionModel.UserId;
+            userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
+            userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
+            await _dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new ArgumentException("User question not found.");
+        }
+    }
+
+    public async Task DeleteUserQuestionAsync(int id)
+    {
+        //tror inte metoden behövs?
+    }
+    public async Task SaveAsync()
     {
         await _dbContext.SaveChangesAsync();
     }
+
+
+
+
 }
