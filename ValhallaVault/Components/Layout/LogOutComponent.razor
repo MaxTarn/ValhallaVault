@@ -1,43 +1,44 @@
-﻿
- @implements IDisposable
+﻿@implements IDisposable
 
 @inject NavigationManager NavigationManager
- 
+
 @* <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">ValhallaVault</a>
-    </div> 
-</div> *@ 
+    </div>
+</div> *@
 
 @* <input type="checkbox" title="Navigation menu" class="navbar-toggler" /> *@
 
 @* <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column"> *@
 
-         <AuthorizeView>
-            <Authorized>
-               @*  <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div> *@
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="btn-custom">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Log out
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
+<AuthorizeView>
+    <Authorized>
+        @*  <div class="nav-item px-3">
+        <NavLink class="nav-link" href="Account/Manage">
+        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+        </NavLink>
+        </div> *@
+        <div class="nav-item px-3">
+            <form action="Account/Logout" method="post">
+                <AntiforgeryToken />
+                @* <input type="hidden" name="ReturnUrl" value="@currentUrl"  /> *@
+                <input type="hidden" name="ReturnUrl" value="" /"" />
+                @*  <button type="submit" class="nav-link btn-custom"> *@
+                <button type="submit" class="btn-custom">
+                    <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Log out
+                </button>
+            </form>
+        </div>
+    </Authorized>
 
-        </AuthorizeView>
- @*    </nav>
+</AuthorizeView>
+@*    </nav>
 </div>
  *@
- 
- 
+
+
 
 @code {
     private string? currentUrl;
@@ -58,5 +59,9 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-}
 
+    private void Redirect()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
