@@ -17,22 +17,22 @@
 @if(!isChecked)
 {
     <div class="text-center">
-    <p class="link-custom" style="margin-right: 50px;">Please accept our terms and conditions to sign up as a user</p>
+    <p class="style-link" style="margin-right: 50px;">Please accept our terms and conditions to sign up as a user</p>
 
 
-        <a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+        <a class="style-link" href="/account/login/">Already a member? Log in here</a>
     </div>
 }
     else
     {
     <div class="text-center">
-        <a class="link-custom" href="/account/register/" style="margin-right: 50px;">Not a member yet? Register here</a>
-        <a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+        <a class="style-link" href="/account/register/" style="margin-right: 50px;">Not a member yet? Register here</a>
+        <a class="style-link" href="/account/login/">Already a member? Log in here</a>
     </div>       
     }
 
 
-<a class="link-custom" href="/accounts/userpage/ ">Temporary link to user page</a>
+<a class="style-link" href="/accounts/userpage/ ">Temporary link to user page</a>
 
 
 
@@ -45,7 +45,7 @@
 
 <style>
     body {
-        background-color: lavenderblush;
+        background-color: aliceblue;
     }
 
     .centered-image {
@@ -69,9 +69,6 @@
 
 
 @code {
-
     public bool isChecked = false;
     private string text = "Agree to terms and conditions";
-
-    
 }
