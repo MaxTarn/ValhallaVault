@@ -19,7 +19,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<QuestionModel>>> GetAll()
         {
-            var question = await _questionRepo.GetAllQuestions();
+            var question = await _questionRepo.GetAllQuestionsAsync();
 
             if (question != null)
             {
@@ -33,7 +33,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var question = await _questionRepo.GetQuestionById(id);
+            var question = await _questionRepo.GetQuestionByIdAsync(id);
 
             if (question != null)
             {
@@ -50,7 +50,7 @@ namespace ValhallaVault.Controllers
 
             if (question != null)
             {
-                await _questionRepo.AddQuestion(question);
+                await _questionRepo.AddQuestionAsync(question);
 
 
 
@@ -64,7 +64,7 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(QuestionModel previousQuestion, int Id)
         {
-            var result = await _questionRepo.GetQuestionById(previousQuestion.Id);
+            var result = await _questionRepo.GetQuestionByIdAsync(previousQuestion.Id);
 
             if (result != null)
             {
@@ -80,7 +80,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var question = await _questionRepo.DeleteQuestion(id);
+            var question = await _questionRepo.DeleteQuestionAsync(id);
 
             if (question != null)
             {

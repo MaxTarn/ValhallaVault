@@ -3,8 +3,8 @@
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-@inject CategoryRepo CategoryRepo
-@inject SegmentRepo SegmentRepo
+@inject ICategoryRepository CategoryRepo
+@inject ISegmentRepository SegmentRepo
 
 
 @if (CategoryId == null)
@@ -58,8 +58,8 @@
     {
         if (CategoryId != null)
         {
-            Category = await CategoryRepo.GetCategoryById((int)CategoryId);
-            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegments())
+            Category = await CategoryRepo.GetCategoryByIdAsync((int)CategoryId);
+            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegmentsAsync())
                 .Where(segment => segment.CategoryId == CategoryId)
                 .ToList();
         }

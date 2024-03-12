@@ -3,31 +3,38 @@
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-@inject MaxCategoryRepo MaxCategoryRepo
-@inject CategoryRepo CategoryRepo
+@inject ICategoryRepository CategoryRepo
 
-<div class="container mt-4">
-    <h1>Categories:</h1>
+
+    
     @* Display error messages if needed *@
     @if (AllCategories == null)
     {
-        <p class="alert alert-danger">Something Went Wrong! Unable to Gather all of the Categories</p>
+        <div class="container mt-4">
+            <p class="alert alert-danger">Something Went Wrong! Unable to Gather all of the Categories</p>
+        </div>
         return;
     }
 
     @if (AllCategories.Count <= 0)
     {
-        <p class="alert alert-warning">Something went Wrong! There were no categories in the database!</p>
-    }
+        <div class="container mt-4">
+            <p class="alert alert-warning">Something went Wrong! There were no categories in the database!</p>
+        </div>
 
-    <!-- Apply Bootstrap styling to the links -->
-    <div class="list-group">
-        @foreach (CategoryModel category in AllCategories)
-        {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Id}")" class="list-group-item list-group-item-action">@category.Name</a>
-        }
+    }
+    
+
+    <div class="container mt-4">
+                    <h1>Categories:</h1>
+        <!-- Apply Bootstrap styling to the links -->
+        <div class="list-group">
+            @foreach (CategoryModel category in AllCategories)
+            {
+                <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Id}")" class="list-group-item list-group-item-action">@category.Name</a>
+            }
+        </div>
     </div>
-</div>
 
 @code {
     //TODO CONACT DB TO GET ALL Categories
@@ -39,7 +46,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        AllCategories = (await CategoryRepo.GetAllCategories()).ToList();
+        AllCategories = (await CategoryRepo.GetAllCategoriesAsync()).ToList();
         await base.OnInitializedAsync();
     }
 

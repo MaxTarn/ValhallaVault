@@ -8,10 +8,10 @@
 @using ValhallaVault.Data
 @using System.Reflection.Metadata.Ecma335
 @using ValhallaVault.Data.Containers
-@inject SubcategoryRepo SubcategoryRepo
-@inject QuestionRepo QuestionRepo
-@inject AnswerRepo AnswerRepo
-@inject UserQuestionRepo UserQuestionRepo
+@inject ISubcategoryRepository SubcategoryRepo
+@inject IQuestionRepository QuestionRepo
+@inject IAnswerRepository AnswerRepo
+@inject IUserQuestionRepository UserQuestionRepo
 @inject AuthenticationStateProvider AuthStateProvider
 @inject UserManager<ApplicationUser> UserManager
 
@@ -204,13 +204,13 @@
             //edit the entry
         }
 
-        UserQuestionRepo.Add(new UserQuestionModel()
+        await UserQuestionRepo.AddUserQuestionAsync(new UserQuestionModel()
             {
                 UserId = userId,
                 QuestionId = CurrentQuestionContainer.Original.Id,
                 IsCorrect = UserChoseCorrectAnswer()
             });
-        await UserQuestionRepo.Save();
+        await UserQuestionRepo.SaveAsync();
     }
 
     /// <summary>
@@ -222,7 +222,9 @@
     private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAll()
+        int? count = UserQuestionRepo.GetAllUserQuestionAsync()
+            .GetAwaiter()
+            .GetResult()
             .Where(q => q.QuestionId == questionId)
             .Where(q => q.UserId == userId)
             .ToList().Count;
@@ -277,7 +279,7 @@
     
     private async Task<SubCategoryContainer?> BuildSubCategoryContainer(int subcategoryId)
     {
-        var subcategory = await SubcategoryRepo.GetByIdWithQuestionsAndAnswers(subcategoryId);
+        var subcategory = await SubcategoryRepo.GetSubCategoryByIdIncludingThingsAsync(subcategoryId);
 
         if (subcategory == null)
         {

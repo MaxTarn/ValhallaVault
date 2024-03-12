@@ -1,9 +1,9 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
-@inject SegmentRepo SegmentRepo
-@inject SubcategoryRepo SubcategoryRepo
-@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@inject ISegmentRepository SegmentRepo
+@inject ISubcategoryRepository SubcategoryRepo
+@inject NavigationManager Navigation
 
 @if (SegmentId == null)
 {
@@ -61,12 +61,12 @@
             return;
         }
 
-        Segment =  await SegmentRepo.GetSegmentById((int)SegmentId);
+        Segment =  await SegmentRepo.GetSegmentByIdAsync((int)SegmentId);
 
         if(Segment == null)return;
 
 
-        SubCategories = (await SubcategoryRepo.GetAllSubs())
+        SubCategories = (await SubcategoryRepo.GetAllSubscategoriesAsync())
             .Where(s => s.SegmentId == SegmentId)
             .ToList();
 

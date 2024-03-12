@@ -18,7 +18,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AnswerModel>>> GetAll()
         {
-            var segment = await _segmentRepo.GetAllSegments();
+            var segment = await _segmentRepo.GetAllSegmentsAsync();
 
             if (segment != null)
             {
@@ -32,7 +32,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var segment = await _segmentRepo.GetSegmentById(id);
+            var segment = await _segmentRepo.GetSegmentByIdAsync(id);
 
             if (segment != null)
             {
@@ -49,9 +49,9 @@ namespace ValhallaVault.Controllers
 
             if (segment != null)
             {
-                await _segmentRepo.AddSegment(segment);
+                await _segmentRepo.AddSegmentAsync(segment);
 
-                await _segmentRepo.Save();
+                await _segmentRepo.SaveAsync();
 
                 return Ok(segment);
             }
@@ -63,13 +63,13 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(SegmentModel previousSegment, int Id)
         {
-            var result = await _segmentRepo.GetSegmentById(previousSegment.Id);
+            var result = await _segmentRepo.GetSegmentByIdAsync(previousSegment.Id);
 
             if (result != null)
             {
                 result.Name = previousSegment.Name;
 
-                await _segmentRepo.Save();
+                await _segmentRepo.SaveAsync();
 
                 return Ok(result);
             }
@@ -81,7 +81,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var segment = await _segmentRepo.DeleteSegment(id);
+            var segment = await _segmentRepo.DeleteSegmentAsync(id);
 
             if (segment != null)
             {
