@@ -16,7 +16,7 @@ namespace ValhallaVault.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnswerModel>>> GetAll()
+        public async Task<ActionResult<List<SegmentModel>>> GetAll()
         {
             var segment = await _segmentRepo.GetAllSegments();
 
