@@ -3,8 +3,8 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    //TODO make method that gets all segments with a specific category Id
-    public class SegmentRepo
+
+    public class SegmentRepo : ISegmentRepository
     {
         private readonly ProgramDbContext _dbContext;
 
@@ -13,34 +13,44 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<SegmentModel>> GetAllSegments()
+        public async Task<IEnumerable<SegmentModel>> GetAllSegmentsAsync()
         {
-            return _dbContext.Set<SegmentModel>().ToList();
+            return await _dbContext.Segments.ToListAsync();
         }
 
-        public async Task<SegmentModel?> GetSegmentById(int id)
+        public async Task<SegmentModel?> GetSegmentByIdAsync(int id)
         {
-            return await _dbContext.Set<SegmentModel>().FindAsync(id);
+            return await _dbContext.Segments.FindAsync(id);
         }
 
-        public async Task AddSegment(SegmentModel segment)
+        public async Task<SegmentModel?> GetSegmentByIdIncludingSubcategoriesAsync(int id)
         {
-            _dbContext.Set<SegmentModel>().Add(segment);
+            return await _dbContext.Segments.Include(x => x.Subcategories).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task AddSegmentAsync(SegmentModel segment)
+        {
+            _dbContext.Segments.Add(segment);
             await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateSegment(SegmentModel segment)
+        public void UpdateSegmentAsync(SegmentModel segment)
         {
             _dbContext.Entry(segment).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
 
-        public async Task<SegmentModel> DeleteSegment(int id)
+        public async Task<SegmentModel?> DeleteSegmentAsync(int id)
         {
-            var segment = await _dbContext.Set<SegmentModel>().FindAsync(id);
+            if (id <= 0)
+            {
+                return null;
+            }
+            var segment = await _dbContext.Segments.FindAsync(id);
             if (segment != null)
             {
-                _dbContext.Set<SegmentModel>().Remove(segment);
+                _dbContext.Segments.Remove(segment);
+                await _dbContext.SaveChangesAsync();
                 return segment;
             }
             else
@@ -49,7 +59,7 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

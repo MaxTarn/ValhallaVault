@@ -44,12 +44,13 @@ namespace ValhallaVault
 
 
             builder.Services.AddScoped<MaxCategoryRepo>();
-            builder.Services.AddScoped<CategoryRepo>();
-            builder.Services.AddScoped<AnswerRepo>();
-            builder.Services.AddScoped<QuestionRepo>();
-            builder.Services.AddScoped<SubcategoryRepo>();
-            builder.Services.AddScoped<SegmentRepo>();
-            builder.Services.AddScoped<UserQuestionRepo>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepo>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepo>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepo>();
+            builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepo>();
+            builder.Services.AddScoped<ISegmentRepository, SegmentRepo>();
+            builder.Services.AddScoped<IUserQuestionRepository, UserQuestionRepo>();
+            builder.Services.AddBlazoredLocalStorage();
 
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 

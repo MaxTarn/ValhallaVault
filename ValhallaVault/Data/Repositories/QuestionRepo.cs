@@ -5,8 +5,8 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    //TODO make method that takes in a question id and then returns that question with all the associated answers
-    public class QuestionRepo
+
+    public class QuestionRepo : IQuestionRepository
     {
         private readonly ProgramDbContext _dbContext;
 
@@ -15,18 +15,24 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<QuestionModel>> GetAllQuestions()
+        public async Task<IEnumerable<QuestionModel>> GetAllQuestionsAsync()
         {
 
-            return _dbContext.Set<QuestionModel>().ToList();
+            return await _dbContext.Questions.ToListAsync();
         }
 
-        public async Task<QuestionModel?> GetQuestionById(int id)
+        public async Task<QuestionModel?> GetQuestionByIdAsync(int id)
         {
-            return await _dbContext.Set<QuestionModel>().FindAsync(id);
+            return await _dbContext.Questions.FindAsync(id);
         }
 
-        public async Task AddQuestion(QuestionModel question)
+        public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
+        {
+            return await _dbContext.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+
+        public async Task AddQuestionAsync(QuestionModel question)
         {
             _dbContext.Set<QuestionModel>().Add(question);
             await _dbContext.SaveChangesAsync();
@@ -38,14 +44,18 @@ namespace ValhallaVault.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public async Task<QuestionModel> DeleteQuestion(int id)
+        public async Task<QuestionModel?> DeleteQuestionAsync(int id)
         {
+            if (id <= 0)
+            {
+                return null;
+            }
             var question = await _dbContext.Questions.FindAsync(id);
 
             if (question != null)
             {
                 _dbContext.Questions.Remove(question);
-
+                await _dbContext.SaveChangesAsync();
                 return question;
             }
             else
@@ -54,7 +64,7 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }
