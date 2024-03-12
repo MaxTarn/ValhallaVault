@@ -1,5 +1,5 @@
 ﻿@page "/"
-
+@rendermode InteractiveServer
 
 <div class="row">
 
@@ -13,16 +13,34 @@
 <h3 class=" text-center">where you can learn more about how to safeguard your digital assets</h3>
 <br />
 <br />
-<div class="text-center">
-<a class="link-custom" href="/account/register/" style="margin-right: 50px;">Not a member yet? Register here</a>
 
-<a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+@if(!isChecked)
+{
+    <div class="text-center">
+    <p class="link-custom" style="margin-right: 50px;">Please accept our terms and conditions to sign up as a user</p>
 
-  
 
-</div>
+        <a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+    </div>
+}
+    else
+    {
+    <div class="text-center">
+        <a class="link-custom" href="/account/register/" style="margin-right: 50px;">Not a member yet? Register here</a>
+        <a class="link-custom" href="/account/login/">Already a member? Log in here</a>
+    </div>       
+    }
 
-<a class="link-custom" href="/accounts/userpage/">Temporary link to user page</a>
+
+<a class="link-custom" href="/accounts/userpage/ ">Temporary link to user page</a>
+
+
+
+ <div class="d-flex align-items">
+<p>Accept terms and conditions</p>
+<input type="checkbox" @bind="isChecked"/>
+</div> 
+
 
 
 <style>
@@ -52,7 +70,8 @@
 
 @code {
 
+    public bool isChecked = false;
+    private string text = "Agree to terms and conditions";
 
-
-
+    
 }

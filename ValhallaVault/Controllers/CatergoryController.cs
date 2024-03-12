@@ -18,7 +18,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryModel>>> GetAll()
         {
-            var categories = await _catergoryRepo.GetAllCategories();
+            var categories = await _catergoryRepo.GetAllCategoriesAsync();
 
             if (categories != null)
             {
@@ -32,7 +32,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _catergoryRepo.GetCategoryById(id);
+            var category = await _catergoryRepo.GetCategoryByIdAsync(id);
 
             if (category != null)
             {
@@ -49,9 +49,9 @@ namespace ValhallaVault.Controllers
 
             if (category != null)
             {
-                await _catergoryRepo.AddCategory(category);
+                await _catergoryRepo.AddCategoryAsync(category);
 
-                await _catergoryRepo.Save();
+                await _catergoryRepo.SaveAsync();
 
                 return Ok(category);
             }
@@ -63,14 +63,14 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(CategoryModel previousCategory, int Id)
         {
-            var result = await _catergoryRepo.GetCategoryById(previousCategory.Id);
+            var result = await _catergoryRepo.GetCategoryByIdAsync(previousCategory.Id);
 
             if (result != null)
             {
                 result.Name = previousCategory.Name;
 
 
-                await _catergoryRepo.Save();
+                await _catergoryRepo.SaveAsync();
 
                 return Ok(result);
             }
@@ -83,7 +83,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _catergoryRepo.DeleteCategory(id);
+            var category = await _catergoryRepo.DeleteCategoryAsync(id);
 
             if (category != null)
             {

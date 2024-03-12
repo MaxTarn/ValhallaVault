@@ -3,7 +3,7 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
 {
-    public class AnswerRepo
+    public class AnswerRepo : IAnswerRepository
     {
         private readonly ProgramDbContext _dbContext;
 
@@ -12,53 +12,39 @@ namespace ValhallaVault.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<AnswerModel>> GetAllAnswers()
+        public async Task<IEnumerable<AnswerModel>> GetAllAnswersAsync()
         {
-            return _dbContext.Set<AnswerModel>().ToList();
+            return await _dbContext.Answers.ToListAsync();
         }
 
-        public async Task<AnswerModel?> GetAnswerById(int id)
+        public async Task<AnswerModel?> GetAnswerByIdAsync(int id)
         {
-            if (id != 0)
-            {
-                return await _dbContext.Set<AnswerModel>().FindAsync(id);
-            }
-            else
-            {
-                throw new Exception("Use valid Id");
-            }
+            return await _dbContext.Answers.FindAsync(id);
         }
 
-        public async Task AddAnswer(AnswerModel answer)
+        public async Task AddAnswerAsync(AnswerModel answer)
         {
+            _dbContext.Set<AnswerModel>().Add(answer);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAnswerAsync(AnswerModel answer)
+        {
+            _dbContext.Entry(answer).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<AnswerModel?> DeleteAnswerAsync(int id)
+        {
+            if (id <= 0)
+            {
+                return null;
+            }
+            var answer = await _dbContext.Answers.FindAsync(id);
             if (answer != null)
             {
-                _dbContext.Set<AnswerModel>().Add(answer);
-            }
-            else
-            {
-                throw new Exception("Answer cannot be null");
-            }
-        }
-
-        public void UpdateAnswer(AnswerModel answer)
-        {
-            if (answer != null)
-            {
-                _dbContext.Entry(answer).State = EntityState.Modified;
-            }
-            else
-            {
-                throw new Exception("Select answer to update");
-            }
-        }
-
-        public async Task<AnswerModel?> DeleteAnswer(int id)
-        {
-            var answer = await _dbContext.Set<AnswerModel>().FindAsync(id);
-            if (answer != null)
-            {
-                _dbContext.Set<AnswerModel>().Remove(answer);
+                _dbContext.Answers.Remove(answer);
+                await _dbContext.SaveChangesAsync();
                 return answer;
             }
             else
@@ -66,9 +52,10 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No answer found with the specified ID.");
             }
         }
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }
     }
+
 }

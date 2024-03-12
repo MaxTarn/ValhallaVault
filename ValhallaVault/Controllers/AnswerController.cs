@@ -21,7 +21,7 @@ namespace ValhallaVault.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AnswerModel>>> GetAll()
         {
-            var answers = await _answerRepo.GetAllAnswers();
+            var answers = await _answerRepo.GetAllAnswersAsync();
 
             if (answers != null)
             {
@@ -35,7 +35,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var answer = await _answerRepo.GetAnswerById(id);
+            var answer = await _answerRepo.GetAnswerByIdAsync(id);
 
             if (answer != null)
             {
@@ -52,9 +52,9 @@ namespace ValhallaVault.Controllers
 
             if (answer != null)
             {
-                await _answerRepo.AddAnswer(answer);
+                await _answerRepo.AddAnswerAsync(answer);
 
-                await _answerRepo.Save();
+                await _answerRepo.SaveAsync();
 
                 return Ok(answer);
             }
@@ -66,14 +66,14 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(AnswerModel previousAnswer, int Id)
         {
-            var result = await _answerRepo.GetAnswerById(previousAnswer.Id);
+            var result = await _answerRepo.GetAnswerByIdAsync(previousAnswer.Id);
 
             if (result != null)
             {
                 result.Answer = previousAnswer.Answer;
                 result.IsCorrect = previousAnswer.IsCorrect;
 
-                await _answerRepo.Save();
+                await _answerRepo.SaveAsync();
 
                 return Ok(result);
             }
@@ -85,7 +85,7 @@ namespace ValhallaVault.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var answer = await _answerRepo.DeleteAnswer(id);
+            var answer = await _answerRepo.DeleteAnswerAsync(id);
 
             if (answer != null)
             {

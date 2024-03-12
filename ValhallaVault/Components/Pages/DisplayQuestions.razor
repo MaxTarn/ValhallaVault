@@ -8,10 +8,10 @@
 @using ValhallaVault.Data
 @using System.Reflection.Metadata.Ecma335
 @using ValhallaVault.Data.Containers
-@inject SubcategoryRepo SubcategoryRepo
-@inject QuestionRepo QuestionRepo
-@inject AnswerRepo AnswerRepo
-@inject UserQuestionRepo UserQuestionRepo
+@inject ISubcategoryRepository SubcategoryRepo
+@inject IQuestionRepository QuestionRepo
+@inject IAnswerRepository AnswerRepo
+@inject IUserQuestionRepository UserQuestionRepo
 @inject AuthenticationStateProvider AuthStateProvider
 @inject UserManager<ApplicationUser> UserManager
 
@@ -68,6 +68,9 @@
 
 @code {
     //ooo didnt know #region was a thing?? how have I not found out this before????!?!?
+
+    //TODO Add backbutton which takes user back up one level
+    //TODO add % completion
 
     #region Parameters
 
@@ -201,13 +204,13 @@
             //edit the entry
         }
 
-        UserQuestionRepo.Add(new UserQuestionModel()
+        await UserQuestionRepo.AddUserQuestionAsync(new UserQuestionModel()
             {
                 UserId = userId,
                 QuestionId = CurrentQuestionContainer.Original.Id,
                 IsCorrect = UserChoseCorrectAnswer()
             });
-        await UserQuestionRepo.Save();
+        await UserQuestionRepo.SaveAsync();
     }
 
     /// <summary>
@@ -219,7 +222,9 @@
     private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAll()
+        int? count = UserQuestionRepo.GetAllUserQuestionsAsync()
+            .GetAwaiter()
+            .GetResult()
             .Where(q => q.QuestionId == questionId)
             .Where(q => q.UserId == userId)
             .ToList().Count;
@@ -231,7 +236,7 @@
     {
         if (userName == null) return null;
         userName = userName.Trim().ToUpper();
-        ApplicationUser? user = UserManager.FindByNameAsync(userName).GetAwaiter().GetResult();
+        ApplicationUser? user = await UserManager.FindByNameAsync(userName);
         string? userId = user?.Id;
         return userId;
 
@@ -253,28 +258,26 @@
 
     private bool ShouldDisableNextButton()
     {
-        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) 
-        { 
-            return true; 
-        }
+        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true; 
+        
 
         int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
 
-        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer.Questions.Count ;
+        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
     }
 
     private bool ShouldDisableCorrectAnswerButton()
     {
-        if (UserHasChosenAnswer() != true) return false;
+        if (UserHasChosenAnswer() != true || CurrentQuestionContainer == null | CurrentSubcategoryContainer == null) return true;
 
-        if (CurrentQuestionContainer?.Answers[0].ShowStyle == true) return true;
+        if (CurrentQuestionContainer.Answers.Any(answer => answer.ShowStyle)) return true;
 
         return false;
     }
     
     private async Task<SubCategoryContainer?> BuildSubCategoryContainer(int subcategoryId)
     {
-        var subcategory = await SubcategoryRepo.GetByIdWithQuestionsAndAnswers(subcategoryId);
+        var subcategory = await SubcategoryRepo.GetSubCategoryByIdIncludingThingsAsync(subcategoryId);
 
         if (subcategory == null)
         {
