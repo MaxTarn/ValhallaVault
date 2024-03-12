@@ -222,7 +222,7 @@
     private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAllUserQuestionAsync()
+        int? count = UserQuestionRepo.GetAllUserQuestionsAsync()
             .GetAwaiter()
             .GetResult()
             .Where(q => q.QuestionId == questionId)
@@ -236,7 +236,7 @@
     {
         if (userName == null) return null;
         userName = userName.Trim().ToUpper();
-        ApplicationUser? user = UserManager.FindByNameAsync(userName).GetAwaiter().GetResult();
+        ApplicationUser? user = await UserManager.FindByNameAsync(userName);
         string? userId = user?.Id;
         return userId;
 
@@ -258,21 +258,19 @@
 
     private bool ShouldDisableNextButton()
     {
-        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) 
-        { 
-            return true; 
-        }
+        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true; 
+        
 
         int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
 
-        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer.Questions.Count ;
+        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
     }
 
     private bool ShouldDisableCorrectAnswerButton()
     {
-        if (UserHasChosenAnswer() != true) return false;
+        if (UserHasChosenAnswer() != true || CurrentQuestionContainer == null | CurrentSubcategoryContainer == null) return true;
 
-        if (CurrentQuestionContainer?.Answers[0].ShowStyle == true) return true;
+        if (CurrentQuestionContainer.Answers.Any(answer => answer.ShowStyle)) return true;
 
         return false;
     }
