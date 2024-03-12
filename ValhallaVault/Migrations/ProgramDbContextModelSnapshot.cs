@@ -8,7 +8,7 @@ using ValhallaVault.Data;
 
 #nullable disable
 
-namespace ValhallaVault.Migrations.ProgramDb
+namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
     partial class ProgramDbContextModelSnapshot : ModelSnapshot
@@ -32,6 +32,9 @@ namespace ValhallaVault.Migrations.ProgramDb
 
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsChecked")
+                        .HasColumnType("bit");
 
                     b.Property<bool?>("IsCorrect")
                         .HasColumnType("bit");
@@ -178,6 +181,286 @@ namespace ValhallaVault.Migrations.ProgramDb
                             Answer = "Brandväggar",
                             IsCorrect = false,
                             QuestionId = 8
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Answer = "Kontakta omedelbart kreditkortsföretaget och rapportera transaktionerna.",
+                            IsCorrect = true,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Answer = "Avvakta och se om det händer igen innan du agerar.",
+                            IsCorrect = false,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Answer = "Ignorera det och hoppas att det löser sig självt.",
+                            IsCorrect = false,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Answer = "Publicera informationen på sociala medier för att varna andra.",
+                            IsCorrect = false,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Answer = "Skimming på betalningsautomater.",
+                            IsCorrect = true,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Answer = "Användning av säkra webbplatser.",
+                            IsCorrect = false,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Answer = "Delning av kreditkortsuppgifter via e-post.",
+                            IsCorrect = false,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Answer = "Användning av offentliga Wi-Fi-nätverk.",
+                            IsCorrect = false,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Answer = "Använd säkra och pålitliga webbplatser.",
+                            IsCorrect = true,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Answer = "Lagra kreditkortsuppgifter offentligt.",
+                            IsCorrect = false,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Answer = "Dela kreditkortsuppgifter via e-post.",
+                            IsCorrect = false,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Answer = "Använda samma lösenord överallt för bekvämlighet.",
+                            IsCorrect = false,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Answer = "Förhindra ytterligare skador.",
+                            IsCorrect = true,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Answer = "Ignorera det och hoppas att det försvinner.",
+                            IsCorrect = false,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Answer = "Rapportera det till ditt internetleverantörsupport.",
+                            IsCorrect = false,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Answer = "Kontakta ditt lokala postkontor.",
+                            IsCorrect = false,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Answer = "Spärra kortet och rapportera till polisen.",
+                            IsCorrect = true,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Answer = "Avvakta och se om något händer.",
+                            IsCorrect = false,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Answer = "Publicera informationen på sociala medier.",
+                            IsCorrect = false,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Answer = "Inget behov av att göra något.",
+                            IsCorrect = false,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Answer = "Undvik att använda misstänkta betalningsautomater.",
+                            IsCorrect = true,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Answer = "Använd alltid samma automater.",
+                            IsCorrect = false,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Answer = "Använd offentliga Wi-Fi-nätverk för att göra inköp.",
+                            IsCorrect = false,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Answer = "Dela din PIN-kod med andra för säkerhet.",
+                            IsCorrect = false,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Answer = "Oregistrerade eller oseriösa webbplatser.",
+                            IsCorrect = true,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Answer = "Enbart välkända och etablerade webbplatser.",
+                            IsCorrect = false,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Answer = "Webbplatser med höga priser.",
+                            IsCorrect = false,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Answer = "Webbplatser med stort utbud av produkter.",
+                            IsCorrect = false,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Answer = "Förhindra obehörig användning.",
+                            IsCorrect = true,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Answer = "Dela CVV-koden med nära vänner.",
+                            IsCorrect = false,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Answer = "Publicera CVV-koden online.",
+                            IsCorrect = false,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Answer = "Använda samma CVV-kod överallt.",
+                            IsCorrect = false,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Answer = "Förvara det på en säker plats.",
+                            IsCorrect = true,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Answer = "Lämna det obevakat på offentliga platser.",
+                            IsCorrect = false,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Answer = "Dela det med okända personer.",
+                            IsCorrect = false,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Answer = "Använd det som bokmärke.",
+                            IsCorrect = false,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Answer = "Kontakta kreditkortsföretaget och spärra kortet.",
+                            IsCorrect = true,
+                            QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Answer = "Ignorera det och fortsätt använda det som vanligt.",
+                            IsCorrect = false,
+                            QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Answer = "Publicera informationen på sociala medier.",
+                            IsCorrect = false,
+                            QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Answer = "Använda samma lösenord på andra konton.",
+                            IsCorrect = false,
+                            QuestionId = 20
                         });
                 });
 
@@ -302,6 +585,76 @@ namespace ValhallaVault.Migrations.ProgramDb
                             Explanation = "Säkerhetsskyddslagen är en svensk lagstiftning som syftar till att skydda nationellt känslig information från spioneri, sabotage, terroristbrott och andra säkerhetshot.",
                             Question = "Vilken lagstiftning ger ramverket för detta skydd?",
                             SubcategoryId = 19
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Explanation = "Omedelbart kontakta ditt kreditkortsföretag för att rapportera de obehöriga transaktionerna och blockera ditt kort för att förhindra ytterligare skador.",
+                            Question = "Vad ska du göra om du upptäcker obehöriga transaktioner på ditt kreditkort?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Explanation = "Phishing-webbplatser och skadlig programvara är vanliga metoder för att stjäla kreditkortsuppgifter online.",
+                            Question = "Vilket är ett vanligt sätt för bedragare att stjäla kreditkortsuppgifter online?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Explanation = "Använd säkra och pålitliga webbplatser, kontrollera att webbadressen börjar med 'https://' och undvik att lagra kreditkortsuppgifter på webbplatser.",
+                            Question = "Hur kan du öka säkerheten när du handlar online med ditt kreditkort?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Explanation = "Regelbunden övervakning av kreditkortsutdrag hjälper till att upptäcka obehöriga transaktioner i tid och minskar risken för bedrägeri.",
+                            Question = "Varför är det viktigt att regelbundet övervaka dina kreditkortsutdrag?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Explanation = "Omedelbart kontakta ditt kreditkortsföretag, spärra ditt kort och rapportera det till polisen för att förebygga obehöriga transaktioner.",
+                            Question = "Vilken åtgärd bör vidtas om du misstänker att ditt kreditkort har blivit stulet?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Explanation = "Undvik att använda betalningsautomater som ser misstänkta ut, täck ditt knappsatsinmatning när du skriver in din PIN-kod och övervaka ditt kreditkortsutdrag.",
+                            Question = "Hur kan du undvika att bli offer för skimming på betalningsautomater?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Explanation = "Oregistrerade eller oseriösa webbplatser, särskilt med onormalt låga priser, kan vara tecken på kreditkortsbedrägeri.",
+                            Question = "Vilket är ett vanligt tecken på kreditkortsbedrägeri vid onlineköp?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Explanation = "CVV-koden används för att bekräfta att du har ditt fysiska kreditkort och bör hållas konfidentiell för att förhindra obehörig användning.",
+                            Question = "Varför är det viktigt att inte dela ditt kreditkorts CVV-kod (säkerhetskod) med andra?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Explanation = "Förvara ditt kreditkort på en säker plats, undvik att lämna det obevakat och använd plånböcker eller skyddsfodral för extra säkerhet.",
+                            Question = "Hur kan du säkert förvara ditt fysiska kreditkort för att undvika stöld?",
+                            SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Explanation = "Omedelbart kontakta ditt kreditkortsföretag, begär att kortet spärras och överväg att ändra ditt lösenord för extra säkerhet.",
+                            Question = "Vilken åtgärd bör du vidta om ditt kreditkortsinformation har blivit komprometterad?",
+                            SubcategoryId = 1
                         });
                 });
 
@@ -571,6 +924,8 @@ namespace ValhallaVault.Migrations.ProgramDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("UserQuestions");
                 });
 
@@ -616,6 +971,15 @@ namespace ValhallaVault.Migrations.ProgramDb
                         .IsRequired();
 
                     b.Navigation("Segment");
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.UserQuestionModel", b =>
+                {
+                    b.HasOne("ValhallaVault.Data.Models.QuestionModel", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.CategoryModel", b =>

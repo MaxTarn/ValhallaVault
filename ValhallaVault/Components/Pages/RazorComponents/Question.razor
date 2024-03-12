@@ -1,4 +1,6 @@
 ﻿@using ValhallaVault.Data.Models
+@using ValhallaVault.Data.Repositories
+@inject AnswerRepo AnswerRepo
 
 @if (TheQuestion == null || TheQuestion?.Answers == null || string.IsNullOrEmpty(TheQuestion.Question))
 {
@@ -41,5 +43,18 @@
 
     [Parameter]
     public bool _resetAnswerState { get; set; }
-    
+
+
+    private List<AnswerModel> Answers;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Answers = (await AnswerRepo.GetAllAnswers())
+            .Where(q => q.QuestionId == TheQuestion.Id)
+            .ToList();
+
+         await base.OnInitializedAsync();
+    }
+
 }

@@ -1,44 +1,64 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/{CategoryId:int}"
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data.Models
+@using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@inject CategoryRepo CategoryRepo
+@inject SegmentRepo SegmentRepo
+
 
 @if (CategoryId == null)
 {
-    <p>Something went Wrong! There was no routed Category. If you entered this page directly, and did not get redirected here, go
-        <a href="@($"{Navigation.BaseUri}DisplayAllCategories")">HERE</a>
-
-    </p>
+    <div class="container mt-4">
+        <p class="alert alert-warning">
+            Something went wrong! There was no routed Category. If you entered this page directly, and did not get redirected here, go
+            <a href="@($"{Navigation.BaseUri}DisplayAllCategories")">HERE</a>
+        </p>
+    </div>
     return;
+   
 }
 @if (Category == null || Category?.Name == null)
 {
-    <p>Something went wrong! The category that was reterived from the database was null.</p>
+    <div class="container mt-4">
+        <p class="alert alert-warning">Something went wrong! The category retrieved from the database was null.</p>
+    </div>
     return;
-}
 
-<div>
-    <h1>
-        @Category.Name
-    </h1>
-    
-    <h3>Content:</h3>
-    @foreach (SegmentModel? segemnt in SegementsThatBelongToCategory)
-    {
-        if(segemnt == null)continue;
-        
-        <a href="">@segemnt.Name</a>
-        
-    }
-    
+}
+<div class="container mt-4">
+
+    <h1>@Category.Name</h1>
+    <div class="list-group">
+        @foreach (SegmentModel? segment in SegmentsThatBelongToCategory)
+        {
+            if (segment == null)continue;
+            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/{segment.Id}")" class="list-group-item list-group-item-action">@segment.Name</a>
+        }
+    </div>
 </div>
 
+
+
+
 @code {
+
+    //TODO MAKE IT SO THAT USER CAN SEE HOW MANY QUESTIONS THEY HAVE ANSWER CORRECTLY IN sort of SOMEWAY
+
     [Parameter]
     public int? CategoryId { get; set; }
 
-    // RUN CODE SO THAT YOU CONTACT DB WITH THE GIVEN CATEGORY ID AND IT THEN GETS THE CATEGORYMODEL
     public CategoryModel? Category { get; set; }
+    public List<SegmentModel> SegmentsThatBelongToCategory { get; set; }
 
-    public List<SegmentModel> SegementsThatBelongToCategory { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (CategoryId != null)
+        {
+            Category = await CategoryRepo.GetCategoryById((int)CategoryId);
+            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegments())
+                .Where(segment => segment.CategoryId == CategoryId)
+                .ToList();
+        }
+    }
 }
