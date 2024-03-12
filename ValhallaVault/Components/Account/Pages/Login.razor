@@ -47,12 +47,16 @@
                     <button type="submit" class="btn-custom">Log in</button>
                 </div>
                 <br />
+                        <div style="text-align: right">
+
+                            <a class="link-custom" href="/">Go back</a>
+                        </div>
                 <div>
                     <p>
                                 @* <a class="link-custom" href="Account/ForgotPassword">Forgot your password?</a> *@
                     </p>
                     <p>
-                                <a class="link-custom" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                              @*   <a class="link-custom" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a> *@
                     </p>
                     <p>
                                @*  <a class="link-custom" href="Account/ResendEmailConfirmation">Resend email confirmation</a> *@

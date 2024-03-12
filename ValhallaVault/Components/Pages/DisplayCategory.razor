@@ -3,8 +3,8 @@
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-@inject CategoryRepo CategoryRepo
-@inject SegmentRepo SegmentRepo
+@inject ICategoryRepository CategoryRepo
+@inject ISegmentRepository SegmentRepo
 
 
 @if (CategoryId == null)
@@ -44,6 +44,9 @@
 @code {
 
     //TODO MAKE IT SO THAT USER CAN SEE HOW MANY QUESTIONS THEY HAVE ANSWER CORRECTLY IN sort of SOMEWAY
+    //TODO Add backbutton which takes user back up one level
+    //TODO add % completion
+    //TODO Add some sort of way of knowing whether user has completed this category
 
     [Parameter]
     public int? CategoryId { get; set; }
@@ -55,8 +58,8 @@
     {
         if (CategoryId != null)
         {
-            Category = await CategoryRepo.GetCategoryById((int)CategoryId);
-            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegments())
+            Category = await CategoryRepo.GetCategoryByIdAsync((int)CategoryId);
+            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegmentsAsync())
                 .Where(segment => segment.CategoryId == CategoryId)
                 .ToList();
         }

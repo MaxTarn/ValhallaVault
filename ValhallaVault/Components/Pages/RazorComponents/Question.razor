@@ -1,6 +1,6 @@
 ﻿@using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
-@inject AnswerRepo AnswerRepo
+@inject IAnswerRepository AnswerRepo
 
 @if (TheQuestion == null || TheQuestion?.Answers == null || string.IsNullOrEmpty(TheQuestion.Question))
 {
@@ -50,7 +50,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Answers = (await AnswerRepo.GetAllAnswers())
+        Answers = (await AnswerRepo.GetAllAnswersAsync())
             .Where(q => q.QuestionId == TheQuestion.Id)
             .ToList();
 
