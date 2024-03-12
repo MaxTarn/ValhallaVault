@@ -12,7 +12,6 @@ public class QuestionModel
     public int SubcategoryId { get; set; }
     public SubcategoryModel? Subcategory { get; set; }
 
-
     [JsonIgnore]
     public List<AnswerModel>? Answers { get; set; } = null!;
     public string Explanation { get; set; }

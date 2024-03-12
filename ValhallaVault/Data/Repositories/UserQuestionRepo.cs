@@ -24,6 +24,11 @@ public class UserQuestionRepo
         _dbContext.UserQuestions.Add(addThis);
     }
 
+    public int CountCorrectAnswers(string userId )
+    {
+        return _dbContext.UserQuestions.Where(u => u.UserId == userId && u.IsCorrect == true).Count();
+    }
+
     public async Task Save()
     {
         await _dbContext.SaveChangesAsync();
