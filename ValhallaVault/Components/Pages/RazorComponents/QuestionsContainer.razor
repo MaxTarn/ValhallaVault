@@ -1,4 +1,6 @@
 ﻿@using ValhallaVault.Data.Models
+@using ValhallaVault.Data.Repositories
+
 
 <h3>QuestionsContainer</h3>
 
@@ -9,16 +11,11 @@
     return;
 }
 
- @if (HasNullEntry())
-
+@if (DisplayTheseQuestions.Count == 0)
 {
-    
-    <h1>Something Went wrong! One of the Questions was null/One of the questions was not found.</h1>
-
-
-} 
-
-
+    <h1>Something went wrong! No questions found for this Subcategory.</h1>
+    return;
+}
 
 <div>
     <p>Question @(_index + 1 )/@DisplayTheseQuestions.Count</p>
@@ -72,7 +69,7 @@
         if(_disableBackButton)return;
         if (_index <= 0) return;
         _index--;
-        _disableBackButton = CheckIfBackButtonShouldBeDisabled();
+        _disableBackButton = CheckIfBackButtonShouldBeEnabled();
     }
 
     private void CorrectAnswers()
@@ -88,36 +85,27 @@
         StyleForCorrectAnswer = "";
         StyleForWrongAnswer = "";
         _resetAnswerState = true;
-        _disableBackButton = !CheckIfBackButtonShouldBeDisabled();
+        _disableBackButton = CheckIfBackButtonShouldBeEnabled();
         if (_index + 1 <= DisplayTheseQuestions.Count) _index++;
     }
 
 
-
-
-
-    public bool HasNullEntry()
+    protected override Task OnInitializedAsync()
     {
-        return DisplayTheseQuestions?.Any(entry => entry == null) ?? false;
+        
+        return base.OnInitializedAsync();
     }
 
 
-
-
-
-    /// <summary>
-    /// returns false when the Back button should be disabled
-    /// returns true when the Back button should be enabled
-    /// </summary>
-    /// <returns></returns>
-    private bool CheckIfBackButtonShouldBeDisabled()
+    
+    private bool CheckIfBackButtonShouldBeEnabled()
     {
         if (DisplayTheseQuestions == null || DisplayTheseQuestions.Count <= 0)
         {
-            return true; // If there are no questions, the Back button should be disabled
+            return false; // If there are no questions, the Back button should be disabled
         }
 
-        return _index <= 0 || _index >= DisplayTheseQuestions.Count - 1;
+        return _index > 0;
     }
 
 }

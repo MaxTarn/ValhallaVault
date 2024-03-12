@@ -1,6 +1,353 @@
-﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/"
-<h3>DisplayQuestions</h3>
+﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{SubCategoryId:int}"
+@rendermode InteractiveServer
+@using ValhallaVault.Data.Repositories
+@using ValhallaVault.Data.Models
+@using ValhallaVault.Components.Pages.RazorComponents
+@using Microsoft.Data.SqlClient
+@using Microsoft.AspNetCore.Identity
+@using ValhallaVault.Data
+@using System.Reflection.Metadata.Ecma335
+@using ValhallaVault.Data.Containers
+@inject SubcategoryRepo SubcategoryRepo
+@inject QuestionRepo QuestionRepo
+@inject AnswerRepo AnswerRepo
+@inject UserQuestionRepo UserQuestionRepo
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
+
+@if (CurrentSubcategoryContainer == null)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Something went wrong! The Subcategory Container was null.</p>
+    </div>
+    return;
+}
+
+@if (CurrentSubcategoryContainer?.Questions == null)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Something went wrong! The Questions could not be retrieved.</p>
+    </div>
+    return;
+}
+
+@if (CurrentQuestionContainer == null || CurrentQuestionContainer?.Answers == null)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Something went wrong! This Question or the questions answers could not be retrieved.</p>
+    </div>
+    return;
+}
+
+<div class="container mt-4">
+    <h1 class="text-primary">@CurrentSubcategoryContainer.Original.Name</h1>
+    <p class="text-muted">Question: @(CurrentSubcategoryContainer.Questions.IndexOf(CurrentQuestionContainer) + 1)/@(CurrentSubcategoryContainer.Questions.Count)</p>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-4">@CurrentQuestionContainer.Question</h4>
+            <ul class="list-group list-group-flush">
+                @foreach (AnswerContainer answerContainer in CurrentQuestionContainer.Answers)
+                {
+                    <li class="list-group-item" style="@(answerContainer.Style)">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" @bind="answerContainer.IsChecked" />
+                            <label class="form-check-label">@answerContainer.Original.Answer</label>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="card-footer">
+            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back</button>
+            <button @onclick="CorrectAnswer" class="btn btn-primary" disabled="@(ShouldDisableCorrectAnswerButton())">Correct answer</button>
+            <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@ShouldDisableNextButton()">Next</button>
+        </div>
+    </div>
+</div>
 
 @code {
-    // NOT YETTTTTTT
+    //ooo didnt know #region was a thing?? how have I not found out this before????!?!?
+
+    #region Parameters
+
+    [Parameter] 
+    public int? SubcategoryId { get; set; }
+
+    #endregion
+
+
+
+    #region Variables
+
+    private string? UserName;
+    private SubCategoryContainer? CurrentSubcategoryContainer;
+    private QuestionContainer? CurrentQuestionContainer;
+    private List<AnswerContainer> Answers = new();
+
+    #endregion
+
+
+
+    #region EventHandlers
+
+    private void BackOneQuestion(MouseEventArgs e)
+    {
+        if (CurrentQuestionContainer == null) return;
+        int? count = CurrentSubcategoryContainer?.Questions?.Count;
+        int? currentQuestionIndex = CurrentSubcategoryContainer?.Questions?.IndexOf(CurrentQuestionContainer);
+
+        if (count == null || currentQuestionIndex == null || currentQuestionIndex <= 0) return;
+
+        CurrentQuestionContainer = CurrentSubcategoryContainer?.Questions?[(int)currentQuestionIndex - 1];
+
+        ResetAnswersContainerList();
+    }
+    private async Task CorrectAnswer(MouseEventArgs e)
+    {
+        if (UserHasChosenAnswer() != true) { return; }
+        if (UserName == null)return;
+
+        foreach (AnswerContainer answerContainer in CurrentQuestionContainer.Answers) answerContainer.ShowStyle = true;
+        await SetAnswerOfQuestionInDbUsingAnswerContainers();
+    }
+    private void NextQuestion(MouseEventArgs e)
+    {
+        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return;
+
+        int? count = CurrentSubcategoryContainer.Questions?.Count;
+        int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+
+        if (count == null || currentQuestionIndex == null || count <= currentQuestionIndex + 1) return;
+
+        CurrentQuestionContainer = CurrentSubcategoryContainer.Questions[(int)currentQuestionIndex + 1];
+        ResetAnswersContainerList();
+    }
+
+    #endregion
+
+
+
+    #region Methods
+
+    private void ResetAnswersContainerList()
+    {
+        Answers.Clear();
+
+        if (CurrentQuestionContainer == null) return;
+
+        CurrentQuestionContainer.Answers?.ForEach(a =>
+        {
+            Answers.Add(new AnswerContainer()
+            {
+                IsChecked = false,
+                Original = a.Original,
+                ShowStyle = false
+            });
+        });
+    }
+
+
+    private bool UserChoseCorrectAnswer()
+    {
+        if (UserHasChosenAnswer() != true) return false;
+
+        bool answerIsCorrect = false;
+        CurrentQuestionContainer?.Answers?.ForEach(a =>
+        {
+            if (a.IsChecked == true && a.Original.IsCorrect == true)
+            {
+                answerIsCorrect = true;
+            }
+        });
+        return answerIsCorrect;
+    }
+    /// <summary>
+    /// null when user has NOT chosen answer
+    /// true when user has chosen ONE answer
+    /// false when user has chosen MORE THAN ONE answer
+    /// </summary>
+    private bool? UserHasChosenAnswer()
+    {
+        int tickedAnswers = 0;
+
+        CurrentQuestionContainer?.Answers.ForEach(ac =>
+        {
+            if (ac.IsChecked) tickedAnswers++;
+        });
+
+        return tickedAnswers switch
+        {
+            0 => null,        // user has not ticked any answer
+            1 => true,        // user has ticked ONLY ONE answer
+            _ => false    // user has ticked MORE THAN ONE
+        };
+    }
+    /// <summary>
+    /// This add a entry in the UserQuestions table in the db.
+    /// Where all the information is stored about what user has answerd what question what correctly
+    /// </summary>
+    private async Task SetAnswerOfQuestionInDbUsingAnswerContainers()
+    {
+        if (CurrentQuestionContainer == null) return;
+        if (UserHasChosenAnswer() != true) return;
+
+        string? userId = await GetUserIdByNormalizedUserName();
+        if (userId == null) return;
+
+        if (AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id) == true)
+        {
+            //TODO
+            //edit the entry
+        }
+
+        UserQuestionRepo.Add(new UserQuestionModel()
+            {
+                UserId = userId,
+                QuestionId = CurrentQuestionContainer.Original.Id,
+                IsCorrect = UserChoseCorrectAnswer()
+            });
+        await UserQuestionRepo.Save();
+    }
+
+    /// <summary>
+    /// Checks if the logged in user has already answerd this particular question
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
+    {
+        if (userId == null || questionId == null) return null;
+        int? count = UserQuestionRepo.GetAll()
+            .Where(q => q.QuestionId == questionId)
+            .Where(q => q.UserId == userId)
+            .ToList().Count;
+        if (count != 0) return true;
+
+        return false;
+    }
+    private async Task<string?> GetUserIdByNormalizedUserName(string? userName)
+    {
+        if (userName == null) return null;
+        userName = userName.Trim().ToUpper();
+        ApplicationUser? user = UserManager.FindByNameAsync(userName).GetAwaiter().GetResult();
+        string? userId = user?.Id;
+        return userId;
+
+    }
+    private async Task<string?> GetUserIdByNormalizedUserName()
+    {
+        return await GetUserIdByNormalizedUserName(UserName);
+
+    }
+
+    private bool ShouldDisableBackButton()
+    {
+        if (CurrentQuestionContainer == null) { return true; }
+
+        int? currentQuestionIndex = CurrentSubcategoryContainer?.Questions?.IndexOf(CurrentQuestionContainer);
+
+        return currentQuestionIndex == null || currentQuestionIndex <= 0;
+    }
+
+    private bool ShouldDisableNextButton()
+    {
+        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) 
+        { 
+            return true; 
+        }
+
+        int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+
+        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer.Questions.Count ;
+    }
+
+    private bool ShouldDisableCorrectAnswerButton()
+    {
+        if (UserHasChosenAnswer() != true) return false;
+
+        if (CurrentQuestionContainer?.Answers[0].ShowStyle == true) return true;
+
+        return false;
+    }
+    
+    private async Task<SubCategoryContainer?> BuildSubCategoryContainer(int subcategoryId)
+    {
+        var subcategory = await SubcategoryRepo.GetByIdWithQuestionsAndAnswers(subcategoryId);
+
+        if (subcategory == null)
+        {
+            // Handle the case when the subcategory is null
+            return null;
+        }
+
+        var subcategoryContainer = new SubCategoryContainer
+        {
+            Original = subcategory,
+            Questions = new List<QuestionContainer>()
+        };
+
+        foreach (var question in subcategory.Questions)
+        {
+            var questionContainer = new QuestionContainer
+            {
+                Question = question.Question,
+                Answers = new List<AnswerContainer>(),
+                Original = question // Add the original QuestionModel to QuestionContainer
+            };
+
+            foreach (var answer in question.Answers)
+            {
+                questionContainer.Answers.Add(new AnswerContainer
+                {
+                    Original = answer,
+                    IsChecked = false,
+                });
+            }
+            subcategoryContainer.Questions.Add(questionContainer);
+        }
+
+        return subcategoryContainer;
+    }
+    #endregion
+
+    #region WhenFirstLoadingPage
+
+    //----------When first loading in this page BELOW THIS----------
+    protected override async Task OnInitializedAsync()
+    {
+        if (SubcategoryId == null) return;
+
+        CurrentSubcategoryContainer = await BuildSubCategoryContainer((int)SubcategoryId);
+
+        if (CurrentSubcategoryContainer == null)
+        {
+            // Log or display an error message
+            Console.WriteLine("SubcategoryContainer is null.");
+            return;
+        }
+
+        UserName = (await AuthStateProvider.GetAuthenticationStateAsync())?.User?.Identity?.Name;
+
+        if (CurrentSubcategoryContainer?.Questions == null || !CurrentSubcategoryContainer.Questions.Any())
+        {
+            // Log or display an error message
+            Console.WriteLine("No questions found in SubcategoryContainer.");
+            return;
+        }
+
+        CurrentQuestionContainer = CurrentSubcategoryContainer?.Questions.FirstOrDefault();
+
+        if (CurrentQuestionContainer == null)
+        {
+            // Log or display an error message
+            Console.WriteLine("CurrentQuestionContainer is null.");
+        }
+
+        ResetAnswersContainerList();
+    }
+
+    #endregion
+    
 }
