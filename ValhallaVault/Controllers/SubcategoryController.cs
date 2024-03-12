@@ -32,7 +32,7 @@ namespace ValhallaVault.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var subcategory = await _subcategoryRepo.GetSubcategoriesByIdAsync(id);
+            var subcategory = await _subcategoryRepo.GetSubcategoryByIdAsync(id);
 
             if (subcategory != null)
             {
@@ -63,7 +63,7 @@ namespace ValhallaVault.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(SubcategoryModel previousSubcategory, int Id)
         {
-            var result = await _subcategoryRepo.GetSubcategoriesByIdAsync(previousSubcategory.Id);
+            var result = await _subcategoryRepo.GetSubcategoryByIdAsync(previousSubcategory.Id);
 
             if (result != null)
             {

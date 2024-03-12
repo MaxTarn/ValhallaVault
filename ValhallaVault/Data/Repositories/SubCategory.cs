@@ -4,8 +4,6 @@ using ValhallaVault.Data.Models;
 namespace ValhallaVault.Data.Repositories
 {
 
-
-
     public class SubcategoryRepo : ISubcategoryRepository
     {
         private readonly ProgramDbContext _dbContext;
@@ -20,7 +18,7 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Subcategories.ToListAsync();
         }
 
-        public async Task<SubcategoryModel?> GetSubcategoriesByIdAsync(int id)
+        public async Task<SubcategoryModel?> GetSubcategoryByIdAsync(int id)
         {
             return await _dbContext.Subcategories.FindAsync(id);
         }
@@ -33,6 +31,14 @@ namespace ValhallaVault.Data.Repositories
         public async Task<SubcategoryModel?> GetSubCategoryByIdIncludigQuestionsAsync(int id)
         {
             return await _dbContext.Subcategories.Include(x => x.Questions).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
+        {
+            return await _dbContext?.Set<SubcategoryModel>()
+                .Include(s => s.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task AddSubcategoryAsync(SubcategoryModel subcategory)
@@ -65,13 +71,6 @@ namespace ValhallaVault.Data.Repositories
                 throw new Exception("No subcategory found with the specified ID.");
             }
         }
-        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
-        {
-            return await _dbContext?.Set<SubcategoryModel>()
-                .Include(s => s.Questions)
-                .ThenInclude(q => q.Answers)
-                .FirstOrDefaultAsync(s => s.Id == id);
-        }
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
@@ -79,4 +78,5 @@ namespace ValhallaVault.Data.Repositories
 
 
     }
+
 }

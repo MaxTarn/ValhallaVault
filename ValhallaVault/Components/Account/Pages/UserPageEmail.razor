@@ -15,17 +15,28 @@
 
 <PageTitle>UserPageEmail</PageTitle>
 
+   <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <div class="text-center">
+
+<hr />
 <h3>Change your email</h3>
+<hr/>
 
 <StatusMessage Message="@message" />
-<div class="row">
-    <div class="col-md-6">
+
+                        <div class="row justify-content-center">
+                            
+                            <div class="col-md-6">
         <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
             <AntiforgeryToken />
         </form>
         <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
+            
             @if (isEmailConfirmed)
             {
                 <div class="form-floating mb-3 input-group">
@@ -49,10 +60,33 @@
                 <label for="new-email" class="form-label">New email</label>
                 <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Change email</button>
+            <button type="submit" class="btn-custom">Change email</button>
+                            
+
         </EditForm>
     </div>
 </div>
+</div>
+        </div>
+        <div style="text-align: right">
+            <br />
+            <br />
+              <br />
+                <br />
+                  <br />
+                    <br />
+            <br />
+            <br />
+            <a class="link-custom" href="/accounts/userpage">Go back</a>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background-color: lavenderblush;
+    }
+
+</style>
 
 @code {
     private string? message;

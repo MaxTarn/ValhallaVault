@@ -13,6 +13,20 @@
 <h1 class="text-center">Confirm email</h1>
 <StatusMessage Message="@statusMessage" />
 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div style="text-align: right">
+
+    <a class="link-custom" href="Account/Login">Log in</a>
+</div>
+
+
+
 <style>
     body {
         background-color: lavenderblush;
@@ -38,6 +52,7 @@
         {
             RedirectManager.RedirectTo("");
         }
+       
 
         var user = await UserManager.FindByIdAsync(UserId);
         if (user is null)

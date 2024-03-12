@@ -3,7 +3,6 @@ using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories;
 
-
 public class UserQuestionRepo : IUserQuestionRepository
 {
 
@@ -13,7 +12,7 @@ public class UserQuestionRepo : IUserQuestionRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<IEnumerable<UserQuestionModel>> GetAllUserQuestionAsync()
+    public async Task<IEnumerable<UserQuestionModel>> GetAllUserQuestionsAsync()
     {
         return await _dbContext.UserQuestions.ToListAsync();
     }
@@ -28,6 +27,8 @@ public class UserQuestionRepo : IUserQuestionRepository
         _dbContext.UserQuestions.Add(userQuestion);
         await _dbContext.SaveChangesAsync();
     }
+
+
     public async Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
     {
         UserQuestionModel? userQuestionToUpdate = await GetUserQuestionByIdAsync(id);
@@ -52,4 +53,8 @@ public class UserQuestionRepo : IUserQuestionRepository
     {
         await _dbContext.SaveChangesAsync();
     }
+
+
+
+
 }

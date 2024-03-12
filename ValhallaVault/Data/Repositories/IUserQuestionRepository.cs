@@ -4,7 +4,7 @@ namespace ValhallaVault.Data.Repositories
 {
     public interface IUserQuestionRepository
     {
-        Task<IEnumerable<UserQuestionModel>> GetAllUserQuestionAsync();
+        Task<IEnumerable<UserQuestionModel>> GetAllUserQuestionsAsync();
         Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id);
         Task AddUserQuestionAsync(UserQuestionModel userQuestion);
         Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel);
