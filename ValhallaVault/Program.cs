@@ -54,12 +54,13 @@ namespace ValhallaVault
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
-            //builder.Services.AddDbContext<ProgramDbContext>(options =>
-            //    options.UseSqlServer(DbString));
-
+            
             builder.Services.AddDbContextFactory<ProgramDbContext>(opt =>
             opt.UseSqlServer(DbString));
-
+            
+            builder.Services.AddDbContext<ProgramDbContext>(options =>
+                options.UseSqlServer(DbString));
+            
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()  //HÃ„R LÃ„GGER VI TILL DENNA RADEN 
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -74,10 +75,10 @@ namespace ValhallaVault
             builder.Services.AddScoped<QuestionRepo>();
             builder.Services.AddScoped<SegmentRepo>();
             builder.Services.AddScoped<SubcategoryRepo>();
-            
-          
-    
-                      //skapa users och roller som ska finnas med fr�n start
+            builder.Services.AddScoped<MaxCategoryRepo>();
+
+
+            //skapa users och roller som ska finnas med fr�n start
 
             using (ServiceProvider sp = builder.Services.BuildServiceProvider())
             {
