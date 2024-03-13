@@ -1,0 +1,268 @@
+﻿@page "/AdminSegment";
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Models;
+@using ValhallaVault.Data.Repositories
+@inject IDbContextFactory<ProgramDbContext> dbFactory;
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@if (Fail == true)
+{
+    <p style=" color:red;">The request failed</p>
+}
+
+<h5> Create </h5>
+<EditForm FormName="SegmentCreate" Model="segmentModel" OnValidSubmit="Post">
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+
+    <label>Segment Name</label>
+    <InputText @bind-Value="@segmentModel.Name"></InputText>
+
+    <br />
+
+    <label>Category Name</label>
+    <InputSelect @bind-Value="segmentModel.CategoryId">
+
+        @if (allSegments != null)
+        {
+            @foreach (CategoryModel categoryModel in allCategories)
+            {
+                <option value="@categoryModel.Id"> @categoryModel.Name </option>
+            }
+        }
+    </InputSelect>
+    <br />
+
+    <input type="submit" value="Post" class="btn btn-primary">
+</EditForm>
+
+<br />
+<br />
+
+<h5>Edit and delete</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Segments</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (allSegments != null)
+        {
+            @foreach (SegmentModel segmentModel in allSegments)
+            {
+                <tr>
+                    <td>@segmentModel.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(segmentModel)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <p> Loading Segments...</p>
+        }
+
+    </tbody>
+    @if (NeedDeleteConfirmation == true)
+    {
+        <div style="border: 1px solid RED; width:400px; height:150px">
+            <p>Are you sure that you want to delete this? </p>
+            <p style=" color:red">It is permanent!</p>
+            <br />
+            <button @onclick="()=> Delete(segmentModelToDelete.Id)" class="btn btn-primary">Yes</button>
+            <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+        </div>
+    }
+</table>
+
+<br />
+
+@if (editing == true)
+{
+    <h6>Editing: "@selectedSegment.Name"</h6>
+    <EditForm FormName="SegmentEdit" Model="segmentModel" OnValidSubmit="showEditConfirmation">
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+
+        <InputText @bind-Value="selectedSegment.Name"></InputText>
+
+        <label> Change category</label>
+        <InputNumber @bind-Value="selectedSegment.CategoryId"></InputNumber>
+
+        <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
+
+        <br />
+
+        @foreach (CategoryModel categoryModel in allCategories)
+        {
+            <ul style=" font-size=8:">
+                <li>Category name: @categoryModel.Name, Id: @categoryModel.Id</li>
+            </ul>
+        }
+
+    </EditForm>
+
+    @if (NeedEditConfirmation == true)
+    {
+        <div style="border: 1px solid RED; width:400px; height:150px">
+            <p>Are you sure that you want to edit this? </p>
+            <p style=" color:red">It is permanent!</p>
+            <br />
+            <button @onclick="Edit" class="btn btn-primary">Yes</button>
+            <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+        </div>
+    }
+}
+
+
+
+
+
+@code {
+
+    [SupplyParameterFromForm]
+    public CategoryModel categoryModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private SegmentModel segmentModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private SegmentModel selectedSegment { get; set; } = new();
+
+    private bool editing = false;
+    private bool Fail = false;
+
+
+    private IEnumerable<SegmentModel>? allSegments;
+    private IEnumerable<CategoryModel>? allCategories;
+
+    SegmentModel segmentModelToDelete { get; set; } = new();
+
+    private bool NeedDeleteConfirmation = false;
+    private bool NeedEditConfirmation = false;
+    private bool Confirmation = false;
+
+
+    private void showDeleteConfirmation(SegmentModel segmentModel)
+    {
+        segmentModelToDelete = segmentModel;
+        NeedDeleteConfirmation = true;
+    }
+
+    private void showEditConfirmation()
+    {
+        NeedEditConfirmation = true;
+    }
+
+    private void ChangeConfirmation(int value)
+    {
+        if (value == 2)
+        {
+            NeedDeleteConfirmation = false;
+            NeedEditConfirmation = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = dbFactory.CreateDbContext();
+        CategoryRepo categoryRepo = new(context);
+        SegmentRepo segmentRepo = new(context);
+
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
+    }
+
+    private async Task Post()
+    {
+        using var context = dbFactory.CreateDbContext();
+        CategoryRepo categoryRepo = new(context);
+        SegmentRepo segmentRepo = new(context);
+
+        // Failure = false;
+
+        // categoryModel.Segments = null;
+
+        // var task = categoryRepo.AddCategory(categoryModel);
+
+        // if (task.IsCompletedSuccessfully)
+        // {
+        // CategoryModel newCategoryModel = new CategoryModel()
+        //     {
+        //         Name = categoryModel.Name,
+        //         Segments = addedSegments
+        //     };
+
+        await segmentRepo.AddSegmentAsync(segmentModel);
+        await UpdateUi();
+        StateHasChanged();
+        // }
+        // else
+        // {
+        //     Failure = true;
+        // }
+    }
+
+
+    private async Task Delete(int id)
+    {
+        using var context = dbFactory.CreateDbContext();
+        SegmentRepo segmentRepo = new(context);
+
+        await segmentRepo.DeleteSegmentAsync(id);
+        await segmentRepo.SaveAsync();
+
+        await UpdateUi();
+        StateHasChanged();
+
+        NeedDeleteConfirmation = false;
+    }
+
+    private async Task SelectEdit(SegmentModel segmentModel)
+    {
+        selectedSegment = segmentModel;
+        editing = true;
+
+        await UpdateUi();
+        StateHasChanged();
+    }
+
+    private async Task Edit()
+    {
+        Fail = false;
+
+        using var context = dbFactory.CreateDbContext();
+        CategoryRepo categoryRepo = new(context);
+        SegmentRepo segmentRepo = new(context);
+
+        if (selectedSegment.Name != null)
+        {
+            segmentRepo.UpdateSegmentAsync(selectedSegment);
+
+            await UpdateUi();
+            StateHasChanged();
+        }
+
+        NeedEditConfirmation = false;
+        editing = false;
+
+    }
+
+    private async Task UpdateUi()
+    {
+        using var context = dbFactory.CreateDbContext();
+        CategoryRepo categoryRepo = new(context);
+        SegmentRepo segmentRepo = new(context);
+
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
+    }
+
+}

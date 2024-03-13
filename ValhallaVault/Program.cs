@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
+using ValhallaVault.Controllers;
 using ValhallaVault.Data;
 using ValhallaVault.Data.Repositories;
 
@@ -67,11 +68,15 @@ namespace ValhallaVault
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
+            
+            builder.Services.AddDbContextFactory<ProgramDbContext>(opt =>
+            opt.UseSqlServer(DbString));
+            
             builder.Services.AddDbContext<ProgramDbContext>(options =>
                 options.UseSqlServer(DbString));
-
+            
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddRoles<IdentityRole>()  //HÄR LÄGGER VI TILL DENNA RADEN 
+                .AddRoles<IdentityRole>()  //HÃ„R LÃ„GGER VI TILL DENNA RADEN 
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
@@ -152,6 +157,9 @@ namespace ValhallaVault
             app.UseRouting();
 
             app.UseCors("AllowAll");
+                app.UseAuthorization();
+
+                app.UseCors("AllowAll");
 
             app.MapControllers();
 
