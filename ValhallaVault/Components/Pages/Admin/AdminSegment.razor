@@ -22,18 +22,18 @@
     <label>Segment Name</label>
     <InputText @bind-Value="@segmentModel.Name"></InputText>
 
-    <br/>
+    <br />
 
     <label>Category Name</label>
-    <InputSelect @bind-Value="segmentModel.CategoryId"> 
+    <InputSelect @bind-Value="segmentModel.CategoryId">
 
-    @if (allSegments != null)
-    {
-    @foreach(CategoryModel categoryModel in allCategories)
-    {
-          <option value="@categoryModel.Id"> @categoryModel.Name </option>
-    }
-    }
+        @if (allSegments != null)
+        {
+            @foreach (CategoryModel categoryModel in allCategories)
+            {
+                <option value="@categoryModel.Id"> @categoryModel.Name </option>
+            }
+        }
     </InputSelect>
     <br />
 
@@ -52,16 +52,25 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (SegmentModel segmentModel in allSegments)
+
+        @if (allSegments != null)
         {
-            <tr>
-                <td>@segmentModel.Name</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(segmentModel)">Press to Delete</button>
-                    <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
-                </td>
-            </tr>
+            @foreach (SegmentModel segmentModel in allSegments)
+            {
+                <tr>
+                    <td>@segmentModel.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(segmentModel)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
         }
+        else
+        {
+            <p> Loading Segments...</p>
+        }
+
     </tbody>
     @if (NeedDeleteConfirmation == true)
     {
@@ -90,16 +99,16 @@
         <InputNumber @bind-Value="selectedSegment.CategoryId"></InputNumber>
 
         <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
-        
+
         <br />
 
-        @foreach(CategoryModel categoryModel in allCategories)
+        @foreach (CategoryModel categoryModel in allCategories)
         {
             <ul style=" font-size=8:">
                 <li>Category name: @categoryModel.Name, Id: @categoryModel.Id</li>
             </ul>
         }
-       
+
     </EditForm>
 
     @if (NeedEditConfirmation == true)
@@ -167,8 +176,8 @@
         CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allCategories = await categoryRepo.GetAllCategories();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
     }
 
     private async Task Post()
@@ -191,7 +200,7 @@
         //         Segments = addedSegments
         //     };
 
-        await segmentRepo.AddSegment(segmentModel);
+        await segmentRepo.AddSegmentAsync(segmentModel);
         await UpdateUi();
         StateHasChanged();
         // }
@@ -207,8 +216,8 @@
         using var context = dbFactory.CreateDbContext();
         SegmentRepo segmentRepo = new(context);
 
-        await segmentRepo.DeleteSegment(id);
-        await segmentRepo.Save();
+        await segmentRepo.DeleteSegmentAsync(id);
+        await segmentRepo.SaveAsync();
 
         await UpdateUi();
         StateHasChanged();
@@ -235,7 +244,7 @@
 
         if (selectedSegment.Name != null)
         {
-            segmentRepo.UpdateSegment(selectedSegment);
+            segmentRepo.UpdateSegmentAsync(selectedSegment);
 
             await UpdateUi();
             StateHasChanged();
@@ -243,7 +252,7 @@
 
         NeedEditConfirmation = false;
         editing = false;
-   
+
     }
 
     private async Task UpdateUi()
@@ -252,8 +261,8 @@
         CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allCategories = await categoryRepo.GetAllCategories();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
     }
 
 }

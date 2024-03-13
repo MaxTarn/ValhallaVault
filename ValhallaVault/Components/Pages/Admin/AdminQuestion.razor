@@ -59,17 +59,25 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (QuestionModel questionModel in allQuestions)
+        @if (allQuestions != null)
         {
-            <tr>
-                <td>@questionModel.Question</td>
-                <td>@questionModel.Explanation</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(questionModel)">Press to Delete</button>
-                    <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
-                </td>
-            </tr>
+            @foreach (QuestionModel questionModel in allQuestions)
+            {
+                <tr>
+                    <td>@questionModel.Question</td>
+                    <td>@questionModel.Explanation</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(questionModel)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
         }
+        else
+        {
+            <p> Loading questions...</p>
+        }
+
     </tbody>
 
     @if (NeedDeleteConfirmation == true)
@@ -125,14 +133,14 @@
         }
 
     </EditForm>
-} 
+}
 
 @code {
 
     [SupplyParameterFromForm]
     public SubcategoryModel SubcategoryModel { get; set; } = new();
     [SupplyParameterFromForm]
-    private QuestionModel QuestionModel{ get; set; } = new();
+    private QuestionModel QuestionModel { get; set; } = new();
     [SupplyParameterFromForm]
     private QuestionModel selectedQuestionModel { get; set; } = new();
 
@@ -175,8 +183,8 @@
         SubcategoryRepo subcategoryRepo = new(context);
         QuestionRepo questionRepo = new(context);
 
-        allQuestions = await questionRepo.GetAllQuestions();
-        allSubcategories = await subcategoryRepo.GetAllSubs();
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
     }
 
     private async Task Post()
@@ -198,7 +206,7 @@
         //         Segments = addedSegments
         //     };
 
-        await questionRepo.AddQuestion(QuestionModel);
+        await questionRepo.AddQuestionAsync(QuestionModel);
         await UpdateUi();
         StateHasChanged();
         // }
@@ -214,8 +222,8 @@
         using var context = dbFactory.CreateDbContext();
         QuestionRepo questionRepo = new(context);
 
-        await questionRepo.DeleteQuestion(id);
-        await questionRepo.Save();
+        await questionRepo.DeleteQuestionAsync(id);
+        await questionRepo.SaveAsync();
 
         await UpdateUi();
         StateHasChanged();
@@ -249,7 +257,7 @@
         }
 
         NeedEditConfirmation = false;
-        editing = false;   
+        editing = false;
     }
 
     private async Task UpdateUi()
@@ -258,8 +266,8 @@
         SubcategoryRepo subcategoryRepo = new(context);
         QuestionRepo questionRepo = new(context);
 
-        allQuestions = await questionRepo.GetAllQuestions();
-        allSubcategories = await subcategoryRepo.GetAllSubs();
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
     }
 
 }

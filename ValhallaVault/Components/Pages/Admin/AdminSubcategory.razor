@@ -53,15 +53,22 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+        @if (allSubcategories != null)
         {
-            <tr>
-                <td>@subcategoryModel.Name</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(subcategoryModel)">Press to Delete</button>
-                    <button class="btn btn-primary" @onclick="()=> SelectEdit(subcategoryModel)">Press To Edit</button>
-                </td>
-            </tr>
+            @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+            {
+                <tr>
+                    <td>@subcategoryModel.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(subcategoryModel)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(subcategoryModel)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <p> Loading subcategories...</p>
         }
     </tbody>
 
@@ -163,8 +170,8 @@
         SubcategoryRepo subcategoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allSubcategories = await subcategoryRepo.GetAllSubs();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
     }
 
     private async Task Post()
@@ -186,7 +193,7 @@
         //         Segments = addedSegments
         //     };
 
-        await subcategoryRepo.AddSub(SubcategoryModel);
+        await subcategoryRepo.AddSubcategoryAsync(SubcategoryModel);
         await UpdateUi();
         StateHasChanged();
         // }
@@ -202,8 +209,8 @@
         using var context = dbFactory.CreateDbContext();
         SubcategoryRepo subcategoryRepo = new(context);
 
-        await subcategoryRepo.DeleteSub(id);
-        await subcategoryRepo.Save();
+        await subcategoryRepo.DeleteSubcategoryAsync(id);
+        await subcategoryRepo.SaveAsync();
 
         await UpdateUi();
         StateHasChanged();
@@ -230,12 +237,12 @@
 
         if (selectedSubcategory.Name != null)
         {
-            subcategoryRepo.UpdateSub(selectedSubcategory);
+            subcategoryRepo.UpdateSubcategoryAsync(selectedSubcategory);
 
             await UpdateUi();
             StateHasChanged();
         }
-        
+
         NeedEditConfirmation = false;
         editing = false;
     }
@@ -246,8 +253,8 @@
         SubcategoryRepo subcategoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allSubcategories = await subcategoryRepo.GetAllSubs();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
     }
 
 }

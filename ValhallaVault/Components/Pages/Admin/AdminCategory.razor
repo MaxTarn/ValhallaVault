@@ -42,15 +42,22 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (CategoryModel category in allCategories)
+        @if(allCategories != null)
         {
-            <tr>
-                <td>@category.Name</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(category)">Press to Delete</button>
-                    <button class="btn btn-primary" @onclick="()=> SelectEdit(category)">Press To Edit</button>
-                </td>
-            </tr>
+            @foreach (CategoryModel category in allCategories)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(category)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(category)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>Loading categories...</tr>
         }
     </tbody>
 
@@ -149,8 +156,8 @@
         CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allCategories = await categoryRepo.GetAllCategories();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
     }
 
     private async Task Post()
@@ -158,7 +165,7 @@
         using var context = dbFactory.CreateDbContext();
         CategoryRepo categoryRepo = new(context);
 
-        await categoryRepo.AddCategory(categoryModel);
+        await categoryRepo.AddCategoryAsync(categoryModel);
         await UpdateUi();
         StateHasChanged();
     }
@@ -169,8 +176,8 @@
         using var context = dbFactory.CreateDbContext();
         CategoryRepo categoryRepo = new(context);
 
-        await categoryRepo.DeleteCategory(id);
-        await categoryRepo.Save();
+        await categoryRepo.DeleteCategoryAsync(id);
+        await categoryRepo.SaveAsync();
         await UpdateUi();
         StateHasChanged();
 
@@ -195,7 +202,7 @@
 
         if (selectedCategory.Name != null)
         {
-            categoryRepo.UpdateCategory(selectedCategory);
+            categoryRepo.UpdateCategoryAsync(selectedCategory);
 
             await UpdateUi();
             StateHasChanged();
@@ -212,8 +219,8 @@
         CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        allSegments = await segmentRepo.GetAllSegments();
-        allCategories = await categoryRepo.GetAllCategories();
+        allSegments = await segmentRepo.GetAllSegmentsAsync();
+        allCategories = await categoryRepo.GetAllCategoriesAsync();
     }
 
     
