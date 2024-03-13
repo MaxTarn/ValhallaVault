@@ -77,6 +77,15 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
+        public int? CountCorrectAnswers(string userId)
+        {
+            if (userId == null)
+            {
+                return null;
+            }
+            return _dbContext.UserQuestions.Where(u => u.UserId == userId && u.IsCorrect == true).Count();
+        }
+
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
