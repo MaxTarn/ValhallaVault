@@ -186,28 +186,9 @@
         CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
-        // Failure = false;
-
-        // categoryModel.Segments = null;
-
-        // var task = categoryRepo.AddCategory(categoryModel);
-
-        // if (task.IsCompletedSuccessfully)
-        // {
-        // CategoryModel newCategoryModel = new CategoryModel()
-        //     {
-        //         Name = categoryModel.Name,
-        //         Segments = addedSegments
-        //     };
-
         await segmentRepo.AddSegmentAsync(segmentModel);
         await UpdateUi();
         StateHasChanged();
-        // }
-        // else
-        // {
-        //     Failure = true;
-        // }
     }
 
 
