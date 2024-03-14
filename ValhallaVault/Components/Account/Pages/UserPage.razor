@@ -1,25 +1,18 @@
-﻿@page "/Accounts/UserPage"
+
+﻿@page "/Account/userpage"
+
 
  @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
-@* @using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage *@
 @using ValhallaVault.Components.Account.Pages.Manage
 @using ValhallaVault.Data
-@* @using System.Text.Encodings.Web <!-- För email --> *@
-
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ChangePassword> Logger
-
-@* @inject NavigationManager NavigationManager  
-@inject IEmailSender<ApplicationUser> EmailSender
- *@<!-- de två sista raderna här ovanför är för email -->
-
-   
 
 <PageTitle>UserPage</PageTitle>
 
@@ -57,7 +50,7 @@
                 <label for="confirm-password" class="form-label">Confirm password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="btn-custom">Update password</button>
+            <button type="submit" class="style-button">Update password</button>
 		</EditForm>
     </div>
                     <div class="text-center">
@@ -65,7 +58,7 @@
                         <h4>Want to change your email?</h4>
                         <hr />
 
-                        <a class="link-custom" href="/Accounts/UserPageEmail">Click here</a>
+                        <a class="style-link" href="/Accounts/UserPageEmail">Click here</a>
                        
                     </div>
 </div>
@@ -74,57 +67,14 @@
         </div>
         <div style="text-align: right;">
 
-            <a class="link-custom" href="/DisplayAllCategories">Go back</a>
+            <a class="style-link" href="/DisplayAllCategories">Go back</a>
         </div>
     </div>
 </div>
 
-<!--För epost här nedan-->
-@* <h5>Change email</h5>
-
-<StatusMessage Message="@message" />
-<div class="row">
-    <div class="col-md-6">
-        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
-            <AntiforgeryToken />
-        </form>
-        <EditForm Model="InputEmail" FormName="change-email" OnValidSubmit="OnValidSubmitEmailAsync">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            @if (isEmailConfirmed)
-            {
-                <div class="form-floating mb-3 input-group">
-                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
-                    <div class="input-group-append">
-                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
-                    </div>
-                    <label for="email" class="form-label">Email</label>
-                </div>
-            }
-            else
-            {
-                <div class="form-floating mb-3">
-                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label for="email" class="form-label">Email</label>
-                    <button type="submit" class="btn btn-link" form="send-verification-form">Send verification email</button>
-                </div>
-            }
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="InputEmail.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                <label for="new-email" class="form-label">New email</label>
-                <ValidationMessage For="() => InputEmail.NewEmail" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-success rounded-circle">Change email</button>
-        </EditForm>
-    </div>
-</div>
-
- *@
-
-
 <style>
     body {
-        background-color: lavenderblush;
+        background-color:aliceblue;
     }
 
 </style>
@@ -133,8 +83,7 @@
     private string? message;
     private ApplicationUser user = default!;
     private bool hasPassword;
-    // private string? email;     //för epost
-    // private bool isEmailConfirmed; //för epost
+    
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;

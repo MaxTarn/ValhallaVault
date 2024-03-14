@@ -1,0 +1,273 @@
+﻿@page "/AdminQuestion"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Models;
+@using ValhallaVault.Data.Repositories
+@inject IDbContextFactory<ProgramDbContext> dbFactory;
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@if (Fail == true)
+{
+    <p style=" color:red;">The request failed</p>
+}
+
+<h5> Create </h5>
+<EditForm FormName="QuestionCreate" Model="QuestionModel" OnValidSubmit="Post">
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+
+    <label>Question: </label>
+    <br />
+    <InputTextArea @bind-Value="@QuestionModel.Question"></InputTextArea>
+    <br />
+    <label>Explanation: </label>
+    <br />
+    <InputTextArea @bind-Value="@QuestionModel.Explanation"></InputTextArea>
+
+    <br />
+
+    <label>Subcategory Name</label>
+    <br />
+    <InputSelect @bind-Value="QuestionModel.SubcategoryId">
+
+        @if (allSubcategories != null)
+        {
+            @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+            {
+                <option value="@subcategoryModel.Id"> @subcategoryModel.Name </option>
+            }
+        }
+    </InputSelect>
+    <br />
+
+    <input type="submit" value="Post" class="btn btn-primary">
+</EditForm>
+
+<br />
+<br />
+
+<h5>Edit and delete</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Questions</th>
+            <th>Explanation</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (allQuestions != null)
+        {
+            @foreach (QuestionModel questionModel in allQuestions)
+            {
+                <tr>
+                    <td>@questionModel.Question</td>
+                    <td>@questionModel.Explanation</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(questionModel)">Press to Delete</button>
+                        <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <p> Loading questions...</p>
+        }
+
+    </tbody>
+
+    @if (NeedDeleteConfirmation == true)
+    {
+        <div style="border: 1px solid RED; width:400px; height:150px">
+            <p>Are you sure that you want to delete this? </p>
+            <p style=" color:red">It is permanent!</p>
+            <br />
+            <button @onclick="()=> Delete(questionToDelete.Id)" class="btn btn-primary">Yes</button>
+            <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+        </div>
+    }
+</table>
+
+<br />
+
+@if (editing == true)
+{
+    <h6>Editing: "@selectedQuestionModel.Question"</h6>
+    <EditForm FormName="QuestionEdit" Model="selectedQuestionModel" OnValidSubmit="showEditConfirmation">
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+
+        <label>Question: </label>
+        <br />
+        <InputTextArea @bind-Value="selectedQuestionModel.Question"></InputTextArea>
+        <br />
+        <label>Explanation: </label>
+        <br />
+        <InputTextArea @bind-Value="selectedQuestionModel.Explanation"></InputTextArea>
+        <br />
+        <label> Change Subcategory</label>
+        <InputNumber @bind-Value="selectedQuestionModel.SubcategoryId"></InputNumber>
+        <br />
+        <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
+        <br />
+        @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+        {
+            <ul style=" font-size=8:">
+                <li>Segment name: @subcategoryModel.Name, Id: @subcategoryModel.Id</li>
+            </ul>
+        }
+
+        @if (NeedEditConfirmation == true)
+        {
+            <div style="border: 1px solid RED; width:400px; height:150px">
+                <p>Are you sure that you want to edit this? </p>
+                <p style=" color:red">It is permanent!</p>
+                <br />
+                <button @onclick="Edit" class="btn btn-primary">Yes</button>
+                <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+            </div>
+        }
+
+    </EditForm>
+}
+
+@code {
+
+    [SupplyParameterFromForm]
+    public SubcategoryModel SubcategoryModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private QuestionModel QuestionModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private QuestionModel selectedQuestionModel { get; set; } = new();
+
+    private bool editing = false;
+    private bool Fail = false;
+
+    private IEnumerable<QuestionModel>? allQuestions;
+    private IEnumerable<SubcategoryModel>? allSubcategories;
+
+    QuestionModel questionToDelete { get; set; } = new();
+
+    private bool NeedDeleteConfirmation = false;
+    private bool NeedEditConfirmation = false;
+    private bool Confirmation = false;
+
+
+    private void showDeleteConfirmation(QuestionModel questionModel)
+    {
+        questionToDelete = questionModel;
+        NeedDeleteConfirmation = true;
+    }
+
+    private void showEditConfirmation()
+    {
+        NeedEditConfirmation = true;
+    }
+
+    private void ChangeConfirmation(int value)
+    {
+        if (value == 2)
+        {
+            NeedDeleteConfirmation = false;
+            NeedEditConfirmation = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = dbFactory.CreateDbContext();
+        SubcategoryRepo subcategoryRepo = new(context);
+        QuestionRepo questionRepo = new(context);
+
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
+    }
+
+    private async Task Post()
+    {
+        using var context = dbFactory.CreateDbContext();
+        QuestionRepo questionRepo = new(context);
+
+        // Failure = false;
+
+        // categoryModel.Segments = null;
+
+        // var task = categoryRepo.AddCategory(categoryModel);
+
+        // if (task.IsCompletedSuccessfully)
+        // {
+        // CategoryModel newCategoryModel = new CategoryModel()
+        //     {
+        //         Name = categoryModel.Name,
+        //         Segments = addedSegments
+        //     };
+
+        await questionRepo.AddQuestionAsync(QuestionModel);
+        await UpdateUi();
+        StateHasChanged();
+        // }
+        // else
+        // {
+        //     Failure = true;
+        // }
+    }
+
+
+    private async Task Delete(int id)
+    {
+        using var context = dbFactory.CreateDbContext();
+        QuestionRepo questionRepo = new(context);
+
+        await questionRepo.DeleteQuestionAsync(id);
+        await questionRepo.SaveAsync();
+
+        await UpdateUi();
+        StateHasChanged();
+
+        NeedDeleteConfirmation = false;
+    }
+
+    private async Task SelectEdit(QuestionModel questionModel)
+    {
+        selectedQuestionModel = questionModel;
+        editing = true;
+
+        await UpdateUi();
+        StateHasChanged();
+    }
+
+    private async Task Edit()
+    {
+        Fail = false;
+
+        using var context = dbFactory.CreateDbContext();
+        SubcategoryRepo subcategoryRepo = new(context);
+        QuestionRepo questionRepo = new(context);
+
+        if (selectedQuestionModel.Question != null)
+        {
+            questionRepo.UpdateQuestion(selectedQuestionModel);
+
+            await UpdateUi();
+            StateHasChanged();
+        }
+
+        NeedEditConfirmation = false;
+        editing = false;
+    }
+
+    private async Task UpdateUi()
+    {
+        using var context = dbFactory.CreateDbContext();
+        SubcategoryRepo subcategoryRepo = new(context);
+        QuestionRepo questionRepo = new(context);
+
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+        allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
+    }
+
+}

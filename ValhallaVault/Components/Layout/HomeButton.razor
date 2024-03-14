@@ -1,0 +1,60 @@
+﻿@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+
+
+<AuthorizeView>
+    <Authorized>
+       
+        <div class="nav-item px-3">
+            <form action="/" method="post" @formname="home">
+                <AntiforgeryToken />
+
+                <input type="hidden" name="ReturnUrl" value="/home" />
+
+                <button type="submit" class="style-button">
+                    <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Home
+                </button>
+            </form>
+        </div>
+    </Authorized>
+
+</AuthorizeView>
+
+
+
+
+
+
+@*    </nav>
+</div>
+ *@
+
+
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private void Redirect()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

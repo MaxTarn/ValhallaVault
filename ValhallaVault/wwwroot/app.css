@@ -50,19 +50,21 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
-.btn-custom {
-    background-color: indianred;
+
+.style-button {
+    background-color: black;
     color: white;
     border: none;
     border-radius: 20px;
     padding: 10px 20px;
     font-size: 16px;
 }
-.link-custom {
-    color: indianred;
+.style-link {
+    color: black;
     font-size: 16px;
     text-decoration: none;
 }
-    .link-custom:hover {
-        color: crimson;
-    }
+
+.style-link:hover {
+    color: gray;
+}
