@@ -1,0 +1,43 @@
+﻿   @implements IDisposable
+ 
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<AuthorizeView>
+    <Authorized>
+        <div class="nav-item px-3">
+            <a href="/Account/userpage" class="style-button" style="text-decoration:none;color:white; ">
+                <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> User page
+            </a> 
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+@code { 
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private void Redirect()
+    {
+        NavigationManager.NavigateTo("/Account/userpage");
+    }
+}
+ 

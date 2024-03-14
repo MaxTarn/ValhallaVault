@@ -58,7 +58,9 @@ h1:focus {
     border-radius: 20px;
     padding: 10px 20px;
     font-size: 16px;
+   
 }
+
 .style-link {
     color: black;
     font-size: 16px;
@@ -68,3 +70,6 @@ h1:focus {
 .style-link:hover {
     color: gray;
 }
+
+
+
