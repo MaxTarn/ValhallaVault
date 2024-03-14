@@ -17,45 +17,41 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Set<CategoryModel>().ToListAsync();
         }
 
-        public async Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        public async Task<CategoryModel?> GetCategoryByIdAsync(int? id)
         {
-            if (id != 0)
+            if (id == null)
             {
-                return await _dbContext.Set<CategoryModel>().FindAsync(id);
+                return null;
             }
-            else
-            {
-                throw new Exception("Use valid ID");
-            }
+            return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
 
-        public async Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
+        public async Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Categories.Include(x => x.Segments).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task AddCategoryAsync(CategoryModel category)
+        public async Task AddCategoryAsync(CategoryModel? category)
         {
-            if (category != null)
+            if (category == null)
             {
-                _dbContext.Set<CategoryModel>().Add(category);
+                return;
             }
-            else
-            {
-                throw new Exception("Category cannot be null");
-            }
+            _dbContext.Set<CategoryModel>().Add(category);
         }
 
-        public async Task UpdateCategoryAsync(CategoryModel category)
+        public async Task UpdateCategocryAsync(CategoryModel? category)
         {
-            if (category != null)
+            if (category == null)
             {
-                _dbContext.Entry(category).State = EntityState.Modified;
+                return;
             }
-            else
-            {
-                throw new Exception("Select category to update");
-            }
+
+            _dbContext.Entry(category).State = EntityState.Modified;
         }
 
         public async Task<CategoryModel?> DeleteCategoryAsync(int id)
@@ -89,6 +85,21 @@ namespace ValhallaVault.Data.Repositories
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public Task UpdateCategoryAsync(CategoryModel category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

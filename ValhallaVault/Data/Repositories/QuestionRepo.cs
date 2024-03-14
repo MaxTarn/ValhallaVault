@@ -20,24 +20,40 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Questions.ToListAsync();
         }
 
-        public async Task<QuestionModel?> GetQuestionByIdAsync(int id)
+        public async Task<QuestionModel?> GetQuestionByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Questions.FindAsync(id);
         }
 
-        public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
+        public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);
         }
 
 
-        public async Task AddQuestionAsync(QuestionModel question)
+        public async Task AddQuestionAsync(QuestionModel? question)
         {
+            if (question == null)
+            {
+                return;
+            }
             _dbContext.Set<QuestionModel>().Add(question);
         }
 
-        public void UpdateQuestion(QuestionModel question)
+        public void UpdateQuestion(QuestionModel? question)
         {
+            if (question == null)
+            {
+                return;
+            }
             _dbContext.Entry(question).State = EntityState.Modified;
         }
 
@@ -64,6 +80,16 @@ namespace ValhallaVault.Data.Repositories
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<QuestionModel?> GetQuestionByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

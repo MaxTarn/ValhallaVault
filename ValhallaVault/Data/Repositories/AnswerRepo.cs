@@ -17,21 +17,31 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Answers.ToListAsync();
         }
 
-        public async Task<AnswerModel?> GetAnswerByIdAsync(int id)
+        public async Task<AnswerModel?> GetAnswerByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Answers.FindAsync(id);
         }
 
-        public async Task AddAnswerAsync(AnswerModel answer)
+        public async Task AddAnswerAsync(AnswerModel? answer)
         {
+            if (answer == null)
+            {
+                return;
+            }
             _dbContext.Set<AnswerModel>().Add(answer);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAnswerAsync(AnswerModel answer)
+        public async Task UpdateAnswerAsync(AnswerModel? answer)
         {
+            if (answer == null)
+            {
+                return;
+            }
             _dbContext.Entry(answer).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<AnswerModel?> DeleteAnswerAsync(int id)
@@ -55,6 +65,11 @@ namespace ValhallaVault.Data.Repositories
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<AnswerModel?> GetAnswerByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 
