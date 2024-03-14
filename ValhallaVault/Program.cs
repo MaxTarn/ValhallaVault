@@ -5,7 +5,6 @@ using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Controllers;
 using ValhallaVault.Data;
-using ValhallaVault.Data.Middleware;
 using ValhallaVault.Data.Repositories;
 
 namespace ValhallaVault
@@ -52,7 +51,6 @@ namespace ValhallaVault
             builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepo>();
             builder.Services.AddScoped<ISegmentRepository, SegmentRepo>();
             builder.Services.AddScoped<IUserQuestionRepository, UserQuestionRepo>();
-            builder.Services.AddScoped<CustomLogger>();
 
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
@@ -150,7 +148,6 @@ namespace ValhallaVault
 
             app.UseRouting();
 
-            app.UseMiddleware<CustomLogger>();
 
             app.UseCors("AllowAll");
 
