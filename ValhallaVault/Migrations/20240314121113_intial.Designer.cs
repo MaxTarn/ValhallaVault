@@ -12,8 +12,8 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20240309110800_added some more questions and answers to subcategory with id 1 (created by GPT)")]
-    partial class addedsomemorequestionsandanswerstosubcategorywithid1createdbyGPT
+    [Migration("20240314121113_intial")]
+    partial class intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -659,6 +659,33 @@ namespace ValhallaVault.Migrations
                             Question = "Vilken åtgärd bör du vidta om ditt kreditkortsinformation har blivit komprometterad?",
                             SubcategoryId = 1
                         });
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.RequestLogs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LogTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestLogs");
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>
