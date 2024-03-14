@@ -198,7 +198,7 @@
         string? userId = await GetUserIdByNormalizedUserName();
         if (userId == null) return;
 
-        if (AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id) == true)
+        if ((await AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id)) == true)
         {
             //TODO
             //edit the entry
@@ -212,19 +212,16 @@
             });
         await UserQuestionRepo.SaveAsync();
     }
-
     /// <summary>
     /// Checks if the logged in user has already answerd this particular question
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
+    private async Task<bool?> AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAllUserQuestionsAsync()
-            .GetAwaiter()
-            .GetResult()
+        int? count = (await UserQuestionRepo.GetAllUserQuestionsAsync())
             .Where(q => q.QuestionId == questionId)
             .Where(q => q.UserId == userId)
             .ToList().Count;
@@ -255,17 +252,21 @@
 
         return currentQuestionIndex == null || currentQuestionIndex <= 0;
     }
-
     private bool ShouldDisableNextButton()
     {
-        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true; 
-        
+        // if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true;
 
-        int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+        // if (CurrentSubcategoryContainer.Questions.Equals(null)) return true;
 
-        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
+        // int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+
+        // if (currentQuestionIndex == null) return true;
+
+        // if (currentQuestionIndex+1 >= CurrentSubcategoryContainer.Questions?.Count) return true;
+
+        return false;
+        //return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
     }
-
     private bool ShouldDisableCorrectAnswerButton()
     {
         if (UserHasChosenAnswer() != true || CurrentQuestionContainer == null | CurrentSubcategoryContainer == null) return true;
@@ -274,7 +275,6 @@
 
         return false;
     }
-    
     private async Task<SubCategoryContainer?> BuildSubCategoryContainer(int subcategoryId)
     {
         var subcategory = await SubcategoryRepo.GetSubCategoryByIdIncludingThingsAsync(subcategoryId);
@@ -314,6 +314,8 @@
         return subcategoryContainer;
     }
     #endregion
+
+
 
     #region WhenFirstLoadingPage
 
