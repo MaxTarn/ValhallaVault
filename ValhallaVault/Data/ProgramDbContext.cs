@@ -17,7 +17,6 @@ namespace ValhallaVault.Data
         public DbSet<SubcategoryModel> Subcategories { get; set; }
         public DbSet<SegmentModel> Segments { get; set; }
         public DbSet<UserQuestionModel> UserQuestions { get; set; }
-        public DbSet<RequestLogs> RequestLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
