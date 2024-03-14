@@ -18,6 +18,18 @@
                 </button>
             </form>
         </div>
+
+        <div class="nav-item px-3">
+            <form action="/DisplayAllCategories" method="post" @formname="categories">
+                <AntiforgeryToken />
+
+                <input type="hidden" name="ReturnUrl" value="/DisplayAllCategories" />
+
+                <button type="submit" class="style-button">
+                    <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> All categories
+                </button>
+            </form>
+        </div>
     </Authorized>
 
 </AuthorizeView>
