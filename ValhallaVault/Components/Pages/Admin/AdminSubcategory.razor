@@ -179,28 +179,9 @@
         using var context = dbFactory.CreateDbContext();
         SubcategoryRepo subcategoryRepo = new(context);
 
-        // Failure = false;
-
-        // categoryModel.Segments = null;
-
-        // var task = categoryRepo.AddCategory(categoryModel);
-
-        // if (task.IsCompletedSuccessfully)
-        // {
-        // CategoryModel newCategoryModel = new CategoryModel()
-        //     {
-        //         Name = categoryModel.Name,
-        //         Segments = addedSegments
-        //     };
-
         await subcategoryRepo.AddSubcategoryAsync(SubcategoryModel);
         await UpdateUi();
         StateHasChanged();
-        // }
-        // else
-        // {
-        //     Failure = true;
-        // }
     }
 
 
