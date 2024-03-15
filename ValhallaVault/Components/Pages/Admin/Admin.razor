@@ -6,8 +6,14 @@
 @using ValhallaVault.Data.Models;
 @using ValhallaVault.Data.Repositories
 @inject IDbContextFactory<ProgramDbContext> dbFactory;
-@attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
+
+
+<AuthorizeView Roles="Admin">
+<Authorized>
+
+
+
 
 <h1>Admin dashboard</h1>
 
@@ -45,9 +51,11 @@
 {
     <AdminQuestion></AdminQuestion>
 }
-
-
-
+    </Authorized>
+    <NotAuthorized>
+        <p> You are not authorized to use Admin pages</p>
+    </NotAuthorized>
+</AuthorizeView>
 @code{
     private int number; 
 
