@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace ValhallaVault.Api
+﻿namespace ValhallaVault.Api
 {
     public class ApiCaller
     {
