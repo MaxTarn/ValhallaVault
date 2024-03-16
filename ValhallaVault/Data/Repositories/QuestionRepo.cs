@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 
@@ -67,6 +68,7 @@ namespace ValhallaVault.Data.Repositories
 
             if (question != null)
             {
+                Debug.WriteLine("Question has been recieved");
                 _dbContext.Questions.Remove(question);
                 await _dbContext.SaveChangesAsync();
                 return question;
@@ -80,6 +82,7 @@ namespace ValhallaVault.Data.Repositories
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+            Debug.WriteLine("Changes saved");
         }
 
         public Task<QuestionModel?> GetQuestionByIdAsync(int id)
