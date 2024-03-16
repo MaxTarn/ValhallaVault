@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using ValhallaVault.Components.Account;
 using ValhallaVault.Controllers;
 using ValhallaVault.Data;
 using ValhallaVault.Data.Repositories;
+using ValhallaVault.MiddleWare;
 
 namespace ValhallaVault
 {
@@ -155,6 +157,10 @@ namespace ValhallaVault
 
             app.UseCors("AllowAll");
 
+            var middleware = new MiddleWareProcessingTime(_ => Task.CompletedTask); // Create an instance of the middleware
+            app.UseMiddleware<MiddleWareProcessingTime>();
+
+
             app.MapControllers();
 
             // Configure the HTTP request pipeline.
@@ -183,6 +189,8 @@ namespace ValhallaVault
             app.MapControllers();
 
             app.Run();
+
+            middleware.PrintTotalProcessingTime();
 
         }
     }
