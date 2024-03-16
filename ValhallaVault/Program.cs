@@ -6,6 +6,7 @@ using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Controllers;
 using ValhallaVault.Data;
+using ValhallaVault.Data.DbServices;
 using ValhallaVault.Data.Repositories;
 using ValhallaVault.MiddleWare;
 
@@ -53,7 +54,7 @@ namespace ValhallaVault
             builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepo>();
             builder.Services.AddScoped<ISegmentRepository, SegmentRepo>();
             builder.Services.AddScoped<IUserQuestionRepository, UserQuestionRepo>();
-
+            builder.Services.AddScoped<UserQuestionService>();
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
             builder.Services.AddAuthentication(options =>
@@ -70,13 +71,13 @@ namespace ValhallaVault
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
-            
+
             builder.Services.AddDbContextFactory<ProgramDbContext>(opt =>
             opt.UseSqlServer(DbString));
-            
+
             builder.Services.AddDbContext<ProgramDbContext>(options =>
                 options.UseSqlServer(DbString));
-            
+
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()  //HÃ„R LÃ„GGER VI TILL DENNA RADEN 
                 .AddEntityFrameworkStores<ApplicationDbContext>()
