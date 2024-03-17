@@ -25,7 +25,10 @@ namespace ValhallaVault.Data.Repositories
 
         public async Task<SubcategoryModel?> GetSubCategoryByIdIncludingThingsAsync(int id)
         {
-            return await _dbContext.Subcategories.Include(x => x.Questions).ThenInclude(xx => xx.Answers).FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Subcategories
+                .Include(x => x.Questions)
+                .ThenInclude(xx => xx.Answers)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<SubcategoryModel?> GetSubCategoryByIdIncludigQuestionsAsync(int id)

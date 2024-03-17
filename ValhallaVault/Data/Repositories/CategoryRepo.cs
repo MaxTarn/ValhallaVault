@@ -22,9 +22,15 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
 
-        public async Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
+        public async Task<CategoryModel?> GetCategoryByIdWithEagerLoadingAsync(int id)
         {
-            return await _dbContext.Categories.Include(x => x.Segments).FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Categories
+                .Where(x => x.Id == id)
+                .Include(x => x.Segments)
+                .ThenInclude(x => x.Subcategories)
+                .ThenInclude(x => x.Questions)
+                .ThenInclude(x => x.Answers)
+                .FirstOrDefaultAsync();
         }
 
         public async Task AddCategoryAsync(CategoryModel category)
