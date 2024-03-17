@@ -28,8 +28,7 @@ namespace ValhallaVault.Data.DbServices
         /// <returns></returns>
         public async Task<(int totalQuestions, int rightQuestions, double percentageComplete)> PercentageOfQuestionsAnswerdForCategoryId(int categoryId, string userId)
         {
-            if (string.IsNullOrEmpty(userId))
-                return (0, 0, 0); // Return default values if userId is null or empty
+            if (string.IsNullOrEmpty(userId)) return (0, 0, 0); // Return default values if userId is null or empty
 
             // Find the category with the specified ID
             CategoryModel? category = await _categoryRepository.GetCategoryByIdWithEagerLoadingAsync(categoryId);
@@ -65,8 +64,7 @@ namespace ValhallaVault.Data.DbServices
 
         public async Task<(int totalQuestions, int rightQuestions, double percentageComplete)> PercentageOfQuestionsAnsweredForSegmentId(int segmentId, string userId)
         {
-            if (string.IsNullOrEmpty(userId))
-                return (0, 0, 0); // Return default values if userId is null or empty
+            if (string.IsNullOrEmpty(userId)) return (0, 0, 0); // Return default values if userId is null or empty
 
             // Find the segment with the specified ID
             SegmentModel? segment = await _segmentRepository.GetSegmentByIdWithEagerLoadingAsync(segmentId);
