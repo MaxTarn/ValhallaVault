@@ -23,10 +23,13 @@
     <DataAnnotationsValidator />
 
     <label>Category Name</label>
-    <InputText @bind-Value="@categoryModel.Name"></InputText>
-
     <br />
-
+    <InputText @bind-Value="@categoryModel.Name"></InputText>
+    <br />
+    <label>Category Info</label>
+    <br />
+    <InputTextArea @bind-Value="@categoryModel.Info"></InputTextArea>
+    <br />
     <input type="submit" value="Post" class="btn btn-primary">
 </EditForm>
 
@@ -104,7 +107,11 @@
         <DataAnnotationsValidator />
 
         <InputText @bind-Value="selectedCategory.Name"></InputText>
+        <br />
+        
+        <InputTextArea @bind-Value="selectedCategory.Info"></InputTextArea>
 
+        <br />
         <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
     </EditForm>
 

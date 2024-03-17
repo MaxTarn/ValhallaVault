@@ -20,7 +20,14 @@
     <DataAnnotationsValidator />
 
     <label>Segment Name</label>
+    <br />
     <InputText @bind-Value="@segmentModel.Name"></InputText>
+
+    <br />
+
+    <label>Segment info</label>
+    <br />
+    <InputTextArea @bind-Value="@segmentModel.Info"></InputTextArea>
 
     <br />
 
@@ -112,6 +119,11 @@
         <DataAnnotationsValidator />
 
         <InputText @bind-Value="selectedSegment.Name"></InputText>
+        <br />
+
+        <InputTextArea @bind-Value="selectedSegment.Info"></InputTextArea>
+
+        <br />
 
         <label>Category Name</label>
         <InputSelect @bind-Value="selectedSegment.CategoryId">
