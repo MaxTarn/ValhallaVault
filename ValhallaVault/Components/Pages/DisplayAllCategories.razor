@@ -1,10 +1,12 @@
 ﻿@page "/DisplayAllCategories"
+@attribute [Authorize]
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data
 @using ValhallaVault.Data.Containers
 @using ValhallaVault.Data.DbServices
 @using ValhallaVault.Data.Repositories
+@using Microsoft.AspNetCore.Authorization
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @inject ICategoryRepository CategoryRepo
 @inject UserQuestionService UserQuestionService

@@ -1,4 +1,5 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
+@attribute [Authorize]
 @rendermode InteractiveServer
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
@@ -6,6 +7,7 @@
 @using ValhallaVault.Data.DbServices
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data
+@using Microsoft.AspNetCore.Authorization
 @inject ISegmentRepository SegmentRepo
 @inject ISubcategoryRepository SubcategoryRepo
 @inject NavigationManager Navigation

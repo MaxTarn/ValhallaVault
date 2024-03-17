@@ -1,5 +1,6 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{SubCategoryId:int}"
 @rendermode InteractiveServer
+@attribute [Authorize]
 @using ValhallaVault.Data.Repositories
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
@@ -7,6 +8,7 @@
 @using Microsoft.AspNetCore.Identity
 @using ValhallaVault.Data
 @using System.Reflection.Metadata.Ecma335
+@using Microsoft.AspNetCore.Authorization
 @using ValhallaVault.Data.Containers
 @inject ISubcategoryRepository SubcategoryRepo
 @inject IQuestionRepository QuestionRepo
