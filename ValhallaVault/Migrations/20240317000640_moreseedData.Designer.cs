@@ -12,8 +12,8 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20240314121113_intial")]
-    partial class intial
+    [Migration("20240317000640_moreseedData")]
+    partial class moreseedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -464,6 +464,286 @@ namespace ValhallaVault.Migrations
                             Answer = "Använda samma lösenord på andra konton.",
                             IsCorrect = false,
                             QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Answer = "Begäran om pengar från okända personer online.",
+                            IsCorrect = true,
+                            QuestionId = 31
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Answer = "Delning av personlig information med okända personer online.",
+                            IsCorrect = false,
+                            QuestionId = 31
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Answer = "Skicka pengar till okända personer online.",
+                            IsCorrect = false,
+                            QuestionId = 31
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Answer = "Träffa okända personer online i person.",
+                            IsCorrect = false,
+                            QuestionId = 31
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Answer = "För att undvika att bli offer för romansbedrägeri bör man vara skeptisk mot okända personer online.",
+                            IsCorrect = true,
+                            QuestionId = 32
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Answer = "Dela personlig information med okända personer online.",
+                            IsCorrect = false,
+                            QuestionId = 32
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Answer = "Begära pengar från okända personer online.",
+                            IsCorrect = false,
+                            QuestionId = 32
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Answer = "Lita blint på okända personer online.",
+                            IsCorrect = false,
+                            QuestionId = 32
+                        },
+                        new
+                        {
+                            Id = 68,
+                            Answer = "Avbryt all kommunikation.",
+                            IsCorrect = true,
+                            QuestionId = 33
+                        },
+                        new
+                        {
+                            Id = 69,
+                            Answer = "Fortsätt att kommunicera och se vad som händer.",
+                            IsCorrect = false,
+                            QuestionId = 33
+                        },
+                        new
+                        {
+                            Id = 70,
+                            Answer = "Skicka mer pengar till bedragaren.",
+                            IsCorrect = false,
+                            QuestionId = 33
+                        },
+                        new
+                        {
+                            Id = 71,
+                            Answer = "Dela mer personlig information med bedragaren.",
+                            IsCorrect = false,
+                            QuestionId = 33
+                        },
+                        new
+                        {
+                            Id = 72,
+                            Answer = "Ekonomiska förluster, förlust av personlig information och psykologisk påverkan på offren.",
+                            IsCorrect = true,
+                            QuestionId = 34
+                        },
+                        new
+                        {
+                            Id = 73,
+                            Answer = "Bara positiva erfarenheter.",
+                            IsCorrect = false,
+                            QuestionId = 34
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Answer = "Inga risker alls.",
+                            IsCorrect = false,
+                            QuestionId = 34
+                        },
+                        new
+                        {
+                            Id = 75,
+                            Answer = "Positiv psykologisk påverkan på offren.",
+                            IsCorrect = false,
+                            QuestionId = 34
+                        },
+                        new
+                        {
+                            Id = 76,
+                            Answer = "Falska identiteter och skapar en känsla av förtroende innan de begär pengar eller personlig information.",
+                            IsCorrect = true,
+                            QuestionId = 35
+                        },
+                        new
+                        {
+                            Id = 77,
+                            Answer = "Delar personlig information direkt utan att tveka.",
+                            IsCorrect = false,
+                            QuestionId = 35
+                        },
+                        new
+                        {
+                            Id = 78,
+                            Answer = "Begär aldrig pengar från offren.",
+                            IsCorrect = false,
+                            QuestionId = 35
+                        },
+                        new
+                        {
+                            Id = 79,
+                            Answer = "Presenterar sig själva med ärliga identiteter och avsikter.",
+                            IsCorrect = false,
+                            QuestionId = 35
+                        },
+                        new
+                        {
+                            Id = 80,
+                            Answer = "Erbjudanden om hög avkastning med liten eller ingen risk.",
+                            IsCorrect = true,
+                            QuestionId = 36
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Answer = "Erbjudanden som är för bra för att vara sanna.",
+                            IsCorrect = false,
+                            QuestionId = 36
+                        },
+                        new
+                        {
+                            Id = 82,
+                            Answer = "Begäran om personlig eller finansiell information.",
+                            IsCorrect = false,
+                            QuestionId = 36
+                        },
+                        new
+                        {
+                            Id = 83,
+                            Answer = "Alla ovanstående.",
+                            IsCorrect = false,
+                            QuestionId = 36
+                        },
+                        new
+                        {
+                            Id = 84,
+                            Answer = "Undvik att ta emot eller svara på oombedda e-postmeddelanden, särskilt från okända avsändare.",
+                            IsCorrect = true,
+                            QuestionId = 37
+                        },
+                        new
+                        {
+                            Id = 85,
+                            Answer = "Öppna alla bilagor och klicka på alla länkar i e-postmeddelanden.",
+                            IsCorrect = false,
+                            QuestionId = 37
+                        },
+                        new
+                        {
+                            Id = 86,
+                            Answer = "Använd samma lösenord för flera olika konton.",
+                            IsCorrect = false,
+                            QuestionId = 37
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Answer = "Dela personlig eller finansiell information via e-post.",
+                            IsCorrect = false,
+                            QuestionId = 37
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Answer = "Skicka aldrig pengar eller personlig information till någon du inte känner och litar på.",
+                            IsCorrect = true,
+                            QuestionId = 38
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Answer = "Följ alltid instruktionerna från okända personer utan att ifrågasätta.",
+                            IsCorrect = false,
+                            QuestionId = 38
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Answer = "Ge ut dina bankuppgifter när någon begär dem online.",
+                            IsCorrect = false,
+                            QuestionId = 38
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Answer = "Dela aldrig bedrägeriuppgifter med andra.",
+                            IsCorrect = false,
+                            QuestionId = 38
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Answer = "Lämna aldrig personlig eller finansiell information via telefon till någon du inte känner och litar på.",
+                            IsCorrect = true,
+                            QuestionId = 39
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Answer = "Ange alltid dina uppgifter när någon ringer och påstår sig vara från banken eller andra institutioner.",
+                            IsCorrect = false,
+                            QuestionId = 39
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Answer = "Be om personlig information från personer som ringer dig.",
+                            IsCorrect = false,
+                            QuestionId = 39
+                        },
+                        new
+                        {
+                            Id = 95,
+                            Answer = "Dela aldrig bedrägeriuppgifter med andra.",
+                            IsCorrect = false,
+                            QuestionId = 39
+                        },
+                        new
+                        {
+                            Id = 96,
+                            Answer = "Välj noga vilka appar du installerar och laddar ner.",
+                            IsCorrect = true,
+                            QuestionId = 40
+                        },
+                        new
+                        {
+                            Id = 97,
+                            Answer = "Ladda ner och installera alla appar du hittar.",
+                            IsCorrect = false,
+                            QuestionId = 40
+                        },
+                        new
+                        {
+                            Id = 98,
+                            Answer = "Ge alla appar tillgång till din kontaktlista och kamera.",
+                            IsCorrect = false,
+                            QuestionId = 40
+                        },
+                        new
+                        {
+                            Id = 99,
+                            Answer = "Klicka på alla annonser för att få gratis erbjudanden.",
+                            IsCorrect = false,
+                            QuestionId = 40
                         });
                 });
 
@@ -658,34 +938,112 @@ namespace ValhallaVault.Migrations
                             Explanation = "Omedelbart kontakta ditt kreditkortsföretag, begär att kortet spärras och överväg att ändra ditt lösenord för extra säkerhet.",
                             Question = "Vilken åtgärd bör du vidta om ditt kreditkortsinformation har blivit komprometterad?",
                             SubcategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Explanation = "Begäran om pengar från okända personer online.",
+                            Question = "Vilka är vanliga tecken på romansbedrägeri?",
+                            SubcategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Explanation = "Var skeptisk mot okända personer online, dela inte personlig information och begär aldrig pengar från okända personer.",
+                            Question = "Hur kan man undvika att bli offer för romansbedrägeri?",
+                            SubcategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Explanation = "Avbryt all kommunikation, rapportera bedrägeriet till plattformsadministratörer och överväg att kontakta lokala myndigheter.",
+                            Question = "Vad ska man göra om man misstänker att man utsatts för romansbedrägeri?",
+                            SubcategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Explanation = "Riskerna inkluderar ekonomiska förluster, förlust av personlig information och psykologisk påverkan på offren.",
+                            Question = "Vilka risker finns med online-dating och romansbedrägeri?",
+                            SubcategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Explanation = "Bedragare använder ofta falska identiteter och skapar en känsla av förtroende innan de begär pengar eller personlig information.",
+                            Question = "Vad är en vanlig strategi för bedragare vid romansbedrägeri?",
+                            SubcategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Explanation = "Erbjudanden om hög avkastning med liten eller ingen risk.",
+                            Question = "Vilka är vanliga tecken på investeringsbedrägeri?",
+                            SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Explanation = "Var skeptisk mot oombedda investeringsmöjligheter, genomför grundlig forskning och konsultera professionella finansiella rådgivare.",
+                            Question = "Hur kan man skydda sig mot investeringsbedrägeri?",
+                            SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Explanation = "Kontakta omedelbart finansiella institutioner, rapportera bedrägeriet till myndigheter och överväg att konsultera juridisk rådgivning.",
+                            Question = "Vad ska man göra om man misstänker att man blivit utsatt för investeringsbedrägeri?",
+                            SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Explanation = "Riskerna inkluderar ekonomiska förluster, exponering för bedrägerier och stöld av personlig information.",
+                            Question = "Vilka är riskerna med att svara på oombedda investeringsmöjligheter?",
+                            SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Explanation = "Bedragare använder ofta pressande tidsfrister och falska rekommendationer för att få offer att fatta snabba beslut utan tillräcklig forskning.",
+                            Question = "Vad är en vanlig strategi för bedragare vid investeringsbedrägeri?",
+                            SubcategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Explanation = "Vanliga taktiker inkluderar falska påståenden om identitet, hot om juridiska konsekenser och påståenden om ekonomiska fördelar.",
+                            Question = "Vilka är vanliga taktiker vid telefonbedrägeri?",
+                            SubcategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Explanation = "Identifiera oombedda samtal, var skeptisk mot oväntade erbjudanden och begär alltid officiell dokumentation.",
+                            Question = "Hur kan man identifiera ett potentiellt telefonbedrägeri?",
+                            SubcategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Explanation = "Avbryt samtalet omedelbart, rapportera numret till myndigheterna och varna andra om möjliga bedrägeriförsök.",
+                            Question = "Vad ska man göra om man blir kontaktad av en misstänkt bedragare?",
+                            SubcategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Explanation = "Riskerna inkluderar ekonomiska förluster, identitetsstöld och exponering för andra bedrägerier.",
+                            Question = "Vilka risker finns med att svara på misstänkta samtal?",
+                            SubcategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Explanation = "Registrera sig på nationella 'nix-listor', utbilda sig själv och sina nära om bedrägeritaktiker och använda sig av spamfilter för att blockera oönskade samtal.",
+                            Question = "Hur kan man skydda sig mot telefonbedrägeri?",
+                            SubcategoryId = 4
                         });
-                });
-
-            modelBuilder.Entity("ValhallaVault.Data.Models.RequestLogs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("LogTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Method")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StatusCode")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequestLogs");
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>

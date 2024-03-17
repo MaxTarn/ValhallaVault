@@ -1,0 +1,18 @@
+﻿<!-- ProgressBar.razor -->
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+@rendermode InteractiveServer
+
+<div class="progress" style="height: 20px; position: relative;" >
+    <div class="progress-bar bg-primary" role="progressbar" style="width: @PercentageComplete%;" aria-valuenow="@PercentageComplete" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+@code {
+    [Parameter]
+    public double PercentageComplete { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        PercentageComplete = Math.Round(PercentageComplete);
+    }
+}

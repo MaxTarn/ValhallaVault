@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ValhallaVault.Migrations
 {
     /// <inheritdoc />
-    public partial class intial : Migration
+    public partial class moreseedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,22 +23,6 @@ namespace ValhallaVault.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RequestLogs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Method = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusCode = table.Column<int>(type: "int", nullable: false),
-                    LogTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RequestLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,7 +209,22 @@ namespace ValhallaVault.Migrations
                     { 17, "Oregistrerade eller oseriösa webbplatser, särskilt med onormalt låga priser, kan vara tecken på kreditkortsbedrägeri.", "Vilket är ett vanligt tecken på kreditkortsbedrägeri vid onlineköp?", 1 },
                     { 18, "CVV-koden används för att bekräfta att du har ditt fysiska kreditkort och bör hållas konfidentiell för att förhindra obehörig användning.", "Varför är det viktigt att inte dela ditt kreditkorts CVV-kod (säkerhetskod) med andra?", 1 },
                     { 19, "Förvara ditt kreditkort på en säker plats, undvik att lämna det obevakat och använd plånböcker eller skyddsfodral för extra säkerhet.", "Hur kan du säkert förvara ditt fysiska kreditkort för att undvika stöld?", 1 },
-                    { 20, "Omedelbart kontakta ditt kreditkortsföretag, begär att kortet spärras och överväg att ändra ditt lösenord för extra säkerhet.", "Vilken åtgärd bör du vidta om ditt kreditkortsinformation har blivit komprometterad?", 1 }
+                    { 20, "Omedelbart kontakta ditt kreditkortsföretag, begär att kortet spärras och överväg att ändra ditt lösenord för extra säkerhet.", "Vilken åtgärd bör du vidta om ditt kreditkortsinformation har blivit komprometterad?", 1 },
+                    { 31, "Begäran om pengar från okända personer online.", "Vilka är vanliga tecken på romansbedrägeri?", 2 },
+                    { 32, "Var skeptisk mot okända personer online, dela inte personlig information och begär aldrig pengar från okända personer.", "Hur kan man undvika att bli offer för romansbedrägeri?", 2 },
+                    { 33, "Avbryt all kommunikation, rapportera bedrägeriet till plattformsadministratörer och överväg att kontakta lokala myndigheter.", "Vad ska man göra om man misstänker att man utsatts för romansbedrägeri?", 2 },
+                    { 34, "Riskerna inkluderar ekonomiska förluster, förlust av personlig information och psykologisk påverkan på offren.", "Vilka risker finns med online-dating och romansbedrägeri?", 2 },
+                    { 35, "Bedragare använder ofta falska identiteter och skapar en känsla av förtroende innan de begär pengar eller personlig information.", "Vad är en vanlig strategi för bedragare vid romansbedrägeri?", 2 },
+                    { 36, "Erbjudanden om hög avkastning med liten eller ingen risk.", "Vilka är vanliga tecken på investeringsbedrägeri?", 3 },
+                    { 37, "Var skeptisk mot oombedda investeringsmöjligheter, genomför grundlig forskning och konsultera professionella finansiella rådgivare.", "Hur kan man skydda sig mot investeringsbedrägeri?", 3 },
+                    { 38, "Kontakta omedelbart finansiella institutioner, rapportera bedrägeriet till myndigheter och överväg att konsultera juridisk rådgivning.", "Vad ska man göra om man misstänker att man blivit utsatt för investeringsbedrägeri?", 3 },
+                    { 39, "Riskerna inkluderar ekonomiska förluster, exponering för bedrägerier och stöld av personlig information.", "Vilka är riskerna med att svara på oombedda investeringsmöjligheter?", 3 },
+                    { 40, "Bedragare använder ofta pressande tidsfrister och falska rekommendationer för att få offer att fatta snabba beslut utan tillräcklig forskning.", "Vad är en vanlig strategi för bedragare vid investeringsbedrägeri?", 3 },
+                    { 41, "Vanliga taktiker inkluderar falska påståenden om identitet, hot om juridiska konsekenser och påståenden om ekonomiska fördelar.", "Vilka är vanliga taktiker vid telefonbedrägeri?", 4 },
+                    { 42, "Identifiera oombedda samtal, var skeptisk mot oväntade erbjudanden och begär alltid officiell dokumentation.", "Hur kan man identifiera ett potentiellt telefonbedrägeri?", 4 },
+                    { 43, "Avbryt samtalet omedelbart, rapportera numret till myndigheterna och varna andra om möjliga bedrägeriförsök.", "Vad ska man göra om man blir kontaktad av en misstänkt bedragare?", 4 },
+                    { 44, "Riskerna inkluderar ekonomiska förluster, identitetsstöld och exponering för andra bedrägerier.", "Vilka risker finns med att svara på misstänkta samtal?", 4 },
+                    { 45, "Registrera sig på nationella 'nix-listor', utbilda sig själv och sina nära om bedrägeritaktiker och använda sig av spamfilter för att blockera oönskade samtal.", "Hur kan man skydda sig mot telefonbedrägeri?", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -292,7 +290,47 @@ namespace ValhallaVault.Migrations
                     { 56, "Kontakta kreditkortsföretaget och spärra kortet.", null, true, 20 },
                     { 57, "Ignorera det och fortsätt använda det som vanligt.", null, false, 20 },
                     { 58, "Publicera informationen på sociala medier.", null, false, 20 },
-                    { 59, "Använda samma lösenord på andra konton.", null, false, 20 }
+                    { 59, "Använda samma lösenord på andra konton.", null, false, 20 },
+                    { 60, "Begäran om pengar från okända personer online.", null, true, 31 },
+                    { 61, "Delning av personlig information med okända personer online.", null, false, 31 },
+                    { 62, "Skicka pengar till okända personer online.", null, false, 31 },
+                    { 63, "Träffa okända personer online i person.", null, false, 31 },
+                    { 64, "För att undvika att bli offer för romansbedrägeri bör man vara skeptisk mot okända personer online.", null, true, 32 },
+                    { 65, "Dela personlig information med okända personer online.", null, false, 32 },
+                    { 66, "Begära pengar från okända personer online.", null, false, 32 },
+                    { 67, "Lita blint på okända personer online.", null, false, 32 },
+                    { 68, "Avbryt all kommunikation.", null, true, 33 },
+                    { 69, "Fortsätt att kommunicera och se vad som händer.", null, false, 33 },
+                    { 70, "Skicka mer pengar till bedragaren.", null, false, 33 },
+                    { 71, "Dela mer personlig information med bedragaren.", null, false, 33 },
+                    { 72, "Ekonomiska förluster, förlust av personlig information och psykologisk påverkan på offren.", null, true, 34 },
+                    { 73, "Bara positiva erfarenheter.", null, false, 34 },
+                    { 74, "Inga risker alls.", null, false, 34 },
+                    { 75, "Positiv psykologisk påverkan på offren.", null, false, 34 },
+                    { 76, "Falska identiteter och skapar en känsla av förtroende innan de begär pengar eller personlig information.", null, true, 35 },
+                    { 77, "Delar personlig information direkt utan att tveka.", null, false, 35 },
+                    { 78, "Begär aldrig pengar från offren.", null, false, 35 },
+                    { 79, "Presenterar sig själva med ärliga identiteter och avsikter.", null, false, 35 },
+                    { 80, "Erbjudanden om hög avkastning med liten eller ingen risk.", null, true, 36 },
+                    { 81, "Erbjudanden som är för bra för att vara sanna.", null, false, 36 },
+                    { 82, "Begäran om personlig eller finansiell information.", null, false, 36 },
+                    { 83, "Alla ovanstående.", null, false, 36 },
+                    { 84, "Undvik att ta emot eller svara på oombedda e-postmeddelanden, särskilt från okända avsändare.", null, true, 37 },
+                    { 85, "Öppna alla bilagor och klicka på alla länkar i e-postmeddelanden.", null, false, 37 },
+                    { 86, "Använd samma lösenord för flera olika konton.", null, false, 37 },
+                    { 87, "Dela personlig eller finansiell information via e-post.", null, false, 37 },
+                    { 88, "Skicka aldrig pengar eller personlig information till någon du inte känner och litar på.", null, true, 38 },
+                    { 89, "Följ alltid instruktionerna från okända personer utan att ifrågasätta.", null, false, 38 },
+                    { 90, "Ge ut dina bankuppgifter när någon begär dem online.", null, false, 38 },
+                    { 91, "Dela aldrig bedrägeriuppgifter med andra.", null, false, 38 },
+                    { 92, "Lämna aldrig personlig eller finansiell information via telefon till någon du inte känner och litar på.", null, true, 39 },
+                    { 93, "Ange alltid dina uppgifter när någon ringer och påstår sig vara från banken eller andra institutioner.", null, false, 39 },
+                    { 94, "Be om personlig information från personer som ringer dig.", null, false, 39 },
+                    { 95, "Dela aldrig bedrägeriuppgifter med andra.", null, false, 39 },
+                    { 96, "Välj noga vilka appar du installerar och laddar ner.", null, true, 40 },
+                    { 97, "Ladda ner och installera alla appar du hittar.", null, false, 40 },
+                    { 98, "Ge alla appar tillgång till din kontaktlista och kamera.", null, false, 40 },
+                    { 99, "Klicka på alla annonser för att få gratis erbjudanden.", null, false, 40 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -326,9 +364,6 @@ namespace ValhallaVault.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Answers");
-
-            migrationBuilder.DropTable(
-                name: "RequestLogs");
 
             migrationBuilder.DropTable(
                 name: "UserQuestions");

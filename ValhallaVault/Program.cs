@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -5,7 +6,9 @@ using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
 using ValhallaVault.Controllers;
 using ValhallaVault.Data;
+using ValhallaVault.Data.DbServices;
 using ValhallaVault.Data.Repositories;
+using ValhallaVault.MiddleWare;
 
 namespace ValhallaVault
 {
@@ -51,7 +54,7 @@ namespace ValhallaVault
             builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepo>();
             builder.Services.AddScoped<ISegmentRepository, SegmentRepo>();
             builder.Services.AddScoped<IUserQuestionRepository, UserQuestionRepo>();
-
+            builder.Services.AddScoped<UserQuestionService>();
             //TODO FIND OUT HOW TO DECLARE USERMANAGER, so that you can acces the currently logged in users id dynamically in code
 
             builder.Services.AddAuthentication(options =>
@@ -68,13 +71,13 @@ namespace ValhallaVault
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var DbString = builder.Configuration.GetConnectionString("BaseConnection") ?? throw new InvalidOperationException("Connection string 'BaseConnection' not found.");
-            
+
             builder.Services.AddDbContextFactory<ProgramDbContext>(opt =>
             opt.UseSqlServer(DbString));
-            
+
             builder.Services.AddDbContext<ProgramDbContext>(options =>
                 options.UseSqlServer(DbString));
-            
+
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()  //HÃ„R LÃ„GGER VI TILL DENNA RADEN 
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -155,6 +158,10 @@ namespace ValhallaVault
 
             app.UseCors("AllowAll");
 
+            var middleware = new MiddleWareProcessingTime(_ => Task.CompletedTask); // Create an instance of the middleware
+            app.UseMiddleware<MiddleWareProcessingTime>();
+
+
             app.MapControllers();
 
             // Configure the HTTP request pipeline.
@@ -183,6 +190,8 @@ namespace ValhallaVault
             app.MapControllers();
 
             app.Run();
+
+            middleware.PrintTotalProcessingTime();
 
         }
     }

@@ -1,9 +1,19 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
+@attribute [Authorize]
+@rendermode InteractiveServer
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
+@using ValhallaVault.Data.Containers
+@using ValhallaVault.Data.DbServices
+@using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data
+@using Microsoft.AspNetCore.Authorization
 @inject ISegmentRepository SegmentRepo
 @inject ISubcategoryRepository SubcategoryRepo
 @inject NavigationManager Navigation
+@inject UserQuestionService UserQuestionService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
 
 @if (SegmentId == null)
 {
@@ -20,38 +30,65 @@
     return;
 }
 
-@if (SubCategories == null || SubCategories?.Count <= 0)
+ @if (Segment?.SubCategoryContainers == null || Segment.SubCategoryContainers?.Count <= 0)
 {
     <div class="container mt-4">
         <p class="alert alert-warning">Something went Wrong! Unable to find any subcategories or there were none in the database. </p>
     </div>
     return;
-}
+} 
 
-<div class="container mt-4">
-    <h1>@Segment.Name</h1>
-    <div class="list-group">
-        @foreach (SubcategoryModel subcategory in SubCategories)
-        {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Id}")" class="list-group-item list-group-item-action">@subcategory.Name</a>
+ <div class="container mt-4">
+     <h1>@Segment.Original.Name</h1>
+    <BackButton></BackButton>
+     <div class="list-group">
+         @foreach (SubCategoryContainer subcategory in Segment.SubCategoryContainers)
+         {
+             if (CanProgress(subcategory))
+             {
+                 <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Original.Id}")" class="list-group-item list-group-item-action">
+                     @subcategory.Original.Name
+                     <p><small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small></p>
+                     <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
+                 </a>
+             }
+             else
+             {
+                 <div class="list-group-item disabled">
+                     @subcategory.Original.Name
+                     <p>
+                         <small>You must achieve at least 75% in the previous subcategory to unlock this one</small>
+                         <br/>
+                         <small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small>
+                     </p>
+                     <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
+                 </div>
+             }
+         }
 
-        }
-    </div>
-</div>
+     </div>
+ </div>
 
 
 @code {
     [Parameter]
     public int? SegmentId { get; set; }
+    private string? UserId = "";
 
-    private SegmentModel? Segment;
+    private SegmentContainer? Segment;
 
-    //TODO Add backbutton which takes user back up one level
-    //TODO add % completion
+    private bool CanProgress(SubCategoryContainer subcategory)
+    {
+        // Check if the previous subcategory exists
+        if (Segment.SubCategoryContainers.IndexOf(subcategory) > 0)
+        {
+            var previousSubcategory = Segment.SubCategoryContainers[Segment.SubCategoryContainers.IndexOf(subcategory) - 1];
+            return previousSubcategory.PercentageComplete >= 75.0;
+        }
+        return true; // First subcategory can always be accessed
+    }
+
     //TODO add a small text that talks about this segment
-    
-
-    public List<SubcategoryModel>? SubCategories { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,14 +98,42 @@
             return;
         }
 
-        Segment =  await SegmentRepo.GetSegmentByIdAsync((int)SegmentId);
+        string? name = (await AuthStateProvider.GetAuthenticationStateAsync())?
+            .User?
+            .Identity?
+            .Name?
+            .Trim()
+            .ToUpper();
 
-        if(Segment == null)return;
+        if (name == null) return;
 
+        UserId = (await UserManager.FindByNameAsync(name))?.Id;
 
-        SubCategories = (await SubcategoryRepo.GetAllSubscategoriesAsync())
-            .Where(s => s.SegmentId == SegmentId)
-            .ToList();
+        if(UserId == null)return;
+
+        var response = await UserQuestionService.PercentageOfQuestionsAnsweredForSegmentId((int)SegmentId, UserId);
+        Segment = new SegmentContainer()
+        {
+            Original = await SegmentRepo.GetSegmentByIdAsync((int)SegmentId),
+            CorrectQuestions = response.rightQuestions,
+            PercentageComplete = response.percentageComplete,
+            TotalQuestions = response.totalQuestions
+
+        };
+
+        Segment.SubCategoryContainers = new();
+
+        foreach (SubcategoryModel subcategory in Segment.Original.Subcategories)
+        {
+            var subcategoryResponse = await UserQuestionService.PercentageOfQuestionsAnsweredForSubcategoryId(subcategory.Id, UserId);
+            Segment.SubCategoryContainers.Add(new SubCategoryContainer()
+            {
+                Original = subcategory,
+                CorrectQuestions = subcategoryResponse.rightQuestions,
+                TotalQuestions = subcategoryResponse.totalQuestions,
+                PercentageComplete = subcategoryResponse.percentageComplete
+            });
+        }
 
     }
 }

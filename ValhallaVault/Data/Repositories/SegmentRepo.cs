@@ -27,13 +27,14 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Segments.FindAsync(id);
         }
 
-        public async Task<SegmentModel?> GetSegmentByIdIncludingSubcategoriesAsync(int? id)
+
+        public async Task<SegmentModel?> GetSegmentByIdWithEagerLoadingAsync(int id)
         {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Segments.Include(x => x.Subcategories).FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Segments
+                .Include(x => x.Subcategories)
+                .ThenInclude(subcategory => subcategory.Questions)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
         }
 
         public async Task AddSegmentAsync(SegmentModel? segment)

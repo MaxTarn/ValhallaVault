@@ -1,57 +1,98 @@
 ﻿@page "/DisplayAllCategories"
+@attribute [Authorize]
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Containers
+@using ValhallaVault.Data.DbServices
 @using ValhallaVault.Data.Repositories
+@using Microsoft.AspNetCore.Authorization
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @inject ICategoryRepository CategoryRepo
+@inject UserQuestionService UserQuestionService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@rendermode InteractiveServer
 
-
-    
-    @* Display error messages if needed *@
-    @if (AllCategories == null)
-    {
-        <div class="container mt-4">
-            <p class="alert alert-danger">Something Went Wrong! Unable to Gather all of the Categories</p>
-        </div>
-        return;
-    }
-
-    @if (AllCategories.Count <= 0)
-    {
-        <div class="container mt-4">
-            <p class="alert alert-warning">Something went Wrong! There were no categories in the database!</p>
-        </div>
-
-    }
-    
-
+@if (AllCategories == null)
+{
     <div class="container mt-4">
-                    <h1>Categories:</h1>
-        <!-- Apply Bootstrap styling to the links -->
-        <div class="list-group">
-            @foreach (CategoryModel category in AllCategories)
-            {
-                <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Id}")" class="list-group-item list-group-item-action">@category.Name</a>
-            }
-        </div>
+        <p class="alert alert-danger">Something Went Wrong! Unable to Gather all of the Categories</p>
     </div>
+    return;
+}
+
+@if (AllCategories.Count <= 0)
+{
+    <div class="container mt-4">
+        <p class="alert alert-warning">Something went Wrong! There were no categories in the database!</p>
+    </div>
+}
+
+<div class="container mt-4">
+    <h1>Categories:</h1>
+    <input type="text" @bind="_searchText" placeholder="Searching for something?" />
+    <button @onclick="FilterCategories">Search</button>
+    <!-- Apply Bootstrap styling to the links -->
+    <div class="list-group">
+        @foreach (var category in FilteredCategories)
+        {
+            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Original.Id}")" class="list-group-item list-group-item-action">
+                @category.Original.Name
+                <p><small>Questions Correct: @category.CorrectQuestions/@category.TotalQuestions (@Math.Round(category.PercentageCompleted)%)</small></p>
+                <ProgressBar PercentageComplete="@category.PercentageCompleted"></ProgressBar>
+            </a>
+        }
+    </div>
+</div>
 
 @code {
-    //TODO CONACT DB TO GET ALL Categories
-    //TODO add a searchbar that searches for a Category
-    //TODO add % completion
-    //TODO close ofthe already started div in the if statements
-    public List<CategoryModel>? AllCategories { get; set; } 
 
-    
-    protected override async Task OnInitializedAsync()
+    private List<CategoryContainer>? AllCategories { get; set; }
+    private List<CategoryContainer>? FilteredCategories { get; set; }
+
+
+    private string _searchText = "";
+    private string? UserId = "";
+
+    private void FilterCategories()
     {
-        AllCategories = (await CategoryRepo.GetAllCategoriesAsync()).ToList();
-        await base.OnInitializedAsync();
+        if (AllCategories == null) return;
+
+        FilteredCategories = AllCategories
+            .Where(category => string.IsNullOrEmpty(_searchText) || category.Original.Name.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) != -1)
+            .ToList();
     }
 
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        string? name = (await AuthStateProvider.GetAuthenticationStateAsync())?
+            .User?
+            .Identity?
+            .Name?
+            .Trim()
+            .ToUpper();
+
+        if (name == null) return;
+
+        UserId = (await UserManager.FindByNameAsync(name))?.Id;
 
 
+        AllCategories = (await CategoryRepo.GetAllCategoriesAsync())
+            .Select(category => { return new CategoryContainer() { Original = category }; })
+            .ToList();
 
+        foreach (CategoryContainer categoryContainer in AllCategories)
+        {
+            var response = await UserQuestionService.PercentageOfQuestionsAnswerdForCategoryId(categoryContainer.Original.Id, UserId ?? "");
+            categoryContainer.PercentageCompleted = response.percentageComplete;
+            categoryContainer.CorrectQuestions = response.rightQuestions;
+            categoryContainer.TotalQuestions = response.totalQuestions;
+        }
+        FilteredCategories = AllCategories;
 
+        
+    }
 }

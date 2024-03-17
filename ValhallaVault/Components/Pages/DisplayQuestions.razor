@@ -1,5 +1,6 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{SubCategoryId:int}"
 @rendermode InteractiveServer
+@attribute [Authorize]
 @using ValhallaVault.Data.Repositories
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
@@ -7,6 +8,7 @@
 @using Microsoft.AspNetCore.Identity
 @using ValhallaVault.Data
 @using System.Reflection.Metadata.Ecma335
+@using Microsoft.AspNetCore.Authorization
 @using ValhallaVault.Data.Containers
 @inject ISubcategoryRepository SubcategoryRepo
 @inject IQuestionRepository QuestionRepo
@@ -41,6 +43,7 @@
 
 <div class="container mt-4">
     <h1 class="text-primary">@CurrentSubcategoryContainer.Original.Name</h1>
+    <BackButton></BackButton>
     <p class="text-muted">Question: @(CurrentSubcategoryContainer.Questions.IndexOf(CurrentQuestionContainer) + 1)/@(CurrentSubcategoryContainer.Questions.Count)</p>
 
     <div class="card">
@@ -59,11 +62,12 @@
             </ul>
         </div>
         <div class="card-footer">
-            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back</button>
+            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back One Question</button>
             <button @onclick="CorrectAnswer" class="btn btn-primary" disabled="@(ShouldDisableCorrectAnswerButton())">Correct answer</button>
             <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@ShouldDisableNextButton()">Next</button>
         </div>
     </div>
+    
 </div>
 
 @code {
@@ -74,7 +78,7 @@
 
     #region Parameters
 
-    [Parameter] 
+    [Parameter]
     public int? SubcategoryId { get; set; }
 
     #endregion
@@ -109,7 +113,7 @@
     private async Task CorrectAnswer(MouseEventArgs e)
     {
         if (UserHasChosenAnswer() != true) { return; }
-        if (UserName == null)return;
+        if (UserName == null) return;
 
         foreach (AnswerContainer answerContainer in CurrentQuestionContainer.Answers) answerContainer.ShowStyle = true;
         await SetAnswerOfQuestionInDbUsingAnswerContainers();
@@ -142,11 +146,11 @@
         CurrentQuestionContainer.Answers?.ForEach(a =>
         {
             Answers.Add(new AnswerContainer()
-            {
-                IsChecked = false,
-                Original = a.Original,
-                ShowStyle = false
-            });
+                {
+                    IsChecked = false,
+                    Original = a.Original,
+                    ShowStyle = false
+                });
         });
     }
 
@@ -198,10 +202,35 @@
         string? userId = await GetUserIdByNormalizedUserName();
         if (userId == null) return;
 
-        if (AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id) == true)
+        // edits the already existing entry in the db if it already exists,
+        // can only change it to true from false, not the other way round
+        //if the user got the current question wrong, but has stored that they got it correct in db, it does not change anything in the db
+        if ((await AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id)) == true)
         {
-            //TODO
-            //edit the entry
+
+            int? idOfUserQuestion = (await UserQuestionRepo.GetAllUserQuestionsAsync())
+                .Where(a => a.UserId == userId && a.QuestionId == CurrentQuestionContainer.Original.Id)
+                .Select(a => a.Id)
+                .FirstOrDefault();
+
+            if (idOfUserQuestion == null) return;
+
+            var existingUserQuestion = await UserQuestionRepo.GetUserQuestionByIdAsync((int)idOfUserQuestion);
+
+            if (existingUserQuestion != null && existingUserQuestion.IsCorrect == false)
+            {
+                await UserQuestionRepo.UpdateUserQuestionAsync((int)idOfUserQuestion, new UserQuestionModel
+                {
+                    Id = (int)idOfUserQuestion,
+                    IsCorrect = UserChoseCorrectAnswer(),
+                    QuestionId = CurrentQuestionContainer.Original.Id,
+                    UserId = userId
+                });
+
+                await UserQuestionRepo.SaveAsync();
+            }
+
+            return;
         }
 
         await UserQuestionRepo.AddUserQuestionAsync(new UserQuestionModel()
@@ -212,19 +241,16 @@
             });
         await UserQuestionRepo.SaveAsync();
     }
-
     /// <summary>
     /// Checks if the logged in user has already answerd this particular question
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    private bool? AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
+    private async Task<bool?> AnswerForQuestionForSpecificUserAlreadyExists(string? userId, int? questionId)
     {
         if (userId == null || questionId == null) return null;
-        int? count = UserQuestionRepo.GetAllUserQuestionsAsync()
-            .GetAwaiter()
-            .GetResult()
+        int? count = (await UserQuestionRepo.GetAllUserQuestionsAsync())
             .Where(q => q.QuestionId == questionId)
             .Where(q => q.UserId == userId)
             .ToList().Count;
@@ -255,17 +281,21 @@
 
         return currentQuestionIndex == null || currentQuestionIndex <= 0;
     }
-
     private bool ShouldDisableNextButton()
     {
-        if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true; 
-        
+        // if (CurrentQuestionContainer == null || CurrentSubcategoryContainer == null) return true;
 
-        int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+        // if (CurrentSubcategoryContainer.Questions.Equals(null)) return true;
 
-        return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
+        // int? currentQuestionIndex = CurrentSubcategoryContainer.Questions?.IndexOf(CurrentQuestionContainer);
+
+        // if (currentQuestionIndex == null) return true;
+
+        // if (currentQuestionIndex+1 >= CurrentSubcategoryContainer.Questions?.Count) return true;
+
+        return false;
+        //return currentQuestionIndex == null || currentQuestionIndex + 1 >= CurrentSubcategoryContainer?.Questions?.Count ;
     }
-
     private bool ShouldDisableCorrectAnswerButton()
     {
         if (UserHasChosenAnswer() != true || CurrentQuestionContainer == null | CurrentSubcategoryContainer == null) return true;
@@ -274,7 +304,6 @@
 
         return false;
     }
-    
     private async Task<SubCategoryContainer?> BuildSubCategoryContainer(int subcategoryId)
     {
         var subcategory = await SubcategoryRepo.GetSubCategoryByIdIncludingThingsAsync(subcategoryId);
@@ -286,27 +315,27 @@
         }
 
         var subcategoryContainer = new SubCategoryContainer
-        {
-            Original = subcategory,
-            Questions = new List<QuestionContainer>()
-        };
+            {
+                Original = subcategory,
+                Questions = new List<QuestionContainer>()
+            };
 
         foreach (var question in subcategory.Questions)
         {
             var questionContainer = new QuestionContainer
-            {
-                Question = question.Question,
-                Answers = new List<AnswerContainer>(),
-                Original = question // Add the original QuestionModel to QuestionContainer
-            };
+                {
+                    Question = question.Question,
+                    Answers = new List<AnswerContainer>(),
+                    Original = question // Add the original QuestionModel to QuestionContainer
+                };
 
             foreach (var answer in question.Answers)
             {
                 questionContainer.Answers.Add(new AnswerContainer
-                {
-                    Original = answer,
-                    IsChecked = false,
-                });
+                    {
+                        Original = answer,
+                        IsChecked = false,
+                    });
             }
             subcategoryContainer.Questions.Add(questionContainer);
         }
@@ -314,6 +343,8 @@
         return subcategoryContainer;
     }
     #endregion
+
+
 
     #region WhenFirstLoadingPage
 
@@ -352,5 +383,5 @@
     }
 
     #endregion
-    
+
 }

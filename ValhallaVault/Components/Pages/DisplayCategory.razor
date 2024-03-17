@@ -1,10 +1,19 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/{CategoryId:int}"
+@attribute [Authorize]
 @using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Containers
+@using ValhallaVault.Data.DbServices
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
+@using Microsoft.AspNetCore.Authorization
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @inject ICategoryRepository CategoryRepo
 @inject ISegmentRepository SegmentRepo
+@inject UserQuestionService UserQuestionService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@rendermode InteractiveServer
 
 
 @if (CategoryId == null)
@@ -18,7 +27,7 @@
     return;
    
 }
-@if (Category == null || Category?.Name == null)
+@if (Category == null || Category?.Original.Name == null)
 {
     <div class="container mt-4">
         <p class="alert alert-warning">Something went wrong! The category retrieved from the database was null.</p>
@@ -28,13 +37,33 @@
 }
 <div class="container mt-4">
 
-    <h1>@Category.Name</h1>
+    <h1>@Category.Original.Name</h1>
+    <BackButton></BackButton>
     <div class="list-group">
-        @foreach (SegmentModel? segment in SegmentsThatBelongToCategory)
+        @foreach (SegmentContainer? segment in Category.Segments)
         {
-            if (segment == null)continue;
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/{segment.Id}")" class="list-group-item list-group-item-action">@segment.Name</a>
+            if (CanProgress(segment))
+            {
+                <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/{segment.Original.Id}")" class="list-group-item list-group-item-action">
+                    @segment.Original.Name
+                    <p><small>Questions correct: @segment.CorrectQuestions/@segment.TotalQuestions (@Math.Round(segment.PercentageComplete)%)</small></p>
+                    <ProgressBar PercentageComplete="segment.PercentageComplete"></ProgressBar>
+                </a>
+            }
+            else
+            {
+                <div class="list-group-item disabled">
+                    @segment.Original.Name
+                    <p>
+                        <small>You must achieve at least 75% in the previous segment to unlock this one</small>
+                        <br/>
+                        <small>Questions correct: @segment.CorrectQuestions/@segment.TotalQuestions (@Math.Round(segment.PercentageComplete)%)</small>
+                    </p>
+                    <ProgressBar PercentageComplete="segment.PercentageComplete"></ProgressBar>
+                </div>
+            }
         }
+        
     </div>
 </div>
 
@@ -43,25 +72,62 @@
 
 @code {
 
-    //TODO MAKE IT SO THAT USER CAN SEE HOW MANY QUESTIONS THEY HAVE ANSWER CORRECTLY IN sort of SOMEWAY
     //TODO Add backbutton which takes user back up one level
-    //TODO add % completion
-    //TODO Add some sort of way of knowing whether user has completed this category
 
     [Parameter]
     public int? CategoryId { get; set; }
+    private string? UserId = "";
 
-    public CategoryModel? Category { get; set; }
-    public List<SegmentModel> SegmentsThatBelongToCategory { get; set; }
+    public CategoryContainer Category { get; set; }
+    
+
+
+    private bool CanProgress(SegmentContainer? segment)
+    {
+        // Check if the previous segment exists
+        if (Category.Segments.IndexOf(segment) > 0)
+        {
+            var previousSegment = Category.Segments[Category.Segments.IndexOf(segment) - 1];
+            return previousSegment.PercentageComplete >= 75.0;
+        }
+        return true; // First segment can always be accessed
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        if (CategoryId != null)
+        if (CategoryId == null) return;
+
+        string? name = (await AuthStateProvider.GetAuthenticationStateAsync())?
+            .User?
+            .Identity?
+            .Name?
+            .Trim()
+            .ToUpper();
+
+        if (name == null) return;
+
+        UserId = (await UserManager.FindByNameAsync(name))?.Id;
+
+
+        Category = new CategoryContainer()
         {
-            Category = await CategoryRepo.GetCategoryByIdAsync((int)CategoryId);
-            SegmentsThatBelongToCategory = (await SegmentRepo.GetAllSegmentsAsync())
-                .Where(segment => segment.CategoryId == CategoryId)
-                .ToList();
+            Original = await CategoryRepo.GetCategoryByIdWithEagerLoadingAsync((int)CategoryId)
+        };
+
+
+
+        Category.Segments = new();
+        foreach (SegmentModel seg in Category.Original.Segments)
+        {
+            var response = await UserQuestionService.PercentageOfQuestionsAnsweredForSegmentId(seg.Id, UserId ?? "");
+            Category.Segments.Add(new SegmentContainer()
+            {
+                Original = seg,
+                CorrectQuestions = response.rightQuestions,
+                TotalQuestions = response.totalQuestions,
+                PercentageComplete = response.percentageComplete
+            });
         }
+
     }
 }
