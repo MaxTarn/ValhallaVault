@@ -40,12 +40,26 @@
     <div class="list-group">
         @foreach (SegmentContainer? segment in Category.Segments)
         {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/{segment.Original.Id}")" class="list-group-item list-group-item-action">
-                @segment.Original.Name
-                <p><small>Questions correct: @segment.CorrectQuestions/@segment.TotalQuestions (@Math.Round(segment.PercentageComplete)%)</small></p>
-                <ProgressBar PercentageComplete="segment.PercentageComplete"></ProgressBar>
-            </a>
-            
+            if (CanProgress(segment))
+            {
+                <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/{segment.Original.Id}")" class="list-group-item list-group-item-action">
+                    @segment.Original.Name
+                    <p><small>Questions correct: @segment.CorrectQuestions/@segment.TotalQuestions (@Math.Round(segment.PercentageComplete)%)</small></p>
+                    <ProgressBar PercentageComplete="segment.PercentageComplete"></ProgressBar>
+                </a>
+            }
+            else
+            {
+                <div class="list-group-item disabled">
+                    @segment.Original.Name
+                    <p>
+                        <small>You must achieve at least 75% in the previous segment to unlock this one</small>
+                        <br/>
+                        <small>Questions correct: @segment.CorrectQuestions/@segment.TotalQuestions (@Math.Round(segment.PercentageComplete)%)</small>
+                    </p>
+                    <ProgressBar PercentageComplete="segment.PercentageComplete"></ProgressBar>
+                </div>
+            }
         }
         
     </div>
@@ -63,7 +77,19 @@
     private string? UserId = "";
 
     public CategoryContainer Category { get; set; }
-    //public CategoryModel? Category { get; set; }
+    
+
+
+    private bool CanProgress(SegmentContainer? segment)
+    {
+        // Check if the previous segment exists
+        if (Category.Segments.IndexOf(segment) > 0)
+        {
+            var previousSegment = Category.Segments[Category.Segments.IndexOf(segment) - 1];
+            return previousSegment.PercentageComplete >= 75.0;
+        }
+        return true; // First segment can always be accessed
+    }
 
     protected override async Task OnInitializedAsync()
     {

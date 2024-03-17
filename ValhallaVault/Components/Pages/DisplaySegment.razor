@@ -42,11 +42,26 @@
      <div class="list-group">
          @foreach (SubCategoryContainer subcategory in Segment.SubCategoryContainers)
          {
-             <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Original.Id}")" class="list-group-item list-group-item-action">
-                 @subcategory.Original.Name
-                <p><small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small></p>
-                 <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
-             </a>
+             if (CanProgress(subcategory))
+             {
+                 <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Original.Id}")" class="list-group-item list-group-item-action">
+                     @subcategory.Original.Name
+                     <p><small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small></p>
+                     <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
+                 </a>
+             }
+             else
+             {
+                 <div class="list-group-item disabled">
+                     @subcategory.Original.Name
+                     <p>
+                         <small>You must achieve at least 75% in the previous subcategory to unlock this one</small>
+                         <br/>
+                         <small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small>
+                     </p>
+                     <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
+                 </div>
+             }
          }
 
      </div>
@@ -60,8 +75,17 @@
 
     private SegmentContainer? Segment;
 
-    //TODO Add backbutton which takes user back up one level
-    //TODO add % completion
+    private bool CanProgress(SubCategoryContainer subcategory)
+    {
+        // Check if the previous subcategory exists
+        if (Segment.SubCategoryContainers.IndexOf(subcategory) > 0)
+        {
+            var previousSubcategory = Segment.SubCategoryContainers[Segment.SubCategoryContainers.IndexOf(subcategory) - 1];
+            return previousSubcategory.PercentageComplete >= 75.0;
+        }
+        return true; // First subcategory can always be accessed
+    }
+
     //TODO add a small text that talks about this segment
 
     protected override async Task OnInitializedAsync()
