@@ -7,7 +7,7 @@
 namespace ValhallaVault.Migrations
 {
     /// <inheritdoc />
-    public partial class ReDoingSeedData : Migration
+    public partial class godfuckinMigrationsFuckingWork : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

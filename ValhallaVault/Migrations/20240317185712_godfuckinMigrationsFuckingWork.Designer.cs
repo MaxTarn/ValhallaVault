@@ -12,8 +12,8 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20240317182901_ReDoingSeedData")]
-    partial class ReDoingSeedData
+    [Migration("20240317185712_godfuckinMigrationsFuckingWork")]
+    partial class godfuckinMigrationsFuckingWork
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
