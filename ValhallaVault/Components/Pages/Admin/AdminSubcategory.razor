@@ -21,10 +21,16 @@
     
 
     <label>Subcategory Name</label>
+    <br />
     <InputText  @bind-Value="@SubcategoryModel.Name"></InputText>
+    <br />
+    <label>Subcategory Info</label>
+    <br />
+    <InputTextArea @bind-Value="@SubcategoryModel.Info"></InputTextArea>
     <br />
 
     <label>Segment Name</label>
+    <br />
     <InputSelect @bind-Value="SubcategoryModel.SegmentId">
 
         @if (allSegments != null)
@@ -112,8 +118,11 @@
         <DataAnnotationsValidator />
 
         <InputText @bind-Value="selectedSubcategory.Name"></InputText>
-
+        <br />
+        <InputTextArea @bind-Value="selectedSubcategory.Info"></InputTextArea>
+        <br />
         <label> Change segment</label>
+        <br />
         <InputSelect @bind-Value="selectedSubcategory.SegmentId">
 
             @if (allSegments != null)
