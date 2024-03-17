@@ -1,4 +1,5 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
+@rendermode InteractiveServer
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
 @using ValhallaVault.Data.Containers
@@ -35,19 +36,21 @@
     return;
 } 
 
-<div class="container mt-4">
-    <h1>@Segment.Original.Name</h1>
-    <div class="list-group">
-        @foreach (SubCategoryContainer subcategory in Segment.SubCategoryContainers)
-        {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Original.Id}")" class="list-group-item list-group-item-action">
-                @subcategory.Original.Name
-                <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
-            </a>
+ <div class="container mt-4">
+     <h1>@Segment.Original.Name</h1>
+    <BackButton></BackButton>
+     <div class="list-group">
+         @foreach (SubCategoryContainer subcategory in Segment.SubCategoryContainers)
+         {
+             <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/DisplaySegment/DisplayQuestions/{subcategory.Original.Id}")" class="list-group-item list-group-item-action">
+                 @subcategory.Original.Name
+                <p><small>Questions Correct: @subcategory.CorrectQuestions/@subcategory.TotalQuestions (@Math.Round(subcategory.PercentageComplete)%)</small></p>
+                 <ProgressBar PercentageComplete="subcategory.PercentageComplete"></ProgressBar>
+             </a>
+         }
 
-        }
-    </div>
-</div>
+     </div>
+ </div>
 
 
 @code {
