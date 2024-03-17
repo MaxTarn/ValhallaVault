@@ -41,6 +41,7 @@
 
 <div class="container mt-4">
     <h1 class="text-primary">@CurrentSubcategoryContainer.Original.Name</h1>
+    <BackButton></BackButton>
     <p class="text-muted">Question: @(CurrentSubcategoryContainer.Questions.IndexOf(CurrentQuestionContainer) + 1)/@(CurrentSubcategoryContainer.Questions.Count)</p>
 
     <div class="card">
@@ -59,11 +60,12 @@
             </ul>
         </div>
         <div class="card-footer">
-            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back</button>
+            <button @onclick="BackOneQuestion" class="btn btn-secondary" disabled="@ShouldDisableBackButton()">Back One Question</button>
             <button @onclick="CorrectAnswer" class="btn btn-primary" disabled="@(ShouldDisableCorrectAnswerButton())">Correct answer</button>
             <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@ShouldDisableNextButton()">Next</button>
         </div>
     </div>
+    
 </div>
 
 @code {
