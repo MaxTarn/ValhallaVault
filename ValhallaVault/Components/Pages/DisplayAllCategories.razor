@@ -27,8 +27,6 @@
     </div>
 }
 
-<h1>@UserId</h1>
-
 <div class="container mt-4">
     <h1>Categories:</h1>
     <input type="text" @bind="_searchText" placeholder="Searching for something?" />
@@ -39,8 +37,8 @@
         {
             <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Original.Id}")" class="list-group-item list-group-item-action">
                 @category.Original.Name
+                <p><small>Questions Correct: @category.CorrectQuestions/@category.TotalQuestions (@Math.Round(category.PercentageCompleted)%)</small></p>
                 <ProgressBar PercentageComplete="@category.PercentageCompleted"></ProgressBar>
-                @{ Console.WriteLine("percentacge: "+category.PercentageCompleted);}
             </a>
         }
     </div>
