@@ -43,6 +43,10 @@
 
 <div class="container mt-4">
     <h1 class="text-primary">@CurrentSubcategoryContainer.Original.Name</h1>
+    @if (!string.IsNullOrEmpty(CurrentSubcategoryContainer.Original.Info))
+    {
+        <h5 class="text-muted">@CurrentSubcategoryContainer.Original.Info</h5>
+    }
     <BackButton></BackButton>
     <p class="text-muted">Question: @(CurrentSubcategoryContainer.Questions.IndexOf(CurrentQuestionContainer) + 1)/@(CurrentSubcategoryContainer.Questions.Count)</p>
 
@@ -67,6 +71,11 @@
             <button @onclick="NextQuestion" class="btn btn-secondary" disabled="@ShouldDisableNextButton()">Next</button>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="text-muted">@explanation</h5>
+        </div>
+    </div>
     
 </div>
 
@@ -88,6 +97,7 @@
     private SubCategoryContainer? CurrentSubcategoryContainer;
     private QuestionContainer? CurrentQuestionContainer;
     private List<AnswerContainer> Answers = new();
+    private string explanation = "";
 
     #endregion
 
@@ -114,6 +124,7 @@
 
         foreach (AnswerContainer answerContainer in CurrentQuestionContainer.Answers) answerContainer.ShowStyle = true;
         await SetAnswerOfQuestionInDbUsingAnswerContainers();
+        explanation = CurrentQuestionContainer.Original.Explanation ?? "";
     }
     private void NextQuestion(MouseEventArgs e)
     {
@@ -126,6 +137,7 @@
 
         CurrentQuestionContainer = CurrentSubcategoryContainer.Questions[(int)currentQuestionIndex + 1];
         ResetAnswersContainerList();
+        explanation = "";
     }
 
     #endregion

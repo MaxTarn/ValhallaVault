@@ -39,7 +39,11 @@
 } 
 
  <div class="container mt-4">
-     <h1>@Segment.Original.Name</h1>
+     <h1 class="display-4">@Segment.Original.Name</h1>
+     @if (!string.IsNullOrEmpty(Segment.Original.Info))
+     {
+         <h5 class="text-muted">@Segment.Original.Info</h5>
+     }
     <BackButton></BackButton>
      <div class="list-group">
          @foreach (SubCategoryContainer subcategory in Segment.SubCategoryContainers)
