@@ -34,6 +34,7 @@
 <br />
 
 <h5>Edit and delete</h5>
+<input @bind-value="searchString" class="form-check-label" type="text" placeholder="Search by category" />
 <table class="table">
     <thead>
         <tr>
@@ -42,18 +43,35 @@
         </tr>
     </thead>
     <tbody>
-        @if(allCategories != null)
+        @if (allCategories != null)
         {
-            @foreach (CategoryModel category in allCategories)
+            @if (searchString == null)
             {
-                <tr>
-                    <td>@category.Name</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(category)">Press to Delete</button>
-                        <button class="btn btn-primary" @onclick="()=> SelectEdit(category)">Press To Edit</button>
-                    </td>
-                </tr>
+                @foreach (CategoryModel category in allCategories)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(category)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(category)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
             }
+            else
+            {
+                @foreach (CategoryModel category in filteredSearch)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(category)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(category)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
+            }
+
         }
         else
         {
@@ -81,7 +99,7 @@
 @if (editing == true)
 {
     <h6>Editing: "@selectedCategory.Name"</h6>
-    <EditForm FormName="CategoryEdit" Model="categoryModel" OnValidSubmit=showEditConfirmation>
+    <EditForm FormName="CategoryEdit" Model="selectedCategory" OnValidSubmit=showEditConfirmation>
         <ValidationSummary />
         <DataAnnotationsValidator />
 
@@ -103,9 +121,6 @@
 }
 
 
-
-
-
 @code {
 
 
@@ -116,14 +131,17 @@
     [SupplyParameterFromForm]
     private CategoryModel selectedCategory { get; set; } = new();
 
+    private string? searchString = null;
+
     private bool editing = false;
     private bool Fail = false;
 
     private IEnumerable<SegmentModel>? allSegments;
     private IEnumerable<CategoryModel>? allCategories;
+    private IEnumerable<CategoryModel>? filteredSearch => allCategories.Where(search => search.Name.ToLower().Contains(searchString.ToLower()));
 
     CategoryModel categoryToDelete { get; set; } = new();
-    
+
     private bool NeedDeleteConfirmation = false;
     private bool NeedEditConfirmation = false;
     private bool Confirmation = false;
@@ -166,8 +184,8 @@
         CategoryRepo categoryRepo = new(context);
 
         await categoryRepo.AddCategoryAsync(categoryModel);
+        
         await UpdateUi();
-        StateHasChanged();
     }
 
 
@@ -177,12 +195,10 @@
         CategoryRepo categoryRepo = new(context);
 
         await categoryRepo.DeleteCategoryAsync(id);
-        await categoryRepo.SaveAsync();
+        
         await UpdateUi();
-        StateHasChanged();
 
         NeedDeleteConfirmation = false;
-
     }
 
     private async Task SelectEdit(CategoryModel categoryModel)
@@ -191,26 +207,24 @@
         editing = true;
 
         await UpdateUi();
-        StateHasChanged();
     }
 
     private async Task Edit()
     {
         using var context = dbFactory.CreateDbContext();
         CategoryRepo categoryRepo = new(context);
-        SegmentRepo segmentRepo = new(context);
 
         if (selectedCategory.Name != null)
         {
-            categoryRepo.UpdateCategoryAsync(selectedCategory);
+            await categoryRepo.UpdateCategoryAsync(selectedCategory);
+            
 
-            await UpdateUi();
-            StateHasChanged();
+
+            UpdateUi();
         }
 
         NeedEditConfirmation = false;
         editing = false;
-
     }
 
     private async Task UpdateUi()
@@ -221,7 +235,9 @@
 
         allSegments = await segmentRepo.GetAllSegmentsAsync();
         allCategories = await categoryRepo.GetAllCategoriesAsync();
+        StateHasChanged();
+
     }
 
-    
+
 }

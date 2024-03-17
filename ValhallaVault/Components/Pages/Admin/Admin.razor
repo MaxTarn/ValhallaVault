@@ -10,63 +10,67 @@
 
 
 <AuthorizeView Roles="Admin">
-<Authorized>
+    <Authorized>
 
+        <h1>Admin dashboard</h1>
 
+        <div style="border: 1px solid black; margin= auto; text-align= center;  ">
+            <style>
+                #B1 {
+                    margin: 5px 5px 5px 5px;
+                }
+            </style>
 
+            <button id="B1" @onclick="() => ChangeNumber(1)" class="btn btn-primary"> Category</button>
+            <button id="B1" @onclick="() => ChangeNumber(2)" class="btn btn-primary"> Segment</button>
+            <button id="B1" @onclick="() => ChangeNumber(3)" class="btn btn-primary"> Subcategory</button>
+            <button id="B1" @onclick="() => ChangeNumber(4)" class="btn btn-primary"> Question </button>
+            <button id="B1" @onclick="() => ChangeNumber(5)" class="btn btn-primary"> Answer </button>
+        </div>
 
-<h1>Admin dashboard</h1>
+        <PageTitle>Admin Dashboard </PageTitle>
 
-<div style="border: 1px solid black; margin= auto; text-align= center;  ">
-    <style>
-        #B1 {
-            margin: 5px 5px 5px 5px;
+        <br />
+        <br />
+
+        @if (number == 1)
+        {
+            <AdminCategory> </AdminCategory>
         }
-    </style>
+        @if (number == 2)
+        {
+            <AdminSegment></AdminSegment>
+        }
+        @if (number == 3)
+        {
+            <AdminSubcategory></AdminSubcategory>
+        }
+        @if (number == 4)
+        {
+            <AdminQuestion></AdminQuestion>
 
-    <button id="B1" @onclick="() => ChangeNumber(1)" class="btn btn-primary"> Category</button>
-    <button id="B1" @onclick="() => ChangeNumber(2)" class="btn btn-primary"> Segment</button>
-    <button id="B1" @onclick="() => ChangeNumber(3)" class="btn btn-primary"> Subcategory</button>
-    <button id="B1" @onclick="() => ChangeNumber(4)" class="btn btn-primary"> Question </button>
-</div>  
+        }
+        @if (number == 5)
+        {
+            <AdminAnswer></AdminAnswer>
+        }
 
-<PageTitle>Admin Dashboard </PageTitle>
-
-<br />
-<br />
-
-@if(number == 1)
-{
-    <AdminCategory> </AdminCategory>    
-}
-@if(number == 2)
-{
-    <AdminSegment></AdminSegment>
-}
-@if (number == 3)
-{
-    <AdminSubcategory></AdminSubcategory>
-}
-@if (number == 4)
-{
-    <AdminQuestion></AdminQuestion>
-}
     </Authorized>
     <NotAuthorized>
         <p> You are not authorized to use Admin pages</p>
     </NotAuthorized>
 </AuthorizeView>
-@code{
-    private int number; 
+@code {
+    private int number;
 
 
     private void ChangeNumber(int value)
     {
-        if(value == 1)
+        if (value == 1)
         {
             number = 1;
         }
-        if(value == 2)
+        if (value == 2)
         {
             number = 2;
         }
@@ -77,6 +81,10 @@
         if (value == 4)
         {
             number = 4;
+        }
+        if (value == 5)
+        {
+            number = 5;
         }
 
     }
