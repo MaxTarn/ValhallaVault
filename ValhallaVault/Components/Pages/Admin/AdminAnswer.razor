@@ -1,0 +1,316 @@
+﻿@page "/adminAnswer"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Models;
+@using ValhallaVault.Data.Repositories
+@inject IDbContextFactory<ProgramDbContext> dbFactory;
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@if (Fail == true)
+{
+    <p style=" color:red;">The request failed</p>
+}
+
+<br />
+<br />
+
+<h5> Create </h5>
+<EditForm FormName="AnswerCreate" Model="answerModel" OnValidSubmit="Post">
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+
+    <label>Answer </label>
+    <br />
+    <InputTextArea @bind-Value="answerModel.Answer"></InputTextArea>
+
+    <br />
+
+    <label>Questions</label>
+    <br />
+    <InputSelect @bind-Value="answerModel.QuestionId">
+
+        @if (allQuestions != null)
+        {
+            @foreach (QuestionModel questionModel in allQuestions)
+            {
+                <option value="@questionModel.Id"> @questionModel.Question </option>
+            }
+        }
+    </InputSelect>
+    <br />
+
+    <label for="IsCorrect"> Is the answer correct?</label>
+    <br />
+    <InputSelect id="IsCorrect" @bind-Value="answerModel.IsCorrect">
+        <option value="True"> Yes</option>
+        <option value="False"> No</option>
+    </InputSelect>
+
+    <br />
+
+    <input type="submit" value="Post" class="btn btn-primary">
+</EditForm>
+
+<br />
+<br />
+
+<h5>Edit and delete</h5>
+<input @bind-value="searchString"  class="form-check-label" type="text" placeholder="Search by answer..." />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Answer</th>
+            <th>Answers Question</th>
+            <th>Correct?</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (allAnswers != null)
+        {
+
+            @if (searchString == null)
+            {
+
+                @foreach (AnswerModel answerModel in allAnswers)
+                {
+
+                    <tr>
+                        <td>@answerModel.Answer</td>
+                        <td>@answerModel.Question.Question</td>
+                        <td>@answerModel.IsCorrect</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(answerModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(answerModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+
+
+
+                }
+            }
+
+            else
+            {
+                @foreach (AnswerModel answer in filteredSearch)
+                {
+                    <tr>
+                        <td>@answer.Answer</td>
+                        <td>@answer.Question.Question</td>
+                        <td>@answer.IsCorrect</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(answer)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(answer)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
+            }
+
+        }
+        else
+        {
+            <tr>Loading answers...</tr>
+        }
+
+
+
+    </tbody>
+
+    @if (NeedDeleteConfirmation == true)
+    {
+        <div style="border: 1px solid RED; width:400px; height:150px">
+            <p>Are you sure that you want to delete this? </p>
+            <p style=" color:red">It is permanent!</p>
+            <br />
+            <button @onclick="()=> Delete(answerToDelete.Id)" class="btn btn-primary">Yes</button>
+            <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+        </div>
+    }
+</table>
+
+
+
+
+<br />
+
+@if (editing == true)
+{
+    <h6>Editing: "@selectedAnswerModel.Answer"</h6>
+    <EditForm FormName="CategoryEdit" Model="selectedAnswerModel" OnValidSubmit=showEditConfirmation>
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+
+        <InputTextArea @bind-Value="selectedAnswerModel.Answer"></InputTextArea>
+        <br />
+
+        <label> Change Question</label>
+        <br />
+        <InputSelect @bind-Value="selectedAnswerModel.QuestionId">
+
+            @if (allQuestions != null)
+            {
+                @foreach (QuestionModel questionModel in allQuestions)
+                {
+                    <option value="@questionModel.Id"> @questionModel.Question </option>
+                }
+            }
+        </InputSelect>
+        <br />
+
+        <label for="IsCorrect"> Change if answer is correct</label>
+        <InputSelect id="IsCorrect" @bind-Value="selectedAnswerModel.IsCorrect">
+            <option value="True"> Yes</option>
+            <option value="False"> No</option>
+        </InputSelect>
+
+        <br />
+
+        <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
+    </EditForm>
+
+    @if (NeedEditConfirmation == true)
+    {
+        <div style="border: 1px solid RED; width:400px; height:150px">
+            <p>Are you sure that you want to edit this? </p>
+            <p style=" color:red">It is permanent!</p>
+            <br />
+            <button @onclick="Edit" class="btn btn-primary">Yes</button>
+            <button @onclick="() => ChangeConfirmation(2)" class="btn btn-primary">No</button>
+        </div>
+    }
+}
+
+
+
+
+
+@code {
+
+
+    [SupplyParameterFromForm]
+    public AnswerModel answerModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private QuestionModel questionModel { get; set; } = new();
+    [SupplyParameterFromForm]
+    private AnswerModel selectedAnswerModel { get; set; } = new();
+
+    private string? searchString = null;
+
+    private bool editing = false;
+    private bool Fail = false;
+
+    private IEnumerable<AnswerModel>? allAnswers;
+    private IEnumerable<QuestionModel>? allQuestions;
+    private IEnumerable<AnswerModel>? filteredSearch => allAnswers.Where(search => search.Answer.ToLower().Contains(searchString.ToLower()));
+
+    AnswerModel answerToDelete { get; set; } = new();
+
+    private bool NeedDeleteConfirmation = false;
+    private bool NeedEditConfirmation = false;
+    private bool Confirmation = false;
+
+
+
+
+    private void showDeleteConfirmation(AnswerModel answerModel)
+    {
+        answerToDelete = answerModel;
+        NeedDeleteConfirmation = true;
+    }
+
+    private void showEditConfirmation()
+    {
+        NeedEditConfirmation = true;
+    }
+
+    private void ChangeConfirmation(int value)
+    {
+        if (value == 2)
+        {
+            NeedDeleteConfirmation = false;
+            NeedEditConfirmation = false;
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = dbFactory.CreateDbContext();
+        AnswerRepo answerRepo = new(context);
+        QuestionRepo questionRepo = new(context);
+
+        allAnswers = await answerRepo.GetAllAnswersAsync();
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+    }
+
+    private async Task Post()
+    {
+        using var context = dbFactory.CreateDbContext();
+        AnswerRepo answerRepo = new(context);
+
+        await answerRepo.AddAnswerAsync(answerModel);
+        
+        await UpdateUi();
+        StateHasChanged();
+    }
+
+
+    private async Task Delete(int id)
+    {
+        using var context = dbFactory.CreateDbContext();
+        AnswerRepo answerRepo = new(context);
+
+        await answerRepo.DeleteAnswerAsync(id);
+        
+        await UpdateUi();
+        StateHasChanged();
+
+        NeedDeleteConfirmation = false;
+
+    }
+
+    private async Task SelectEdit(AnswerModel answerModel)
+    {
+        selectedAnswerModel = answerModel;
+        editing = true;
+
+        await UpdateUi();
+        StateHasChanged();
+    }
+
+    private async Task Edit()
+    {
+        using var context = dbFactory.CreateDbContext();
+        AnswerRepo answerRepo = new(context);
+
+
+        if (selectedAnswerModel.Answer != null)
+        {
+            await answerRepo.UpdateAnswerAsync(selectedAnswerModel);
+            
+
+            await UpdateUi();
+            StateHasChanged();
+        }
+
+        NeedEditConfirmation = false;
+        editing = false;
+
+    }
+
+    private async Task UpdateUi()
+    {
+        using var context = dbFactory.CreateDbContext();
+        AnswerRepo answerRepo = new(context);
+        QuestionRepo questionRepo = new(context);
+
+        allAnswers = await answerRepo.GetAllAnswersAsync();
+        allQuestions = await questionRepo.GetAllQuestionsAsync();
+    }
+
+
+}

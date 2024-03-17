@@ -1,5 +1,4 @@
 ﻿@page "/AdminSubcategory";
-
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
@@ -18,11 +17,11 @@
 <h5> Create </h5>
 <EditForm FormName="SubcategoryCreate" Model="SubcategoryModel" OnValidSubmit="Post">
     <ValidationSummary />
-    <DataAnnotationsValidator />
+    <DataAnnotationsValidator/>
+    
 
     <label>Subcategory Name</label>
-    <InputText @bind-Value="@SubcategoryModel.Name"></InputText>
-
+    <InputText  @bind-Value="@SubcategoryModel.Name"></InputText>
     <br />
 
     <label>Segment Name</label>
@@ -45,6 +44,7 @@
 <br />
 
 <h5>Edit and delete</h5>
+<input @bind-value="searchString" class="form-check-label" type="text" placeholder="Search by subcategory" />
 <table class="table">
     <thead>
         <tr>
@@ -55,16 +55,34 @@
     <tbody>
         @if (allSubcategories != null)
         {
-            @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+            @if (searchString == null)
             {
-                <tr>
-                    <td>@subcategoryModel.Name</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(subcategoryModel)">Press to Delete</button>
-                        <button class="btn btn-primary" @onclick="()=> SelectEdit(subcategoryModel)">Press To Edit</button>
-                    </td>
-                </tr>
+                @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+                {
+                    <tr>
+                        <td>@subcategoryModel.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(subcategoryModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(subcategoryModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
             }
+            else
+            {
+                @foreach (SubcategoryModel subcategoryModel in filteredSearch)
+                {
+                    <tr>
+                        <td>@subcategoryModel.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(subcategoryModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(subcategoryModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
+            }
+
+
         }
         else
         {
@@ -96,18 +114,23 @@
         <InputText @bind-Value="selectedSubcategory.Name"></InputText>
 
         <label> Change segment</label>
-        <InputNumber @bind-Value="selectedSubcategory.SegmentId"></InputNumber>
+        <InputSelect @bind-Value="selectedSubcategory.SegmentId">
+
+            @if (allSegments != null)
+            {
+                @foreach (SegmentModel segmentModel in allSegments)
+                {
+                    <option value="@segmentModel.Id"> @segmentModel.Name </option>
+                }
+            }
+        </InputSelect>
+        <br />
 
         <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
 
         <br />
 
-        @foreach (SegmentModel segmentModel in allSegments)
-        {
-            <ul style=" font-size=8:">
-                <li>Segment name: @segmentModel.Name, Id: @segmentModel.Id</li>
-            </ul>
-        }
+
 
     </EditForm>
     @if (NeedEditConfirmation == true)
@@ -124,18 +147,21 @@
 
 @code {
 
-    [SupplyParameterFromForm]
+    [SupplyParameterFromForm] 
     public SubcategoryModel SubcategoryModel { get; set; } = new();
     [SupplyParameterFromForm]
     private SegmentModel segmentModel { get; set; } = new();
     [SupplyParameterFromForm]
     private SubcategoryModel selectedSubcategory { get; set; } = new();
 
+    private string? searchString = null;
+
     private bool editing = false;
     private bool Fail = false;
 
     private IEnumerable<SegmentModel>? allSegments;
     private IEnumerable<SubcategoryModel>? allSubcategories;
+    private IEnumerable<SubcategoryModel>? filteredSearch => allSubcategories.Where(search => search.Name.ToLower().Contains(searchString.ToLower()));
 
     SubcategoryModel subcategoryModelToDelete { get; set; } = new();
 
@@ -180,8 +206,9 @@
         SubcategoryRepo subcategoryRepo = new(context);
 
         await subcategoryRepo.AddSubcategoryAsync(SubcategoryModel);
+
         await UpdateUi();
-        StateHasChanged();
+
     }
 
 
@@ -191,10 +218,10 @@
         SubcategoryRepo subcategoryRepo = new(context);
 
         await subcategoryRepo.DeleteSubcategoryAsync(id);
-        await subcategoryRepo.SaveAsync();
+
 
         await UpdateUi();
-        StateHasChanged();
+
 
         NeedDeleteConfirmation = false;
     }
@@ -205,7 +232,7 @@
         editing = true;
 
         await UpdateUi();
-        StateHasChanged();
+
     }
 
     private async Task Edit()
@@ -214,14 +241,15 @@
 
         using var context = dbFactory.CreateDbContext();
         SubcategoryRepo subcategoryRepo = new(context);
-        SegmentRepo segmentRepo = new(context);
+
 
         if (selectedSubcategory.Name != null)
         {
             subcategoryRepo.UpdateSubcategoryAsync(selectedSubcategory);
 
+
             await UpdateUi();
-            StateHasChanged();
+
         }
 
         NeedEditConfirmation = false;
@@ -236,6 +264,7 @@
 
         allSegments = await segmentRepo.GetAllSegmentsAsync();
         allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
+        StateHasChanged();
     }
 
 }

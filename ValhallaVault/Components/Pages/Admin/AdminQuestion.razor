@@ -50,6 +50,7 @@
 <br />
 
 <h5>Edit and delete</h5>
+<input @bind-value="searchString" class="form-check-label" type="text" placeholder="Search by question..." />
 <table class="table">
     <thead>
         <tr>
@@ -61,17 +62,35 @@
     <tbody>
         @if (allQuestions != null)
         {
-            @foreach (QuestionModel questionModel in allQuestions)
+            @if (searchString == null)
             {
-                <tr>
-                    <td>@questionModel.Question</td>
-                    <td>@questionModel.Explanation</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(questionModel)">Press to Delete</button>
-                        <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
-                    </td>
-                </tr>
+                @foreach (QuestionModel questionModel in allQuestions)
+                {
+                    <tr>
+                        <td>@questionModel.Question</td>
+                        <td>@questionModel.Explanation</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(questionModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
             }
+            else
+            {
+                @foreach (QuestionModel questionModel in filteredSearch)
+                {
+                    <tr>
+                        <td>@questionModel.Question</td>
+                        <td>@questionModel.Explanation</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(questionModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(questionModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
+            }
+
         }
         else
         {
@@ -110,16 +129,21 @@
         <InputTextArea @bind-Value="selectedQuestionModel.Explanation"></InputTextArea>
         <br />
         <label> Change Subcategory</label>
-        <InputNumber @bind-Value="selectedQuestionModel.SubcategoryId"></InputNumber>
         <br />
+        <InputSelect @bind-Value="selectedQuestionModel.SubcategoryId">
+
+            @if (allSubcategories != null)
+            {
+                @foreach (SubcategoryModel subcategoryModel in allSubcategories)
+                {
+                    <option value="@subcategoryModel.Id"> @subcategoryModel.Name </option>
+                }
+            }
+        </InputSelect>
+        <br />
+
         <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
         <br />
-        @foreach (SubcategoryModel subcategoryModel in allSubcategories)
-        {
-            <ul style=" font-size=8:">
-                <li>Segment name: @subcategoryModel.Name, Id: @subcategoryModel.Id</li>
-            </ul>
-        }
 
         @if (NeedEditConfirmation == true)
         {
@@ -144,11 +168,14 @@
     [SupplyParameterFromForm]
     private QuestionModel selectedQuestionModel { get; set; } = new();
 
+    private string? searchString = null;
+
     private bool editing = false;
     private bool Fail = false;
 
     private IEnumerable<QuestionModel>? allQuestions;
     private IEnumerable<SubcategoryModel>? allSubcategories;
+    private IEnumerable<QuestionModel>? filteredSearch => allQuestions.Where(search => search.Question.ToLower().Contains(searchString.ToLower()));
 
     QuestionModel questionToDelete { get; set; } = new();
 
@@ -193,8 +220,9 @@
         QuestionRepo questionRepo = new(context);
 
         await questionRepo.AddQuestionAsync(QuestionModel);
+        
         await UpdateUi();
-        StateHasChanged();
+
     }
 
 
@@ -204,10 +232,10 @@
         QuestionRepo questionRepo = new(context);
 
         await questionRepo.DeleteQuestionAsync(id);
-        await questionRepo.SaveAsync();
+        
 
         await UpdateUi();
-        StateHasChanged();
+
 
         NeedDeleteConfirmation = false;
     }
@@ -218,7 +246,7 @@
         editing = true;
 
         await UpdateUi();
-        StateHasChanged();
+
     }
 
     private async Task Edit()
@@ -226,15 +254,15 @@
         Fail = false;
 
         using var context = dbFactory.CreateDbContext();
-        SubcategoryRepo subcategoryRepo = new(context);
         QuestionRepo questionRepo = new(context);
 
         if (selectedQuestionModel.Question != null)
         {
             questionRepo.UpdateQuestion(selectedQuestionModel);
+            
 
             await UpdateUi();
-            StateHasChanged();
+
         }
 
         NeedEditConfirmation = false;
@@ -249,6 +277,7 @@
 
         allQuestions = await questionRepo.GetAllQuestionsAsync();
         allSubcategories = await subcategoryRepo.GetAllSubscategoriesAsync();
+        StateHasChanged();
     }
 
 }
