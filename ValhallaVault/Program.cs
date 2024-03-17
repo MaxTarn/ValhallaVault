@@ -7,8 +7,9 @@ using ValhallaVault.Components.Account;
 using ValhallaVault.Controllers;
 using ValhallaVault.Data;
 using ValhallaVault.Data.DbServices;
+using ValhallaVault.Data.Middleware;
 using ValhallaVault.Data.Repositories;
-using ValhallaVault.MiddleWare;
+
 
 namespace ValhallaVault
 {
@@ -53,6 +54,7 @@ namespace ValhallaVault
             builder.Services.AddScoped<ISegmentRepository, SegmentRepo>();
             builder.Services.AddScoped<IUserQuestionRepository, UserQuestionRepo>();
             builder.Services.AddScoped<UserQuestionService>();
+            builder.Services.AddScoped<CustomLogger>();
 
             builder.Services.AddAuthentication(options =>
                 {
@@ -148,16 +150,13 @@ namespace ValhallaVault
 
             app.UseRouting();
 
+            app.UseMiddleware<CustomLogger>();
 
             app.UseCors("AllowAll");
 
             app.UseAuthorization();
 
             app.UseCors("AllowAll");
-
-            var middleware = new MiddleWareProcessingTime(_ => Task.CompletedTask); // Create an instance of the middleware
-            app.UseMiddleware<MiddleWareProcessingTime>();
-
 
             app.MapControllers();
 
@@ -188,7 +187,7 @@ namespace ValhallaVault
 
             app.Run();
 
-            middleware.PrintTotalProcessingTime();
+ 
 
         }
     }

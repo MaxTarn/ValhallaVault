@@ -1613,6 +1613,33 @@ namespace ValhallaVault.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ValhallaVault.Data.Models.RequestLogs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LogTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestLogs");
+                });
+
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>
                 {
                     b.Property<int>("Id")

@@ -12,7 +12,7 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20240317192832_initial")]
+    [Migration("20240317200048_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -1614,6 +1614,33 @@ namespace ValhallaVault.Migrations
                             Question = "Vad är fördelarna med att använda symmetrisk kryptering för filkryptering?",
                             SubcategoryId = 11
                         });
+                });
+
+            modelBuilder.Entity("ValhallaVault.Data.Models.RequestLogs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LogTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestLogs");
                 });
 
             modelBuilder.Entity("ValhallaVault.Data.Models.SegmentModel", b =>
