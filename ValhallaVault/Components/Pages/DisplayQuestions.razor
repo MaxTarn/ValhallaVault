@@ -74,7 +74,7 @@
 
     #region Parameters
 
-    [Parameter] 
+    [Parameter]
     public int? SubcategoryId { get; set; }
 
     #endregion
@@ -109,7 +109,7 @@
     private async Task CorrectAnswer(MouseEventArgs e)
     {
         if (UserHasChosenAnswer() != true) { return; }
-        if (UserName == null)return;
+        if (UserName == null) return;
 
         foreach (AnswerContainer answerContainer in CurrentQuestionContainer.Answers) answerContainer.ShowStyle = true;
         await SetAnswerOfQuestionInDbUsingAnswerContainers();
@@ -142,11 +142,11 @@
         CurrentQuestionContainer.Answers?.ForEach(a =>
         {
             Answers.Add(new AnswerContainer()
-            {
-                IsChecked = false,
-                Original = a.Original,
-                ShowStyle = false
-            });
+                {
+                    IsChecked = false,
+                    Original = a.Original,
+                    ShowStyle = false
+                });
         });
     }
 
@@ -198,10 +198,35 @@
         string? userId = await GetUserIdByNormalizedUserName();
         if (userId == null) return;
 
+        // edits the already existing entry in the db if it already exists,
+        // can only change it to true from false, not the other way round
+        //if the user got the current question wrong, but has stored that they got it correct in db, it does not change anything in the db
         if ((await AnswerForQuestionForSpecificUserAlreadyExists(userId, CurrentQuestionContainer.Original.Id)) == true)
         {
-            //TODO
-            //edit the entry
+
+            int? idOfUserQuestion = (await UserQuestionRepo.GetAllUserQuestionsAsync())
+                .Where(a => a.UserId == userId && a.QuestionId == CurrentQuestionContainer.Original.Id)
+                .Select(a => a.Id)
+                .FirstOrDefault();
+
+            if (idOfUserQuestion == null) return;
+
+            var existingUserQuestion = await UserQuestionRepo.GetUserQuestionByIdAsync((int)idOfUserQuestion);
+
+            if (existingUserQuestion != null && existingUserQuestion.IsCorrect == false)
+            {
+                await UserQuestionRepo.UpdateUserQuestionAsync((int)idOfUserQuestion, new UserQuestionModel
+                {
+                    Id = (int)idOfUserQuestion,
+                    IsCorrect = UserChoseCorrectAnswer(),
+                    QuestionId = CurrentQuestionContainer.Original.Id,
+                    UserId = userId
+                });
+
+                await UserQuestionRepo.SaveAsync();
+            }
+
+            return;
         }
 
         await UserQuestionRepo.AddUserQuestionAsync(new UserQuestionModel()
@@ -286,27 +311,27 @@
         }
 
         var subcategoryContainer = new SubCategoryContainer
-        {
-            Original = subcategory,
-            Questions = new List<QuestionContainer>()
-        };
+            {
+                Original = subcategory,
+                Questions = new List<QuestionContainer>()
+            };
 
         foreach (var question in subcategory.Questions)
         {
             var questionContainer = new QuestionContainer
-            {
-                Question = question.Question,
-                Answers = new List<AnswerContainer>(),
-                Original = question // Add the original QuestionModel to QuestionContainer
-            };
+                {
+                    Question = question.Question,
+                    Answers = new List<AnswerContainer>(),
+                    Original = question // Add the original QuestionModel to QuestionContainer
+                };
 
             foreach (var answer in question.Answers)
             {
                 questionContainer.Answers.Add(new AnswerContainer
-                {
-                    Original = answer,
-                    IsChecked = false,
-                });
+                    {
+                        Original = answer,
+                        IsChecked = false,
+                    });
             }
             subcategoryContainer.Questions.Add(questionContainer);
         }
@@ -354,5 +379,5 @@
     }
 
     #endregion
-    
+
 }
