@@ -17,32 +17,36 @@ public class UserQuestionRepo : IUserQuestionRepository
         return await _dbContext.UserQuestions.ToListAsync();
     }
 
-    public async Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id)
+    public async Task<UserQuestionModel?> GetUserQuestionByIdAsync(int? id)
     {
+        if (id == null)
+        {
+            return null;
+        }
         return await _dbContext.UserQuestions.FindAsync(id);
     }
 
-    public async Task AddUserQuestionAsync(UserQuestionModel userQuestion)
+    public async Task AddUserQuestionAsync(UserQuestionModel? userQuestion)
     {
+        if (userQuestion == null)
+        {
+            return;
+        }
         _dbContext.UserQuestions.Add(userQuestion);
-        await _dbContext.SaveChangesAsync();
     }
 
 
-    public async Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
+    public async Task UpdateUserQuestionAsync(int? id, UserQuestionModel? updatedUserQuestionModel)
     {
         UserQuestionModel? userQuestionToUpdate = await GetUserQuestionByIdAsync(id);
-        if (userQuestionToUpdate != null)
+        if (id == null)
         {
-            userQuestionToUpdate.UserId = updatedUserQuestionModel.UserId;
-            userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
-            userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
-            await _dbContext.SaveChangesAsync();
+            return;
         }
-        else
-        {
-            throw new ArgumentException("User question not found.");
-        }
+
+        userQuestionToUpdate.UserId = updatedUserQuestionModel.UserId;
+        userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
+        userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
     }
 
     public async Task DeleteUserQuestionAsync(int id)
@@ -54,7 +58,13 @@ public class UserQuestionRepo : IUserQuestionRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-
-
+    public Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
+    {
+        throw new NotImplementedException();
+    }
 }

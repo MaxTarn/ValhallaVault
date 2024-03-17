@@ -18,10 +18,15 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Segments.ToListAsync();
         }
 
-        public async Task<SegmentModel?> GetSegmentByIdAsync(int id)
+        public async Task<SegmentModel?> GetSegmentByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Segments.FindAsync(id);
         }
+
 
         public async Task<SegmentModel?> GetSegmentByIdWithEagerLoadingAsync(int id)
         {
@@ -29,18 +34,25 @@ namespace ValhallaVault.Data.Repositories
                 .Include(x => x.Subcategories)
                 .ThenInclude(subcategory => subcategory.Questions)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
         }
 
-        public async Task AddSegmentAsync(SegmentModel segment)
+        public async Task AddSegmentAsync(SegmentModel? segment)
         {
+            if (segment == null)
+            {
+                return;
+            }
             _dbContext.Segments.Add(segment);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateSegmentAsync(SegmentModel segment)
+        public void UpdateSegmentAsync(SegmentModel? segment)
         {
+            if (segment == null)
+            {
+                return;
+            }
             _dbContext.Entry(segment).State = EntityState.Modified;
-            _dbContext.SaveChanges();
         }
 
         public async Task<SegmentModel?> DeleteSegmentAsync(int id)
@@ -65,6 +77,16 @@ namespace ValhallaVault.Data.Repositories
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<SegmentModel?> GetSegmentByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SegmentModel?> GetSegmentByIdIncludingSubcategoriesAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

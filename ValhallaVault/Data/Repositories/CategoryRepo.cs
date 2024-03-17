@@ -17,10 +17,15 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Set<CategoryModel>().ToListAsync();
         }
 
-        public async Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        public async Task<CategoryModel?> GetCategoryByIdAsync(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
+
 
         public async Task<CategoryModel?> GetCategoryByIdWithEagerLoadingAsync(int id)
         {
@@ -31,18 +36,26 @@ namespace ValhallaVault.Data.Repositories
                 .ThenInclude(x => x.Questions)
                 .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync();
+
         }
 
-        public async Task AddCategoryAsync(CategoryModel category)
+        public async Task AddCategoryAsync(CategoryModel? category)
         {
+            if (category == null)
+            {
+                return;
+            }
             _dbContext.Set<CategoryModel>().Add(category);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateCategoryAsync(CategoryModel category)
+        public async Task UpdateCategocryAsync(CategoryModel? category)
         {
+            if (category == null)
+            {
+                return;
+            }
+
             _dbContext.Entry(category).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<CategoryModel?> DeleteCategoryAsync(int id)
@@ -64,9 +77,33 @@ namespace ValhallaVault.Data.Repositories
             }
         }
 
+        public int? CountCorrectAnswers(string userId)
+        {
+            if (userId == null)
+            {
+                return null;
+            }
+            return _dbContext.UserQuestions.Where(u => u.UserId == userId && u.IsCorrect == true).Count();
+        }
+
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public Task UpdateCategoryAsync(CategoryModel category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
