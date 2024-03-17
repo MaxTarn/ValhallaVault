@@ -44,6 +44,7 @@
 <br />
 
 <h5>Edit and delete</h5>
+<input @bind-value="searchString" class="form-check-label" type="text" placeholder="Search by Segment" />
 <table class="table">
     <thead>
         <tr>
@@ -55,16 +56,33 @@
 
         @if (allSegments != null)
         {
-            @foreach (SegmentModel segmentModel in allSegments)
+            @if (searchString == null)
             {
-                <tr>
-                    <td>@segmentModel.Name</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(segmentModel)">Press to Delete</button>
-                        <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
-                    </td>
-                </tr>
+                @foreach (SegmentModel segmentModel in allSegments)
+                {
+                    <tr>
+                        <td>@segmentModel.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=> showDeleteConfirmation(segmentModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
             }
+            else
+            {
+                @foreach (SegmentModel segmentModel in filteredSearch)
+                {
+                    <tr>
+                        <td>@segmentModel.Name</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => showDeleteConfirmation(segmentModel)">Press to Delete</button>
+                            <button class="btn btn-primary" @onclick="()=> SelectEdit(segmentModel)">Press To Edit</button>
+                        </td>
+                    </tr>
+                }
+            }
+
         }
         else
         {
@@ -89,25 +107,30 @@
 @if (editing == true)
 {
     <h6>Editing: "@selectedSegment.Name"</h6>
-    <EditForm FormName="SegmentEdit" Model="segmentModel" OnValidSubmit="showEditConfirmation">
+    <EditForm FormName="SegmentEdit" Model="selectedSegment" OnValidSubmit="showEditConfirmation">
         <ValidationSummary />
         <DataAnnotationsValidator />
 
         <InputText @bind-Value="selectedSegment.Name"></InputText>
 
-        <label> Change category</label>
-        <InputNumber @bind-Value="selectedSegment.CategoryId"></InputNumber>
+        <label>Category Name</label>
+        <InputSelect @bind-Value="selectedSegment.CategoryId">
 
-        <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
-
+            @if (allSegments != null)
+            {
+                @foreach (CategoryModel categoryModel in allCategories)
+                {
+                    <option value="@categoryModel.Id"> @categoryModel.Name </option>
+                }
+            }
+        </InputSelect>
         <br />
 
-        @foreach (CategoryModel categoryModel in allCategories)
-        {
-            <ul style=" font-size=8:">
-                <li>Category name: @categoryModel.Name, Id: @categoryModel.Id</li>
-            </ul>
-        }
+
+        <button type="submit" value="Put" class="btn btn-primary"> Edit</button>
+        <br />
+
+
 
     </EditForm>
 
@@ -136,12 +159,15 @@
     [SupplyParameterFromForm]
     private SegmentModel selectedSegment { get; set; } = new();
 
+    private string? searchString = null;
+
     private bool editing = false;
     private bool Fail = false;
 
 
     private IEnumerable<SegmentModel>? allSegments;
     private IEnumerable<CategoryModel>? allCategories;
+    private IEnumerable<SegmentModel>? filteredSearch => allSegments.Where(search => search.Name.ToLower().Contains(searchString.ToLower()));
 
     SegmentModel segmentModelToDelete { get; set; } = new();
 
@@ -183,12 +209,12 @@
     private async Task Post()
     {
         using var context = dbFactory.CreateDbContext();
-        CategoryRepo categoryRepo = new(context);
         SegmentRepo segmentRepo = new(context);
 
         await segmentRepo.AddSegmentAsync(segmentModel);
+        
         await UpdateUi();
-        StateHasChanged();
+
     }
 
 
@@ -198,10 +224,10 @@
         SegmentRepo segmentRepo = new(context);
 
         await segmentRepo.DeleteSegmentAsync(id);
-        await segmentRepo.SaveAsync();
+        
 
         await UpdateUi();
-        StateHasChanged();
+
 
         NeedDeleteConfirmation = false;
     }
@@ -212,7 +238,7 @@
         editing = true;
 
         await UpdateUi();
-        StateHasChanged();
+
     }
 
     private async Task Edit()
@@ -220,15 +246,16 @@
         Fail = false;
 
         using var context = dbFactory.CreateDbContext();
-        CategoryRepo categoryRepo = new(context);
+
         SegmentRepo segmentRepo = new(context);
 
         if (selectedSegment.Name != null)
         {
             segmentRepo.UpdateSegmentAsync(selectedSegment);
+            
 
             await UpdateUi();
-            StateHasChanged();
+
         }
 
         NeedEditConfirmation = false;
@@ -244,6 +271,7 @@
 
         allSegments = await segmentRepo.GetAllSegmentsAsync();
         allCategories = await categoryRepo.GetAllCategoriesAsync();
+        StateHasChanged();
     }
 
 }
