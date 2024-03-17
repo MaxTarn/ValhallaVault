@@ -43,5 +43,26 @@ public class SubCategoryContainer
 {
     public SubcategoryModel Original { get; set; }
     public List<QuestionContainer> Questions { get; set; }
+    public int TotalQuestions { get; set; }
+    public int CorrectQuestions { get; set; }
+    public double PercentageComplete { get; set; }
+}
+
+public class CategoryContainer
+{
+    public CategoryModel Original { get; set; }
+    public double PercentageCompleted { get; set; }
+    public int TotalQuestions { get; set; }
+    public int CorrectQuestions { get; set; }
+
+}
+
+public class SegmentContainer
+{
+    public SegmentModel Original { get; set; }
+    public List<SubCategoryContainer> SubCategoryContainers { get; set; }
+    public int TotalQuestions { get; set; }
+    public int CorrectQuestions { get; set; }
+    public double PercentageComplete { get; set; }
 }
 
