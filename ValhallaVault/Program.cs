@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
-using ValhallaVault.Controllers;
 using ValhallaVault.Data;
 using ValhallaVault.Data.DbServices;
 using ValhallaVault.Data.Repositories;
 using ValhallaVault.MiddleWare;
+using ValhallaVault.MiiasMiddleware;
 
 namespace ValhallaVault
 {
@@ -145,6 +144,10 @@ namespace ValhallaVault
 
 
             var app = builder.Build();
+
+            app.UseMiddleware<First>();
+            app.UseMiddleware<Second>();
+            app.UseMiddleware<Third>();
 
             app.UseRouting();
 
