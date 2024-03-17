@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
@@ -56,6 +57,7 @@ namespace ValhallaVault.Data.Repositories
             {
                 _dbContext.Set<CategoryModel>().Remove(category);
                 await _dbContext.SaveChangesAsync();
+                Debug.WriteLine("Category deleted");
                 return category;
             }
             else

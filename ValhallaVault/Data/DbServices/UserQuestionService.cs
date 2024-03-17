@@ -1,4 +1,5 @@
-﻿using ValhallaVault.Data.Models;
+﻿using System.Diagnostics;
+using ValhallaVault.Data.Models;
 using ValhallaVault.Data.Repositories;
 
 namespace ValhallaVault.Data.DbServices
@@ -41,6 +42,7 @@ namespace ValhallaVault.Data.DbServices
                 .SelectMany(segment => segment.Subcategories)
                 .SelectMany(subcategory => subcategory.Questions)
                 .Count() ?? 0;
+            Debug.WriteLine("Questions counted");
 
             // Retrieve user questions from the repository
             var userQuestions = await _userQuestionRepository.GetAllUserQuestionsAsync();
@@ -76,6 +78,7 @@ namespace ValhallaVault.Data.DbServices
             int totalQuestions = segment.Subcategories?
                 .SelectMany(subcategory => subcategory.Questions)
                 .Count() ?? 0;
+            Debug.WriteLine("Questions in segment counted");
 
             // Retrieve user questions from the repository
             var userQuestions = await _userQuestionRepository.GetAllUserQuestionsAsync();
@@ -88,6 +91,7 @@ namespace ValhallaVault.Data.DbServices
                                  .SelectMany(subcategory => subcategory.Questions)
                                  .Any(question => question.Id == uq.QuestionId))
                 .Count();
+            Debug.WriteLine("Currect answers in segment counted");
 
             // Calculate the percentage of questions answered correctly within the segment
             double percentageComplete = totalQuestions == 0 ? 0 : (double)rightQuestions / totalQuestions * 100;
@@ -115,6 +119,7 @@ namespace ValhallaVault.Data.DbServices
                 .Count();
 
             double percentageComplete = totalQuestions == 0 ? 0 : (double)rightQuestions / totalQuestions * 100;
+            Debug.WriteLine("Calculation done");
 
             return (totalQuestions, rightQuestions, percentageComplete);
         }

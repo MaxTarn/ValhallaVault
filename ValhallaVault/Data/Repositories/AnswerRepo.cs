@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
@@ -43,6 +44,7 @@ namespace ValhallaVault.Data.Repositories
             var answer = await _dbContext.Answers.FindAsync(id);
             if (answer != null)
             {
+                Debug.WriteLine("Answer is not null");
                 _dbContext.Answers.Remove(answer);
                 await _dbContext.SaveChangesAsync();
                 return answer;

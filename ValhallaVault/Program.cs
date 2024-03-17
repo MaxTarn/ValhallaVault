@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Components;
 using ValhallaVault.Components.Account;
-using ValhallaVault.Controllers;
 using ValhallaVault.Data;
 using ValhallaVault.Data.DbServices;
 using ValhallaVault.Data.Repositories;
@@ -91,6 +90,7 @@ namespace ValhallaVault
 
             using (ServiceProvider sp = builder.Services.BuildServiceProvider())
             {
+                Debug.WriteLine("Entered using block");
                 var context = sp.GetRequiredService<ApplicationDbContext>(); //plocka ut dessa ut vår dependency injection container
                 var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
                 var roleManagaer = sp.GetRequiredService<RoleManager<IdentityRole>>();
@@ -123,6 +123,7 @@ namespace ValhallaVault
                             Name = "Admin",
                         };
                         roleManagaer.CreateAsync(adminRole).GetAwaiter().GetResult();
+                        Debug.WriteLine("New admin created");
                     }
                     //tilldela adminrollen till den nya användaren
                     signInManager.UserManager.AddToRoleAsync(newAdmin, "Admin").GetAwaiter().GetResult();
@@ -140,6 +141,7 @@ namespace ValhallaVault
                 {
                     //skapa en ny user
                     signInManager.UserManager.CreateAsync(newUser, "Password1234!").GetAwaiter().GetResult();
+                    Debug.WriteLine("New user created");
                 }
             }
 

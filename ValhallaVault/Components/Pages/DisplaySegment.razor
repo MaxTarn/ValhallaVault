@@ -1,6 +1,7 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/DisplaySegment/{SegmentId:int}"
 @attribute [Authorize]
 @rendermode InteractiveServer
+@using System.Diagnostics
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Data.Repositories
 @using ValhallaVault.Data.Containers
@@ -129,6 +130,7 @@
 
         foreach (SubcategoryModel subcategory in Segment.Original.Subcategories)
         {
+            Debug.WriteLine("Foreach over subcategory");
             var subcategoryResponse = await UserQuestionService.PercentageOfQuestionsAnsweredForSubcategoryId(subcategory.Id, UserId);
             Segment.SubCategoryContainers.Add(new SubCategoryContainer()
             {

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 
@@ -34,6 +35,7 @@ namespace ValhallaVault.Data.Repositories
         public async Task AddQuestionAsync(QuestionModel question)
         {
             _dbContext.Set<QuestionModel>().Add(question);
+            Debug.WriteLine("Question added");
             await _dbContext.SaveChangesAsync();
         }
 
@@ -54,6 +56,7 @@ namespace ValhallaVault.Data.Repositories
             if (question != null)
             {
                 _dbContext.Questions.Remove(question);
+                Debug.WriteLine("Question deleted");
                 await _dbContext.SaveChangesAsync();
                 return question;
             }

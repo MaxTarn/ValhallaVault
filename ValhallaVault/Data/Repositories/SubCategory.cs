@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories
@@ -66,6 +67,7 @@ namespace ValhallaVault.Data.Repositories
             if (subcategory != null)
             {
                 _dbContext.Subcategories.Remove(subcategory);
+                Debug.WriteLine("Subcategory removed");
                 await _dbContext.SaveChangesAsync();
                 return subcategory;
             }

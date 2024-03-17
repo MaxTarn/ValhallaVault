@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 
 namespace ValhallaVault.Data.Repositories;
@@ -38,6 +39,7 @@ public class UserQuestionRepo : IUserQuestionRepository
             userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
             userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
             await _dbContext.SaveChangesAsync();
+            Debug.WriteLine("UserQuestion updated");
         }
         else
         {

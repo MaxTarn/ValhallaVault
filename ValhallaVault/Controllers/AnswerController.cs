@@ -1,6 +1,7 @@
 ﻿// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using ValhallaVault.Data.Models;
 using ValhallaVault.Data.Repositories;
 
@@ -57,6 +58,7 @@ namespace ValhallaVault.Controllers
                 await _answerRepo.SaveAsync();
 
                 return Ok(answer);
+                Debug.WriteLine("Answer added");
             }
 
             return NotFound("The answer that you were trying to post could not be found");
@@ -90,6 +92,7 @@ namespace ValhallaVault.Controllers
             if (answer != null)
             {
                 return Ok(answer);
+                Debug.WriteLine("Answer deleted");
             }
 
             return NotFound("The answer that you wanted to delete could not be found");

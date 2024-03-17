@@ -1,5 +1,6 @@
 ﻿@page "/DisplayAllCategories/DisplayCategory/{CategoryId:int}"
 @attribute [Authorize]
+@using System.Diagnostics
 @using ValhallaVault.Components.Pages.RazorComponents
 @using ValhallaVault.Data
 @using ValhallaVault.Data.Containers
@@ -81,7 +82,7 @@
     private string? UserId = "";
 
     public CategoryContainer Category { get; set; }
-    
+
 
 
     private bool CanProgress(SegmentContainer? segment)
@@ -121,6 +122,7 @@
         Category.Segments = new();
         foreach (SegmentModel seg in Category.Original.Segments)
         {
+            Debug.WriteLine("Foreach over segments");
             var response = await UserQuestionService.PercentageOfQuestionsAnsweredForSegmentId(seg.Id, UserId ?? "");
             Category.Segments.Add(new SegmentContainer()
             {
