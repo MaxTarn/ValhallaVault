@@ -38,6 +38,10 @@
 <div class="container mt-4">
 
     <h1>@Category.Original.Name</h1>
+    @if (!string.IsNullOrEmpty(Category.Original.Info))
+    {
+        <h5 class="text-muted">@Category.Original.Info</h5>
+    }
     <BackButton></BackButton>
     <div class="list-group">
         @foreach (SegmentContainer? segment in Category.Segments)
@@ -71,8 +75,6 @@
 
 
 @code {
-
-    //TODO Add backbutton which takes user back up one level
 
     [Parameter]
     public int? CategoryId { get; set; }
