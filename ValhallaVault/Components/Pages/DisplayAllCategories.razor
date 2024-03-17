@@ -1,9 +1,15 @@
 ﻿@page "/DisplayAllCategories"
 @using ValhallaVault.Data.Models
 @using ValhallaVault.Components.Pages.RazorComponents
+@using ValhallaVault.Data
+@using ValhallaVault.Data.Containers
+@using ValhallaVault.Data.DbServices
 @using ValhallaVault.Data.Repositories
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @inject ICategoryRepository CategoryRepo
+@inject UserQuestionService UserQuestionService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UserManager<ApplicationUser> UserManager
 @rendermode InteractiveServer
 
 @if (AllCategories == null)
@@ -21,39 +27,72 @@
     </div>
 }
 
-
+<h1>@UserId</h1>
 
 <div class="container mt-4">
     <h1>Categories:</h1>
-    <input type="text" @bind="_searchText" placeholder="Searching for something?"  />
+    <input type="text" @bind="_searchText" placeholder="Searching for something?" />
     <button @onclick="FilterCategories">Search</button>
     <!-- Apply Bootstrap styling to the links -->
     <div class="list-group">
         @foreach (var category in FilteredCategories)
         {
-            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Id}")" class="list-group-item list-group-item-action">@category.Name</a>
+            <a href="@($"{Navigation.BaseUri}DisplayAllCategories/DisplayCategory/{category.Original.Id}")" class="list-group-item list-group-item-action">
+                @category.Original.Name
+                <ProgressBar PercentageComplete="@category.PercentageCompleted"></ProgressBar>
+                @{ Console.WriteLine("percentacge: "+category.PercentageCompleted);}
+            </a>
         }
     </div>
 </div>
 
 @code {
 
-    public List<CategoryModel>? AllCategories { get; set; }
-    private List<CategoryModel>? FilteredCategories { get; set; }
+    private List<CategoryContainer>? AllCategories { get; set; }
+    private List<CategoryContainer>? FilteredCategories { get; set; }
+
+
     private string _searchText = "";
+    private string? UserId = "";
 
     private void FilterCategories()
     {
         if (AllCategories == null) return;
 
         FilteredCategories = AllCategories
-            .Where(category => string.IsNullOrEmpty(_searchText) || category.Name.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) != -1)
+            .Where(category => string.IsNullOrEmpty(_searchText) || category.Original.Name.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) != -1)
             .ToList();
     }
 
+    
+
     protected override async Task OnInitializedAsync()
     {
-        AllCategories = (await CategoryRepo.GetAllCategoriesAsync()).ToList();
+        string? name = (await AuthStateProvider.GetAuthenticationStateAsync())?
+            .User?
+            .Identity?
+            .Name?
+            .Trim()
+            .ToUpper();
+
+        if (name == null) return;
+
+        UserId = (await UserManager.FindByNameAsync(name))?.Id;
+
+
+        AllCategories = (await CategoryRepo.GetAllCategoriesAsync())
+            .Select(category => { return new CategoryContainer() { Original = category }; })
+            .ToList();
+
+        foreach (CategoryContainer categoryContainer in AllCategories)
+        {
+            var response = await UserQuestionService.PercentageOfQuestionsAnswerdForCategoryId(categoryContainer.Original.Id, UserId ?? "");
+            categoryContainer.PercentageCompleted = response.percentageComplete;
+            categoryContainer.CorrectQuestions = response.rightQuestions;
+            categoryContainer.TotalQuestions = response.totalQuestions;
+        }
         FilteredCategories = AllCategories;
+
+        
     }
 }
