@@ -18,25 +18,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Subcategories.ToListAsync();
         }
 
-        public async Task<SubcategoryModel?> GetSubcategoryByIdAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Subcategories.FindAsync(id);
-        }
-
-        public async Task<SubcategoryModel?> GetSubCategoryByIdIncludingThingsAsync(int? id)
-        {
-
-            return await _dbContext.Subcategories
-                .Include(x => x.Questions)
-                .ThenInclude(xx => xx.Answers)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-        }
-
         public async Task<SubcategoryModel?> GetSubCategoryByIdIncludigQuestionsAsync(int? id)
         {
             if (id == null)
@@ -44,18 +25,6 @@ namespace ValhallaVault.Data.Repositories
                 return null;
             }
             return await _dbContext.Subcategories.Include(x => x.Questions).FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext?.Set<SubcategoryModel>()
-                .Include(s => s.Questions)
-                .ThenInclude(q => q.Answers)
-                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task AddSubcategoryAsync(SubcategoryModel? subcategory)
@@ -99,14 +68,21 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<SubcategoryModel?> GetSubcategoryByIdAsync(int id)
+        public async Task<SubcategoryModel?> GetSubcategoryByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Subcategories.FindAsync(id);
         }
 
-        public Task<SubcategoryModel?> GetSubCategoryByIdIncludingThingsAsync(int id)
+        public async Task<SubcategoryModel?> GetSubCategoryByIdIncludingThingsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Subcategories
+                .Include(x => x.Questions)
+                .ThenInclude(xx => xx.Answers)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<SubcategoryModel?> GetSubCategoryByIdIncludigQuestionsAsync(int id)
@@ -114,9 +90,16 @@ namespace ValhallaVault.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
+        public async Task<SubcategoryModel?> GetByIdWithQuestionsAndAnswers(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext?.Set<SubcategoryModel>()
+                .Include(s => s.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
     }
 

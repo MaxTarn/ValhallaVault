@@ -20,25 +20,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Questions.ToListAsync();
         }
 
-        public async Task<QuestionModel?> GetQuestionByIdAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Questions.FindAsync(id);
-        }
-
-        public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-
         public async Task AddQuestionAsync(QuestionModel? question)
         {
             if (question == null)
@@ -82,14 +63,22 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<QuestionModel?> GetQuestionByIdAsync(int id)
+        public async Task<QuestionModel?> GetQuestionByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Questions.FindAsync(id);
         }
 
-        public Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
+        public async Task<QuestionModel?> GetQuestionByIdIncludingAnswersAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

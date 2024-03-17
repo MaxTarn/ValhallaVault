@@ -17,15 +17,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Answers.ToListAsync();
         }
 
-        public async Task<AnswerModel?> GetAnswerByIdAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Answers.FindAsync(id);
-        }
-
         public async Task AddAnswerAsync(AnswerModel? answer)
         {
             if (answer == null)
@@ -67,9 +58,13 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<AnswerModel?> GetAnswerByIdAsync(int id)
+        public async Task<AnswerModel?> GetAnswerByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Answers.FindAsync(id);
         }
     }
 

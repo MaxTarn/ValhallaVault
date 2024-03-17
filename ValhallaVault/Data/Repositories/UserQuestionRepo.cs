@@ -17,15 +17,6 @@ public class UserQuestionRepo : IUserQuestionRepository
         return await _dbContext.UserQuestions.ToListAsync();
     }
 
-    public async Task<UserQuestionModel?> GetUserQuestionByIdAsync(int? id)
-    {
-        if (id == null)
-        {
-            return null;
-        }
-        return await _dbContext.UserQuestions.FindAsync(id);
-    }
-
     public async Task AddUserQuestionAsync(UserQuestionModel? userQuestion)
     {
         if (userQuestion == null)
@@ -33,20 +24,6 @@ public class UserQuestionRepo : IUserQuestionRepository
             return;
         }
         _dbContext.UserQuestions.Add(userQuestion);
-    }
-
-
-    public async Task UpdateUserQuestionAsync(int? id, UserQuestionModel? updatedUserQuestionModel)
-    {
-        UserQuestionModel? userQuestionToUpdate = await GetUserQuestionByIdAsync(id);
-        if (id == null)
-        {
-            return;
-        }
-
-        userQuestionToUpdate.UserId = updatedUserQuestionModel.UserId;
-        userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
-        userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
     }
 
     public async Task DeleteUserQuestionAsync(int id)
@@ -58,13 +35,25 @@ public class UserQuestionRepo : IUserQuestionRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id)
+    public async Task<UserQuestionModel?> GetUserQuestionByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        if (id == null)
+        {
+            return null;
+        }
+        return await _dbContext.UserQuestions.FindAsync(id);
     }
 
-    public Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
+    public async Task UpdateUserQuestionAsync(int id, UserQuestionModel updatedUserQuestionModel)
     {
-        throw new NotImplementedException();
+        UserQuestionModel? userQuestionToUpdate = await GetUserQuestionByIdAsync(id);
+        if (id == null)
+        {
+            return;
+        }
+
+        userQuestionToUpdate.UserId = updatedUserQuestionModel.UserId;
+        userQuestionToUpdate.QuestionId = updatedUserQuestionModel.QuestionId;
+        userQuestionToUpdate.IsCorrect = updatedUserQuestionModel.IsCorrect;
     }
 }

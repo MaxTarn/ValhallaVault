@@ -18,16 +18,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Segments.ToListAsync();
         }
 
-        public async Task<SegmentModel?> GetSegmentByIdAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Segments.FindAsync(id);
-        }
-
-
         public async Task<SegmentModel?> GetSegmentByIdWithEagerLoadingAsync(int id)
         {
             return await _dbContext.Segments
@@ -79,9 +69,13 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<SegmentModel?> GetSegmentByIdAsync(int id)
+        public async Task<SegmentModel?> GetSegmentByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Segments.FindAsync(id);
         }
 
         public Task<SegmentModel?> GetSegmentByIdIncludingSubcategoriesAsync(int id)

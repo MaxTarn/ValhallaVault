@@ -17,16 +17,6 @@ namespace ValhallaVault.Data.Repositories
             return await _dbContext.Set<CategoryModel>().ToListAsync();
         }
 
-        public async Task<CategoryModel?> GetCategoryByIdAsync(int? id)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-            return await _dbContext.Set<CategoryModel>().FindAsync(id);
-        }
-
-
         public async Task<CategoryModel?> GetCategoryByIdWithEagerLoadingAsync(int id)
         {
             return await _dbContext.Categories
@@ -46,16 +36,6 @@ namespace ValhallaVault.Data.Repositories
                 return;
             }
             _dbContext.Set<CategoryModel>().Add(category);
-        }
-
-        public async Task UpdateCategocryAsync(CategoryModel? category)
-        {
-            if (category == null)
-            {
-                return;
-            }
-
-            _dbContext.Entry(category).State = EntityState.Modified;
         }
 
         public async Task<CategoryModel?> DeleteCategoryAsync(int id)
@@ -91,14 +71,23 @@ namespace ValhallaVault.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task UpdateCategoryAsync(CategoryModel category)
+        public async Task UpdateCategoryAsync(CategoryModel category)
         {
-            throw new NotImplementedException();
+            if (category == null)
+            {
+                return;
+            }
+
+            _dbContext.Entry(category).State = EntityState.Modified;
         }
 
-        public Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        public async Task<CategoryModel?> GetCategoryByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            return await _dbContext.Set<CategoryModel>().FindAsync(id);
         }
 
         public Task<CategoryModel?> GetCategoryByIdIncludingSegmentsAsync(int id)
