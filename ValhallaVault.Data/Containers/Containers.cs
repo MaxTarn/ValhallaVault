@@ -51,6 +51,7 @@ public class SubCategoryContainer
 public class CategoryContainer
 {
     public CategoryModel Original { get; set; }
+    public List<SegmentContainer> Segments { get; set; }
     public double PercentageCompleted { get; set; }
     public int TotalQuestions { get; set; }
     public int CorrectQuestions { get; set; }
