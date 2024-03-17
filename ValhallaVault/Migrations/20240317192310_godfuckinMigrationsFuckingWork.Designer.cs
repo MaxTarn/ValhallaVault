@@ -12,7 +12,7 @@ using ValhallaVault.Data;
 namespace ValhallaVault.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20240317185712_godfuckinMigrationsFuckingWork")]
+    [Migration("20240317192310_godfuckinMigrationsFuckingWork")]
     partial class godfuckinMigrationsFuckingWork
     {
         /// <inheritdoc />
@@ -1173,7 +1173,6 @@ namespace ValhallaVault.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Info")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -1629,7 +1628,6 @@ namespace ValhallaVault.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Info")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -1696,7 +1694,6 @@ namespace ValhallaVault.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Info")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
